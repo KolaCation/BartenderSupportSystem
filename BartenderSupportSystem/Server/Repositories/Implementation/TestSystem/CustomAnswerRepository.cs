@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BartenderSupportSystem.Domain.TestSystem;
-using BartenderSupportSystem.Server.CustomDbContextFolder;
+using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Mappers.Implementation.TestSystem;
 using BartenderSupportSystem.Server.Mappers.Interfaces.TestSystem;
 using BartenderSupportSystem.Server.Repositories.Interfaces.TestSystem;
@@ -13,10 +13,10 @@ namespace BartenderSupportSystem.Server.Repositories.Implementation.TestSystem
 {
     public sealed class CustomAnswerRepository : ICustomAnswerRepository
     {
-        private readonly CustomDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ICustomAnswerMapper _customAnswerMapper;
 
-        public CustomAnswerRepository(CustomDbContext context)
+        public CustomAnswerRepository(ApplicationDbContext context)
         {
             _context = context;
             _customAnswerMapper = new CustomAnswerMapper();

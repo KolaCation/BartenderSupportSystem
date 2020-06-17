@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using BartenderSupportSystem.Domain.TestSystem;
-using BartenderSupportSystem.Server.CustomDbContextFolder;
+using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.DbModels.TestSystem;
 using BartenderSupportSystem.Server.Mappers.Interfaces.TestSystem;
 
@@ -8,10 +8,10 @@ namespace BartenderSupportSystem.Server.Mappers.Implementation.TestSystem
 {
     internal sealed class CustomTestMapper : ICustomTestMapper
     {
-        private readonly CustomDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ICustomQuestionMapper _customQuestionMapper;
 
-        public CustomTestMapper(CustomDbContext context)
+        public CustomTestMapper(ApplicationDbContext context)
         {
             _context = context;
             _customQuestionMapper = new CustomQuestionMapper(context);

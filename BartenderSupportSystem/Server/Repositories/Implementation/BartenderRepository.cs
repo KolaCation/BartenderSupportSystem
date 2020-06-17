@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BartenderSupportSystem.Domain;
-using BartenderSupportSystem.Server.CustomDbContextFolder;
+using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Mappers.Implementation;
 using BartenderSupportSystem.Server.Mappers.Interfaces;
 using BartenderSupportSystem.Server.Repositories.Interfaces;
@@ -13,10 +13,10 @@ namespace BartenderSupportSystem.Server.Repositories.Implementation
 {
     public sealed class BartenderRepository : IBartenderRepository
     {
-        private readonly CustomDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IBartenderMapper _bartenderMapper;
 
-        public BartenderRepository(CustomDbContext context)
+        public BartenderRepository(ApplicationDbContext context)
         {
             _context = context;
             _bartenderMapper = new BartenderMapper();

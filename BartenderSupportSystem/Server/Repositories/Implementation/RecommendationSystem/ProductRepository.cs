@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BartenderSupportSystem.Domain.RecommendationSystem;
-using BartenderSupportSystem.Server.CustomDbContextFolder;
+using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Repositories.Interfaces.RecommendationSystem;
@@ -13,10 +13,10 @@ namespace BartenderSupportSystem.Server.Repositories.Implementation.Recommendati
 {
     public sealed class ProductRepository : IProductRepository
     {
-        private readonly CustomDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IProductMapper _productMapper;
 
-        public ProductRepository(CustomDbContext context)
+        public ProductRepository(ApplicationDbContext context)
         {
             _context = context;
             _productMapper = new ProductMapper();
