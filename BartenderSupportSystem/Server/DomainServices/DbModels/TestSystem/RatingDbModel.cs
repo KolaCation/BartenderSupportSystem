@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BartenderSupportSystem.Domain.TestSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem
 {
-    public sealed class Rating
+    internal sealed class RatingDbModel
     {
         public Guid Id { get; private set; }
         public Guid TestId { get; private set; }
         public double Mark { get; private set; }
         public int QuantityOfRaters { get; private set; }
 
-        public Rating(Guid id, Guid testId, double mark, int quantityOfRaters)
+        public RatingDbModel(Guid id, Guid testId, double mark, int quantityOfRaters)
         {
             Id = id;
             TestId = testId;

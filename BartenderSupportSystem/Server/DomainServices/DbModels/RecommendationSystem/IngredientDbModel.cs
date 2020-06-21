@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BartenderSupportSystem.Domain.RecommendationSystem.Enums;
 
-namespace BartenderSupportSystem.Domain.RecommendationSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
-    public sealed class Ingredient
+    internal sealed class IngredientDbModel
     {
         public Guid Id { get; private set; }
         public Guid ComponentId { get; private set; }
         public Guid CocktailId { get; private set; }
         public double Weight { get; private set; }
 
-        public Ingredient(Guid id, Guid componentId, Guid cocktailId, double weight)
+        public IngredientDbModel(Guid id, Guid componentId, Guid cocktailId, double weight)
         {
             Id = id;
             ComponentId = componentId;

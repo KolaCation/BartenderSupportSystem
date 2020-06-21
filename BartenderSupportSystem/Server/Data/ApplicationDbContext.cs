@@ -1,7 +1,4 @@
-﻿using BartenderSupportSystem.Server.DbModels;
-using BartenderSupportSystem.Server.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Server.DbModels.TestSystem;
-using BartenderSupportSystem.Server.Models;
+﻿using BartenderSupportSystem.Server.Models;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.DomainServices.DbModels;
+using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem;
 
 namespace BartenderSupportSystem.Server.Data
 {

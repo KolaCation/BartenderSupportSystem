@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BartenderSupportSystem.Domain
+namespace BartenderSupportSystem.Server.DomainServices.DbModels
 {
-    public sealed class Bartender
+    internal sealed class BartenderDbModel
     {
         public Guid Id { get; private set; }
         public string FirstName { get; private set; }
@@ -12,7 +10,7 @@ namespace BartenderSupportSystem.Domain
         public double Experience { get; private set; }
         public string PhotoPath { get; private set; }
 
-        public Bartender(Guid id, string firstName, string lastName, double experience, string photoPath)
+        public BartenderDbModel(Guid id, string firstName, string lastName, double experience, string photoPath)
         {
             Id = id;
             FirstName = firstName;

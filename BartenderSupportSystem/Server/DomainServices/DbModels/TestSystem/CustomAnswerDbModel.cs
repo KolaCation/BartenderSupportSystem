@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BartenderSupportSystem.Domain.TestSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem
 {
-    public sealed class CustomAnswer
+    internal sealed class CustomAnswerDbModel
     {
         public Guid Id { get; private set; }
         public string Statement { get; private set; }
         public bool IsCorrect { get; private set; }
         public Guid QuestionId { get; private set; }
+        [ForeignKey("QuestionId")]
+        public CustomQuestionDbModel Question { get; private set; }
 
-        public CustomAnswer(Guid id, string statement, bool isCorrect, Guid questionId)
+        public CustomAnswerDbModel(Guid id, string statement, bool isCorrect, Guid questionId)
         {
             Id = id;
             Statement = statement;

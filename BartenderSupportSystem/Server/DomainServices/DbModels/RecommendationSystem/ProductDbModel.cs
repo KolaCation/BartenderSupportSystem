@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BartenderSupportSystem.Domain.RecommendationSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
-    public abstract class Food
+    internal sealed class ProductDbModel
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public double PricePerGr { get; private set; }
 
-        protected Food(Guid id, string name, double pricePerGr)
+        public ProductDbModel(Guid id, string name, double pricePerGr)
         {
             Id = id;
             Name = name;

@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BartenderSupportSystem.Domain.RecommendationSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
-    public sealed class Menu
+    internal sealed class MenuDbModel
     {
         public Guid Id { get; private set; }
         public Guid DrinkId { get; private set; }
         public Guid SnackId { get; private set; }
 
-        public Menu(Guid id, Guid drinkId, Guid snackId)
+        public MenuDbModel(Guid id, Guid drinkId, Guid snackId)
         {
             Id = id;
             DrinkId = drinkId;

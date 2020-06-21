@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using BartenderSupportSystem.Domain.RecommendationSystem.Enums;
 
-namespace BartenderSupportSystem.Domain.RecommendationSystem
+namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
-    public sealed class Drink
+    internal sealed class DrinkDbModel
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
@@ -16,7 +14,7 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
         public double PricePerMl { get; private set; }
         public string PhotoPath { get; private set; }
 
-        public Drink(Guid id, string name, AlcoholType type, double alcoholPercentage, string flavor, Guid brandId, double pricePerMl, string photoPath)
+        public DrinkDbModel(Guid id, string name, AlcoholType type, double alcoholPercentage, string flavor, Guid brandId, double pricePerMl, string photoPath)
         {
             Id = id;
             Name = name;
