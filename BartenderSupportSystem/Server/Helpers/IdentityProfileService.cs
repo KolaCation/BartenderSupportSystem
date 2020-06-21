@@ -30,25 +30,8 @@ namespace BartenderSupportSystem.Server.Helpers
             var user = await _userManager.FindByIdAsync(userId);
             var claimsPrincipal = await _claimsFactory.CreateAsync(user);
             var claims = claimsPrincipal.Claims.ToList();
-
             var claimsDB = await _userManager.GetClaimsAsync(user);
-
-            var mappedClaims = new List<Claim>();
-
-            foreach (var claim in claimsDB)
-            {
-                if (claim.Type == ClaimTypes.Role)
-                {
-                    mappedClaims.Add(new Claim(JwtClaimTypes.Role, claim.Value));
-                }
-                else
-                {
-                    mappedClaims.Add(claim);
-                }
-            }
-
-            claims.AddRange(mappedClaims);
-
+            claims.AddRange(claimsDB);
             context.IssuedClaims = claims;
         }
 

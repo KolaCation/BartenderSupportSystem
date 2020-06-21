@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
+using BartenderSupportSystem.Domain;
+using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.DomainServices.DbModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BartenderSupportSystem.Server.Models;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,17 +30,23 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
+            _mapper = mapper;
         }
 
         [BindProperty]
@@ -56,6 +68,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 
             [Required]
             [Display(Name = "Experience (months)")]
+            [Range(0, 120000, ErrorMessage = "The experience value must be between 0 and 120000")]
             public double Experience { get; set; }
 
             [Required]
@@ -89,11 +102,16 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             {
                 var id = Guid.NewGuid();
                 var user = new ApplicationUser { Id = id.ToString(), UserName = Input.Email, Email = Input.Email, BartenderId = id, RegistrationDate = DateTimeOffset.Now };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
+                    var userDetails = new Bartender(id, Input.FirstName, Input.LastName, Input.Experience, "noImg");//pictureService
+                    var userDetailsDb = _mapper.Map<Bartender, BartenderDbModel>(userDetails);
+                    await _context.BartendersSet.AddAsync(userDetailsDb);
+                    await _context.SaveChangesAsync();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
