@@ -7,10 +7,10 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public sealed class Cocktail
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public CocktailType Type { get; }
-        public string PhotoPath { get; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public CocktailType Type { get; private set; }
+        public string PhotoPath { get; private set; }
 
         public Cocktail(Guid id, string name, CocktailType type, string photoPath)
         {

@@ -7,10 +7,10 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public sealed class Ingredient
     {
-        public Guid Id { get; }
-        public Guid ComponentId { get; }
-        public Guid CocktailId { get; }
-        public double Weight { get; }
+        public Guid Id { get; private set; }
+        public Guid ComponentId { get; private set; }
+        public Guid CocktailId { get; private set; }
+        public double Weight { get; private set; }
 
         public Ingredient(Guid id, Guid componentId, Guid cocktailId, double weight)
         {

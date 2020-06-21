@@ -6,9 +6,9 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public abstract class Food
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public double PricePerGr { get; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public double PricePerGr { get; private set; }
 
         protected Food(Guid id, string name, double pricePerGr)
         {

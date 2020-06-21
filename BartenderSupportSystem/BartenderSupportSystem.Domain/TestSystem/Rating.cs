@@ -6,10 +6,10 @@ namespace BartenderSupportSystem.Domain.TestSystem
 {
     public sealed class Rating
     {
-        public Guid Id { get; }
-        public Guid TestId { get; }
-        public double Mark { get; }
-        public int QuantityOfRaters { get; }
+        public Guid Id { get; private set; }
+        public Guid TestId { get; private set; }
+        public double Mark { get; private set; }
+        public int QuantityOfRaters { get; private set; }
 
         public Rating(Guid id, Guid testId, double mark, int quantityOfRaters)
         {

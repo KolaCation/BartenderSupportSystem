@@ -6,11 +6,11 @@ namespace BartenderSupportSystem.Domain
 {
     public sealed class Bartender
     {
-        public Guid Id { get; }
-        public string FirstName { get; }
-        public string LastName { get; }
-        public double Experience { get; }
-        public string PhotoPath { get; }
+        public Guid Id { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public double Experience { get; private set; }
+        public string PhotoPath { get; private set; }
 
         public Bartender(Guid id, string firstName, string lastName, double experience, string photoPath)
         {

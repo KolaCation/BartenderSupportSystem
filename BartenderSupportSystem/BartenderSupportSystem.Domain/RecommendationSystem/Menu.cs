@@ -6,9 +6,9 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public sealed class Menu
     {
-        public Guid Id { get; }
-        public Guid DrinkId { get; }
-        public Guid SnackId { get; }
+        public Guid Id { get; private set; }
+        public Guid DrinkId { get; private set; }
+        public Guid SnackId { get; private set; }
 
         public Menu(Guid id, Guid drinkId, Guid snackId)
         {

@@ -6,12 +6,11 @@ namespace BartenderSupportSystem.Domain.TestSystem
 {
     public sealed class CustomTest
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public string Topic { get; }
-        public string Description { get; }
-        private readonly List<CustomQuestion> _questions;
-        public IReadOnlyCollection<CustomQuestion> Questions => _questions.AsReadOnly();
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public string Topic { get; private set; }
+        public string Description { get; private set; }
+        public IReadOnlyCollection<CustomQuestion> Questions { get; private set; }
 
         public CustomTest(Guid id, string name, string topic, string description)
         {
@@ -19,13 +18,6 @@ namespace BartenderSupportSystem.Domain.TestSystem
             Name = name;
             Topic = topic;
             Description = description;
-            _questions = new List<CustomQuestion>();
-        }
-
-        public CustomTest(Guid id, string name, string topic, string description, List<CustomQuestion> questions)
-            : this(id, name, topic, description)
-        {
-            _questions = questions;
         }
     }
 }

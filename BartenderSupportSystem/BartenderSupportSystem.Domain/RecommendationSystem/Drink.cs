@@ -7,14 +7,14 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public sealed class Drink
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public AlcoholType Type { get; }
-        public double AlcoholPercentage { get; }
-        public string Flavor { get; }
-        public Guid BrandId { get; }
-        public double PricePerMl { get; }
-        public string PhotoPath { get; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public AlcoholType Type { get; private set; }
+        public double AlcoholPercentage { get; private set; }
+        public string Flavor { get; private set; }
+        public Guid BrandId { get; private set; }
+        public double PricePerMl { get; private set; }
+        public string PhotoPath { get; private set; }
 
         public Drink(Guid id, string name, AlcoholType type, double alcoholPercentage, string flavor, Guid brandId, double pricePerMl, string photoPath)
         {

@@ -5,9 +5,9 @@ namespace BartenderSupportSystem.Domain.RecommendationSystem
 {
     public sealed class Brand
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public Countries CountryOfOrigin { get; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public Countries CountryOfOrigin { get; private set; }
 
         public Brand(Guid id, string name, Countries countryOfOrigin)
         {
