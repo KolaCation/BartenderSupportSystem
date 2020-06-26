@@ -15,6 +15,8 @@ using AutoMapper;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Server.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BartenderSupportSystem.Server
 {
@@ -23,6 +25,7 @@ namespace BartenderSupportSystem.Server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         public IConfiguration Configuration { get; }
@@ -39,6 +42,8 @@ namespace BartenderSupportSystem.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            services.AddScoped<IStorageService, InAppStorageService>();
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()

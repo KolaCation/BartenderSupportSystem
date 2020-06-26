@@ -2,6 +2,8 @@
 {
     public enum CocktailType
     {
-
+        Common,
+        Authors,
+        Deluxe
     }
 }

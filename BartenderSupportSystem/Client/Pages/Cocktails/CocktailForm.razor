@@ -1,0 +1,51 @@
+﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+<h3>Create Cocktail</h3>
+<EditForm Model="CocktailViewModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="@CocktailViewModel.Name">Name</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@CocktailViewModel.Name" />
+            <ValidationMessage For="@(() => CocktailViewModel.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@CocktailViewModel.Type">Type</label>
+        <div>
+            <InputSelect class="form-control" @bind-Value="@CocktailViewModel.Type">
+                <option value="" selected>---Select a type---</option>
+                @foreach (var opt in Enum.GetValues(typeof(CocktailType)))
+                {
+                    <option value="@opt">@opt</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => CocktailViewModel.Type)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <InputImg Label="Photo" ImageUrl="@_imageUrl" OnSelectedImage="OnSelectedImage"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+@code {
+    [Parameter] public CocktailViewModel CocktailViewModel { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string _imageUrl;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(CocktailViewModel.PhotoPath))
+        {
+            _imageUrl = CocktailViewModel.PhotoPath;
+            CocktailViewModel.PhotoPath = null;
+        }
+    }
+
+    private void OnSelectedImage(string imageBase64)
+    {
+        CocktailViewModel.PhotoPath = imageBase64;
+        _imageUrl = null;
+    }
+}

@@ -20,5 +20,10 @@ namespace BartenderSupportSystem.Domain
             Experience = experience;
             PhotoPath = photoPath;
         }
+
+        public void UpdatePhotoPath(string newPhotoPath)
+        {
+            PhotoPath = newPhotoPath;
+        }
     }
 }
