@@ -20,5 +20,10 @@ namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSy
             Type = type;
             PhotoPath = photoPath;
         }
+
+        public void UpdatePhotoPath(string newPhotoPath)
+        {
+            PhotoPath = newPhotoPath;
+        }
     }
 }

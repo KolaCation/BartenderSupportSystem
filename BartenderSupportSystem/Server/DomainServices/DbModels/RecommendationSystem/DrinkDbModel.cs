@@ -25,5 +25,10 @@ namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSy
             PricePerMl = pricePerMl;
             PhotoPath = photoPath;
         }
+
+        public void UpdatePhotoPath(string newPhotoPath)
+        {
+            PhotoPath = newPhotoPath;
+        }
     }
 }

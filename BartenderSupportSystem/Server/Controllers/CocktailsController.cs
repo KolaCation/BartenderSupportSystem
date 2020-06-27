@@ -63,8 +63,20 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest();
             }
 
-            var cocktailDbModel = _mapper.Map<Cocktail, CocktailDbModel>(cocktail);
-            _context.Entry(cocktailDbModel).State = EntityState.Modified;
+            var cocktailDbModelToUpdate = await _context.CocktailsSet.FindAsync(id);
+            if (cocktailDbModelToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            var fileRoute = cocktailDbModelToUpdate.PhotoPath;
+            cocktailDbModelToUpdate = _mapper.Map<Cocktail, CocktailDbModel>(cocktail);
+            if (!string.IsNullOrEmpty(cocktail.PhotoPath))
+            {
+                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(cocktail.PhotoPath), "jpg", "cocktails", fileRoute));
+            }
+
+            _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
 
             try
             {
