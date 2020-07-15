@@ -10,6 +10,7 @@ using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -33,6 +34,17 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<ActionResult<IEnumerable<Cocktail>>> GetCocktail()
         {
             var cocktailDbModels = await _context.CocktailsSet.ToListAsync();
+            var cocktails = _mapper.Map<List<CocktailDbModel>, List<Cocktail>>(cocktailDbModels);
+            return cocktails;
+        }
+
+        //GET: api/Cocktails (paginated count)
+        [HttpGet]
+        public async Task<List<Cocktail>> GetCocktail([FromQuery] PaginationDto paginationDto)
+        {
+            var cocktailsQueryable = _context.CocktailsSet.AsQueryable();
+            await HttpContext.InsertPaginationParamsIntoResponse(cocktailsQueryable, paginationDto);
+            var cocktailDbModels = await cocktailsQueryable.InsertPagination(paginationDto).ToListAsync();
             var cocktails = _mapper.Map<List<CocktailDbModel>, List<Cocktail>>(cocktailDbModels);
             return cocktails;
         }

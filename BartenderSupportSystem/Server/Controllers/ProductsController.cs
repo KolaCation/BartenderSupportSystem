@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -30,6 +32,17 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
             var productDbModels = await _context.ProductsSet.ToListAsync();
+            var products = _mapper.Map<List<ProductDbModel>, List<Product>>(productDbModels);
+            return products;
+        }
+
+        //GET: api/Products (paginated count)
+        [HttpGet]
+        public async Task<List<Product>> GetProduct([FromQuery] PaginationDto paginationDto)
+        {
+            var productsQueryable = _context.ProductsSet.AsQueryable();
+            await HttpContext.InsertPaginationParamsIntoResponse(productsQueryable, paginationDto);
+            var productDbModels = await productsQueryable.InsertPagination(paginationDto).ToListAsync();
             var products = _mapper.Map<List<ProductDbModel>, List<Product>>(productDbModels);
             return products;
         }
