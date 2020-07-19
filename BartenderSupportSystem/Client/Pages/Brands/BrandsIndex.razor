@@ -1,0 +1,56 @@
+﻿@page "/brands"
+@using BartenderSupportSystem.Client.Repositories
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using AutoMapper
+@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@inject NavigationManager NavigationManager
+<h3>Brands Index</h3>
+
+@if (_brands != null)
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Country Of Origin</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var brand in _brands)
+        {
+            <tr>
+                <td>@brand.Name</td>
+                <td>@brand.CountryOfOrigin</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Loading...</p>
+}
+<BrandsForm BrandViewModel="BrandViewModel" OnValidSubmit="AddBrand" />
+
+@code {
+    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    public BrandViewModel BrandViewModel { get; set; } = new BrandViewModel { Id = Guid.NewGuid() };
+    private List<BrandViewModel> _brands;
+
+    private async Task AddBrand()
+    {
+        var brand = Mapper.Map<BrandViewModel, Brand>(BrandViewModel);
+        await BrandRepository.AddOne(brand);
+        NavigationManager.NavigateTo("/");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var brandModels = await BrandRepository.GetAll();
+        var brandsList = Mapper.Map<List<Brand>, List<BrandViewModel>>(brandModels.ToList());
+        var b = 3;
+        _brands = new List<BrandViewModel>();
+        _brands.AddRange(brandsList);
+    }
+}

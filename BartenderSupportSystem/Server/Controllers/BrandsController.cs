@@ -35,7 +35,7 @@ namespace BartenderSupportSystem.Server.Controllers
             var brands = _mapper.Map<List<BrandDbModel>, List<Brand>>(brandDbModels);
             return brands;
         }
-
+        /*
         //GET: api/Brands (paginated count)
         [HttpGet]
         public async Task<List<Brand>> GetBrand([FromQuery] PaginationDto paginationDto)
@@ -46,7 +46,7 @@ namespace BartenderSupportSystem.Server.Controllers
             var brands = _mapper.Map<List<BrandDbModel>, List<Brand>>(brandDbModels);
             return brands;
         }
-
+        */
         // GET: api/Brands/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Brand>> GetBrand(Guid id)

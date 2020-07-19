@@ -1,0 +1,31 @@
+﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+<h3>BrandsForm</h3>
+<EditForm Model="BrandViewModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="@BrandViewModel.Name">Name</label>
+        <div>
+            <InputText class="form-control col-6" @bind-Value="@BrandViewModel.Name" />
+            <ValidationMessage For="@(() => BrandViewModel.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@BrandViewModel.CountryOfOrigin">Country Of Origin</label>
+        <div>
+            <InputText  class="form-control col-6" list="countries" @bind-Value="@BrandViewModel.CountryOfOrigin"/>
+                <datalist id="countries">
+                    @foreach (var opt in Enum.GetValues(typeof(Countries)))
+                    {
+                        <option value="@opt"></option>
+                    }
+                </datalist>
+            <ValidationMessage For="@(() => BrandViewModel.CountryOfOrigin)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+@code {
+    [Parameter] public BrandViewModel BrandViewModel { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

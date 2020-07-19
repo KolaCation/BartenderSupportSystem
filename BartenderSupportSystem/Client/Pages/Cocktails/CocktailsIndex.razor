@@ -6,7 +6,7 @@
 @inject NavigationManager NavigationManager
 
 <h3>Cocktails</h3>
-<CocktailForm CocktailViewModel="CocktailViewModel" OnValidSubmit="AddCocktail" />
+<CocktailsForm CocktailViewModel="CocktailViewModel" OnValidSubmit="AddCocktail" />
 
 @code {
     [Inject] public IRepository<Cocktail> CocktailRepository { get; set; }
