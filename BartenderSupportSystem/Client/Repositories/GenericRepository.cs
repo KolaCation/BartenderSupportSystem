@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Client.Repositories
 {
@@ -64,6 +65,12 @@ namespace BartenderSupportSystem.Client.Repositories
             {
                 throw new ApplicationException(await result.GetBody());
             }
+        }
+
+        public async Task<PaginatedResponse<IEnumerable<T>>> GetPaginated(PaginationDto paginationDto)
+        {
+            var result = await _httpService.GetHelper<IEnumerable<T>>(Url, paginationDto);
+            return result;
         }
 
         public async Task<T> GetOne(Guid id)

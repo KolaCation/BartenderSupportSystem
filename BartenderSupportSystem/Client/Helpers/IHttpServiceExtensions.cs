@@ -28,12 +28,12 @@ namespace BartenderSupportSystem.Client.Helpers
             if (url.Contains("?"))
             {
                 urlWithQueryString =
-                    $"{url}&currentPage={paginationDto.CurrentPage}&amountOfRecordsPerPage={paginationDto.AmountOfRecordsPerPage}";
+                    $"{url}&Page={paginationDto.Page}&amountOfRecordsPerPage={paginationDto.AmountOfRecordsPerPage}";
             }
             else
             {
                 urlWithQueryString =
-                    $"{url}?currentPage={paginationDto.CurrentPage}&amountOfRecordsPerPage={paginationDto.AmountOfRecordsPerPage}";
+                    $"{url}?Page={paginationDto.Page}&amountOfRecordsPerPage={paginationDto.AmountOfRecordsPerPage}";
             }
 
             var result = await httpService.Get<T>(urlWithQueryString);

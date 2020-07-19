@@ -10,7 +10,7 @@ namespace BartenderSupportSystem.Server.Helpers
     {
         public static IQueryable<T> InsertPagination<T>(this IQueryable<T> queryable, PaginationDto pagination)
         {
-            return queryable.Skip((pagination.CurrentPage - 1) * pagination.AmountOfRecordsPerPage).Take(pagination.AmountOfRecordsPerPage);
+            return queryable.Skip((pagination.Page - 1) * pagination.AmountOfRecordsPerPage).Take(pagination.AmountOfRecordsPerPage);
         }
     }
 }

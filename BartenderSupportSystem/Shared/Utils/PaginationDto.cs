@@ -6,8 +6,7 @@ namespace BartenderSupportSystem.Shared.Utils
 {
     public sealed class PaginationDto
     {
-        public int TotalAmountOfPages { get; set; }
         public int AmountOfRecordsPerPage { get; set; } = 4;
-        public int CurrentPage { get; set; } = 1;
+        public int Page { get; set; } = 1;
     }
 }
