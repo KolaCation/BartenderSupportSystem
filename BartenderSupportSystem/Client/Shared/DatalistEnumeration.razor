@@ -1,0 +1,12 @@
+﻿<datalist id="@Id">
+    @foreach (var opt in Enum.GetValues(EnumType))
+    {
+        <option value="@opt"></option>
+    }
+</datalist>
+
+@code
+{
+    [Parameter] public string Id { get; set; }
+    [Parameter] public Type EnumType { get; set; }
+}

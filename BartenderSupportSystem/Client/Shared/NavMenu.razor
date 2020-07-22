@@ -8,27 +8,43 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="brands/create">
+                <span class="oi oi-folder" aria-hidden="true"></span> Create Brand
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="drinks/create">
+                <span class="oi oi-folder" aria-hidden="true"></span> Create Drink
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="cocktails/create">
+                <span class="oi oi-folder" aria-hidden="true"></span> Create Cocktail
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="counter">
                 <span class="oi oi-plus" aria-hidden="true"></span> Counter
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="cocktails">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="cocktails">
                 <span class="oi oi-folder" aria-hidden="true"></span> Cocktails
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="brands">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" href="brands">
                 <span class="oi oi-folder" aria-hidden="true"></span> Brands
             </NavLink>
         </li>

@@ -34,22 +34,13 @@ else
 {
     <p>Loading...</p>
 }
-<BrandsForm BrandViewModel="BrandViewModel" OnValidSubmit="AddBrand" />
 
 @code {
     [Inject] public IRepository<Brand> BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     public PaginationDto PaginationDto { get; set; } = new PaginationDto {AmountOfRecordsPerPage = 2};
-    public BrandViewModel BrandViewModel { get; set; } = new BrandViewModel { Id = Guid.NewGuid() };
     private List<BrandViewModel> _brands;
     private int _totalAmountOfPages;
-
-    private async Task AddBrand()
-    {
-        var brand = Mapper.Map<BrandViewModel, Brand>(BrandViewModel);
-        await BrandRepository.AddOne(brand);
-        NavigationManager.NavigateTo("/");
-    }
 
     protected override async Task OnInitializedAsync()
     {

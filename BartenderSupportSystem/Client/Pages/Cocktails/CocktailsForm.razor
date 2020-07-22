@@ -1,26 +1,22 @@
 ﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
-<h3>Create Cocktail</h3>
+<h3>Cocktails Form</h3>
 <EditForm Model="CocktailViewModel" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
+    <DataAnnotationsValidator/>
     <div class="form-group">
         <label for="@CocktailViewModel.Name">Name</label>
         <div>
-            <InputText class="form-control col-6" @bind-Value="@CocktailViewModel.Name" />
-            <ValidationMessage For="@(() => CocktailViewModel.Name)" />
+            <InputText class="form-control col-6" @bind-Value="@CocktailViewModel.Name"/>
+            <ValidationMessage For="@(() => CocktailViewModel.Name)"/>
         </div>
     </div>
     <div class="form-group">
         <label for="@CocktailViewModel.Type">Type</label>
         <div>
-            <InputSelect class="form-control col-6" @bind-Value="@CocktailViewModel.Type">
-                @foreach (var opt in Enum.GetValues(typeof(CocktailType)))
-                {
-                    <option value="@opt">@opt</option>
-                }
-                <option value="" selected>---Select a type---</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => CocktailViewModel.Type)" />
+
+            <InputText class="form-control col-6" list="cocktails" @bind-Value="@CocktailViewModel.Type"/>
+            <DatalistEnumeration Id="cocktails" EnumType="@typeof(CocktailType)"/>
+            <ValidationMessage For="@(() => CocktailViewModel.Type)"/>
         </div>
     </div>
     <div class="form-group">
@@ -29,9 +25,15 @@
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
+
 @code {
-    [Parameter] public CocktailViewModel CocktailViewModel { get; set; }
-    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    public CocktailViewModel CocktailViewModel { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
     private string _imageUrl;
 
     protected override void OnInitialized()
@@ -48,4 +50,5 @@
         CocktailViewModel.PhotoPath = imageBase64;
         _imageUrl = null;
     }
+
 }

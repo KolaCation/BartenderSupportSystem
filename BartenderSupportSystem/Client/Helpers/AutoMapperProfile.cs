@@ -13,11 +13,12 @@ namespace BartenderSupportSystem.Client.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<Cocktail, CocktailViewModel>().ReverseMap();
-            CreateMap<Brand, BrandViewModel>().ForMember(dest => dest.CountryOfOrigin,
-                opt => opt.MapFrom(source => source.CountryOfOrigin.ToString()));
-            CreateMap<BrandViewModel, Brand>().ForMember(dest => dest.CountryOfOrigin,
-                opt => opt.MapFrom(source => Enum.Parse(typeof(Countries), source.CountryOfOrigin)));
+            CreateMap<Cocktail, CocktailViewModel>().ForMember(dest => dest.Type, opt => opt.MapFrom(source => source.Type.ToString()));
+            CreateMap<CocktailViewModel, Cocktail>().ForMember(dest => dest.Type, opt => opt.MapFrom(source => Enum.Parse(typeof(CocktailType), source.Type)));
+            CreateMap<Brand, BrandViewModel>().ForMember(dest => dest.CountryOfOrigin, opt => opt.MapFrom(source => source.CountryOfOrigin.ToString()));
+            CreateMap<BrandViewModel, Brand>().ForMember(dest => dest.CountryOfOrigin, opt => opt.MapFrom(source => Enum.Parse(typeof(Countries), source.CountryOfOrigin)));
+            CreateMap<Drink, DrinkViewModel>().ForMember(dest => dest.Type, opt => opt.MapFrom(source => source.Type.ToString()));
+            CreateMap<DrinkViewModel, Drink>().ForMember(dest => dest.Type, opt => opt.MapFrom(source => Enum.Parse(typeof(AlcoholType), source.Type)));
         }
     }
 }
