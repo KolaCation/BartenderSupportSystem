@@ -8,8 +8,8 @@ namespace BartenderSupportSystem.Client.Repositories
 {
     public interface IRepository<T>
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<PaginatedResponse<IEnumerable<T>>> GetPaginated(PaginationDto paginationDto);
+        Task<List<T>> GetAll(bool includeAllPrefix = false);
+        Task<PaginatedResponse<List<T>>> GetPaginated(PaginationDto paginationDto);
         Task<T> GetOne(Guid id);
         Task AddOne(T item);
         Task UpdateOne(Guid id, T item);

@@ -1,5 +1,6 @@
 ﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+
 <h3>Cocktails Form</h3>
 <EditForm Model="CocktailViewModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
@@ -13,7 +14,6 @@
     <div class="form-group">
         <label for="@CocktailViewModel.Type">Type</label>
         <div>
-
             <InputText class="form-control col-6" list="cocktails" @bind-Value="@CocktailViewModel.Type"/>
             <DatalistEnumeration Id="cocktails" EnumType="@typeof(CocktailType)"/>
             <ValidationMessage For="@(() => CocktailViewModel.Type)"/>

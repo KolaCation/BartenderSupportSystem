@@ -1,0 +1,23 @@
+﻿@page "/drinks/create"
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using BartenderSupportSystem.Client.Repositories
+@using AutoMapper
+@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@inject NavigationManager NavigationManager
+
+<h3>Create Drink</h3>
+
+<DrinksForm DrinkViewModel="DrinkViewModel" OnValidSubmit="Create" />
+
+@code {
+    [Inject] public IRepository<Drink> DrinkRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    public DrinkViewModel DrinkViewModel { get; set; } = new DrinkViewModel { Id = Guid.NewGuid() };
+
+    private async Task Create()
+    {
+        var drink = Mapper.Map<DrinkViewModel, Drink>(DrinkViewModel);
+        await DrinkRepository.AddOne(drink);
+        NavigationManager.NavigateTo("/drinks");
+    }
+}

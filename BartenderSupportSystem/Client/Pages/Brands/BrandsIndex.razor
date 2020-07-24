@@ -5,40 +5,39 @@
 @using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
 @using BartenderSupportSystem.Shared.Utils
 @inject NavigationManager NavigationManager
+
 <h3>Brands Index</h3>
 
-<Pagination CurrentPage="@PaginationDto.Page" TotalAmountOfPages="_totalAmountOfPages" OnSelectedPage="OnSelectedPage">
-
-</Pagination>
-@if (_brands != null)
-{
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Country Of Origin</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var brand in _brands)
-        {
+<Pagination CurrentPage="@PaginationDto.Page" TotalAmountOfPages="_totalAmountOfPages" OnSelectedPage="OnSelectedPage"/>
+<GenericList List="@_brands">
+    <WholeListTemplate>
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td>@brand.Name</td>
-                <td>@brand.CountryOfOrigin</td>
+                <th scope="col">Name</th>
+                <th scope="col">Country Of Origin</th>
             </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Loading...</p>
-}
+            </thead>
+            <tbody>
+            @foreach (var brand in _brands)
+            {
+                <tr>
+                    <td>@brand.Name</td>
+                    <td>@brand.CountryOfOrigin</td>
+                    <td><a class="btn btn-success" href="/brands/edit/@brand.Id">Edit</a></td>
+                    <td><button class="btn btn-danger" @onclick="@(() => Delete(brand.Id))">Delete</button></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+</GenericList>
+   
 
 @code {
     [Inject] public IRepository<Brand> BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
-    public PaginationDto PaginationDto { get; set; } = new PaginationDto {AmountOfRecordsPerPage = 2};
+    public PaginationDto PaginationDto { get; set; } = new PaginationDto {AmountOfRecordsPerPage = 6};
     private List<BrandViewModel> _brands;
     private int _totalAmountOfPages;
 
@@ -58,5 +57,11 @@ else
         var paginatedBrandModelsResponse = await BrandRepository.GetPaginated(PaginationDto);
         _totalAmountOfPages = paginatedBrandModelsResponse.TotalAmountOfPages;
         _brands = Mapper.Map<List<Brand>, List<BrandViewModel>>(paginatedBrandModelsResponse.Content.ToList());
+    }
+
+    private async Task Delete(Guid id)
+    {
+        await BrandRepository.DeleteOne(id);
+        await LoadBrands();
     }
 }

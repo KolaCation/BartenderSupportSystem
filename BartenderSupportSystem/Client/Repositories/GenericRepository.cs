@@ -54,9 +54,14 @@ namespace BartenderSupportSystem.Client.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<List<T>> GetAll(bool includeAllPrefix = false)
         {
-            var result = await _httpService.Get<IEnumerable<T>>(Url);
+            var url = Url;
+            if (includeAllPrefix)
+            {
+                url = $"{Url}/all";
+            }
+            var result = await _httpService.Get<List<T>>(url);
             if (result.Success)
             {
                 return result.Response;
@@ -67,9 +72,9 @@ namespace BartenderSupportSystem.Client.Repositories
             }
         }
 
-        public async Task<PaginatedResponse<IEnumerable<T>>> GetPaginated(PaginationDto paginationDto)
+        public async Task<PaginatedResponse<List<T>>> GetPaginated(PaginationDto paginationDto)
         {
-            var result = await _httpService.GetHelper<IEnumerable<T>>(Url, paginationDto);
+            var result = await _httpService.GetHelper<List<T>>(Url, paginationDto);
             return result;
         }
 

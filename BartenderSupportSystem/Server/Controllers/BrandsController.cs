@@ -27,9 +27,18 @@ namespace BartenderSupportSystem.Server.Controllers
             _mapper = mapper;
         }
 
+        //GET: api/Brands/all
+        [HttpGet("all")]
+        public async Task<ActionResult<List<Brand>>> GetBrand()
+        {
+            var brandDbModels = await _context.BrandsSet.ToListAsync();
+            var brands = _mapper.Map<List<BrandDbModel>, List<Brand>>(brandDbModels);
+            return brands;
+        }
+
         //GET: api/Brands (paginated count)
         [HttpGet]
-        public async Task<List<Brand>> GetBrand([FromQuery] PaginationDto paginationDto)
+        public async Task<ActionResult<List<Brand>>> GetBrand([FromQuery] PaginationDto paginationDto)
         {
             var brandsQueryable = _context.BrandsSet.AsQueryable();
             await HttpContext.InsertPaginationParamsIntoResponse(brandsQueryable, paginationDto);

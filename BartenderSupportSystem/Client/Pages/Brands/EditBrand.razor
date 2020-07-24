@@ -1,5 +1,29 @@
-﻿<h3>Edit Brand</h3>
+﻿@page "/brands/edit/{Id:guid}"
+@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@using BartenderSupportSystem.Client.Repositories
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using AutoMapper
+@inject NavigationManager NavigationManager
+
+<h3>Edit Brand</h3>
+<BrandsForm BrandViewModel="@_brandViewModel" OnValidSubmit="Edit"/>
 
 @code {
+    [Parameter] public Guid Id { get; set; }
+    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    private BrandViewModel _brandViewModel = new BrandViewModel();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var brand = await BrandRepository.GetOne(Id);
+        _brandViewModel = Mapper.Map<Brand, BrandViewModel>(brand);
+    }
+
+    private async Task Edit()
+    {
+        var brand = Mapper.Map<BrandViewModel, Brand>(_brandViewModel);
+        await BrandRepository.UpdateOne(brand.Id, brand);
+        NavigationManager.NavigateTo("/brands");
+    }
 }

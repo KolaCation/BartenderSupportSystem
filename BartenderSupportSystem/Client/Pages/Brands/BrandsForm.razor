@@ -1,6 +1,8 @@
 ﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+
 <h3>Brands Form</h3>
+
 <EditForm Model="BrandViewModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -22,11 +24,6 @@
 </EditForm>
 
 @code {
-
-    [Parameter]
-    public BrandViewModel BrandViewModel { get; set; }
-
-    [Parameter]
-    public EventCallback OnValidSubmit { get; set; }
-
+    [Parameter] public BrandViewModel BrandViewModel { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
 }
