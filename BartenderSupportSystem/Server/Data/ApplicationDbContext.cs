@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using BartenderSupportSystem.Server.DomainServices.DbModels;
 using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Data
 {

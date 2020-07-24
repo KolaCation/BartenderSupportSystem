@@ -1,5 +1,6 @@
 ﻿using System;
-using BartenderSupportSystem.Domain.RecommendationSystem.Enums;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
@@ -12,10 +13,17 @@ namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSy
 
         public CocktailDbModel(Guid id, string name, CocktailType type, string photoPath)
         {
+            CustomValidator.ValidateId(id);
+            CustomValidator.ValidateString(name, 2, 40);
             Id = id;
             Name = name;
             Type = type;
             PhotoPath = photoPath;
+        }
+
+        public void UpdatePhotoPath(string newPhotoPath)
+        {
+            PhotoPath = newPhotoPath;
         }
     }
 }

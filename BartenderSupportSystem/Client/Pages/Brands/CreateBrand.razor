@@ -1,0 +1,23 @@
+﻿@page "/brands/create"
+@using BartenderSupportSystem.Client.Repositories
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using AutoMapper
+@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@inject NavigationManager NavigationManager
+
+<h3>Create Brand</h3>
+
+<BrandsForm BrandViewModel="BrandViewModel" OnValidSubmit="Create"/>
+
+@code {
+    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    public BrandViewModel BrandViewModel { get; set; } = new BrandViewModel { Id = Guid.NewGuid() };
+
+    private async Task Create()
+    {
+        var brand = Mapper.Map<BrandViewModel, Brand>(BrandViewModel);
+        await BrandRepository.AddOne(brand);
+        NavigationManager.NavigateTo("/brands");
+    }
+}

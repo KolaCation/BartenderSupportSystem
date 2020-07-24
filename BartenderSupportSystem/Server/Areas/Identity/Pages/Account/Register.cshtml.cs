@@ -7,12 +7,12 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
-using BartenderSupportSystem.Domain;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.DomainServices.DbModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BartenderSupportSystem.Server.Models;
+using BartenderSupportSystem.Shared.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -67,11 +67,6 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
-            [Display(Name = "Experience (months)")]
-            [Range(0, 120000, ErrorMessage = "The experience value must be between 0 and 120000")]
-            public double Experience { get; set; }
-
-            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -108,7 +103,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
-                    var userDetails = new Bartender(id, Input.FirstName, Input.LastName, Input.Experience, "noImg");//pictureService
+                    var userDetails = new Bartender {Id = id, FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = "NoImg" };//pictureService
                     var userDetailsDb = _mapper.Map<Bartender, BartenderDbModel>(userDetails);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();

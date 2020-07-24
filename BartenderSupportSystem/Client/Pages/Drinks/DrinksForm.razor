@@ -1,0 +1,94 @@
+﻿@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+@using BartenderSupportSystem.Client.Repositories
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using System.Linq;
+@using BartenderSupportSystem.Client.Helpers
+
+<h3>Drinks Form</h3>
+
+@if (_brands != null)
+{
+<EditForm Model="DrinkViewModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="@DrinkViewModel.Name">Name</label>
+        <div>
+            <InputText class="form-control col-6" @bind-Value="@DrinkViewModel.Name" />
+            <ValidationMessage For="@(() => DrinkViewModel.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@DrinkViewModel.Type">Type</label>
+        <div>
+            <InputText class="form-control col-6" list="drinks" @bind-Value="@DrinkViewModel.Type" />
+            <DatalistEnumeration Id="drinks" EnumType="@typeof(AlcoholType)" />
+            <ValidationMessage For="@(() => DrinkViewModel.Type)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@DrinkViewModel.AlcoholPercentage">Alcohol Percentage</label>
+        <div>
+            <InputNumber min="0" max="100" class="form-control col-6" @bind-Value="@DrinkViewModel.AlcoholPercentage" />
+            <ValidationMessage For="@(() => DrinkViewModel.AlcoholPercentage)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@DrinkViewModel.Flavor">Flavor (Description)</label>
+        <div>
+            <InputTextArea class="form-control col-6" @bind-Value="@DrinkViewModel.Flavor" />
+            <ValidationMessage For="@(() => DrinkViewModel.Flavor)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@DrinkViewModel.PricePerMl">Price Per Ml</label>
+        <div>
+            <InputNumber min="0" max="10000" class="form-control col-6" @bind-Value="@DrinkViewModel.PricePerMl" />
+            <ValidationMessage For="@(() => DrinkViewModel.PricePerMl)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="@DrinkViewModel.BrandId">Brand</label>
+        <div>
+            <GuidInputSelect class="form-control col-6" @bind-Value="DrinkViewModel.BrandId">
+                @foreach (var brand in _brands)
+                {
+                    <option value="@brand.Id">@brand.Name</option>
+                }
+                <option value="@Guid.Empty" selected>---Select A Brand---</option>
+            </GuidInputSelect>
+            <ValidationMessage For="@(() => DrinkViewModel.BrandId)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <InputImg Label="Photo" ImageUrl="@_imageUrl" OnSelectedImage="OnSelectedImage" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+}
+
+
+@code {
+    [Parameter] public DrinkViewModel DrinkViewModel { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    private string _imageUrl;
+    private List<Brand> _brands = new List<Brand>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(DrinkViewModel.PhotoPath))
+        {
+            _imageUrl = DrinkViewModel.PhotoPath;
+            DrinkViewModel.PhotoPath = null;
+        }
+        _brands = await BrandRepository.GetAll(true);
+        _brands = _brands.OrderBy(el=>el.Name).ToList();
+    }
+
+    private void OnSelectedImage(string imageBase64)
+    {
+        DrinkViewModel.PhotoPath = imageBase64;
+        _imageUrl = null;
+    }
+}

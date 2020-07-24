@@ -1,0 +1,29 @@
+﻿@page "/drinks/edit/{Id:guid}"
+@using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
+@using BartenderSupportSystem.Client.Repositories
+@using BartenderSupportSystem.Shared.Models.RecommendationSystem
+@using AutoMapper
+@inject NavigationManager NavigationManager
+
+<h3>Edit Drink</h3>
+<DrinksForm DrinkViewModel="@_drinkViewModel" OnValidSubmit="Edit" />
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    [Inject] public IRepository<Drink> DrinkRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    private DrinkViewModel _drinkViewModel = new DrinkViewModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var drink = await DrinkRepository.GetOne(Id);
+        _drinkViewModel = Mapper.Map<Drink, DrinkViewModel>(drink);
+    }
+
+    private async Task Edit()
+    {
+        var drink = Mapper.Map<DrinkViewModel, Drink>(_drinkViewModel);
+        await DrinkRepository.UpdateOne(drink.Id, drink);
+        NavigationManager.NavigateTo("/drinks");
+    }
+}

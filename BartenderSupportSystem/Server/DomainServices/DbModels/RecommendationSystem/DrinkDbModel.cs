@@ -1,5 +1,5 @@
 ﻿using System;
-using BartenderSupportSystem.Domain.RecommendationSystem.Enums;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
 {
@@ -24,6 +24,11 @@ namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSy
             BrandId = brandId;
             PricePerMl = pricePerMl;
             PhotoPath = photoPath;
+        }
+
+        public void UpdatePhotoPath(string newPhotoPath)
+        {
+            PhotoPath = newPhotoPath;
         }
     }
 }

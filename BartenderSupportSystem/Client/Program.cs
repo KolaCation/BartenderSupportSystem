@@ -1,13 +1,13 @@
 using System;
 using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
+using Blazor.FileReader;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using AutoMapper;
+using BartenderSupportSystem.Client.Helpers;
+using BartenderSupportSystem.Client.Repositories;
 
 namespace BartenderSupportSystem.Client
 {
@@ -23,7 +23,10 @@ namespace BartenderSupportSystem.Client
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BartenderSupportSystem.ServerAPI"));
-
+            builder.Services.AddFileReaderService();
+            builder.Services.AddScoped<IHttpService, HttpService>();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();
