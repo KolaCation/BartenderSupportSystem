@@ -2,12 +2,12 @@
 
 namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
 {
-    public sealed class Menu
+    public sealed class MenuDto
     {
         public Guid Id { get; set; }
         public Guid DrinkId { get; set; }
-        public Drink Drink { get; set; }
+        public DrinkDto Drink { get; set; }
         public Guid SnackId { get; set; }
-        public Snack Snack { get; set; }
+        public SnackDto Snack { get; set; }
     }
 }

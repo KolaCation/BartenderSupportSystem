@@ -29,27 +29,27 @@ namespace BartenderSupportSystem.Server.Controllers
 
         //GET: api/Brands/all
         [HttpGet("all")]
-        public async Task<ActionResult<List<Brand>>> GetBrand()
+        public async Task<ActionResult<List<BrandDto>>> GetBrand()
         {
             var brandDbModels = await _context.BrandsSet.ToListAsync();
-            var brands = _mapper.Map<List<BrandDbModel>, List<Brand>>(brandDbModels);
+            var brands = _mapper.Map<List<BrandDbModel>, List<BrandDto>>(brandDbModels);
             return brands;
         }
 
         //GET: api/Brands (paginated count)
         [HttpGet]
-        public async Task<ActionResult<List<Brand>>> GetBrand([FromQuery] PaginationDto paginationDto)
+        public async Task<ActionResult<List<BrandDto>>> GetBrand([FromQuery] PaginationDto paginationDto)
         {
             var brandsQueryable = _context.BrandsSet.AsQueryable();
             await HttpContext.InsertPaginationParamsIntoResponse(brandsQueryable, paginationDto);
             var brandDbModels = await brandsQueryable.InsertPagination(paginationDto).ToListAsync();
-            var brands = _mapper.Map<List<BrandDbModel>, List<Brand>>(brandDbModels);
+            var brands = _mapper.Map<List<BrandDbModel>, List<BrandDto>>(brandDbModels);
             return brands;
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Brand>> GetBrand(Guid id)
+        public async Task<ActionResult<BrandDto>> GetBrand(Guid id)
         {
             var brandDbModel = await _context.BrandsSet.FindAsync(id);
 
@@ -58,7 +58,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var brand = _mapper.Map<BrandDbModel, Brand>(brandDbModel);
+            var brand = _mapper.Map<BrandDbModel, BrandDto>(brandDbModel);
             return brand;
         }
 
@@ -66,14 +66,14 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(Guid id, Brand brand)
+        public async Task<IActionResult> PutBrand(Guid id, BrandDto brand)
         {
             if (!id.Equals(brand.Id))
             {
                 return BadRequest();
             }
 
-            var brandDbModel = _mapper.Map<Brand, BrandDbModel>(brand);
+            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
             _context.Entry(brandDbModel).State = EntityState.Modified;
 
             try
@@ -99,9 +99,9 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand(Brand brand)
+        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
         {
-            var brandDbModel = _mapper.Map<Brand, BrandDbModel>(brand);
+            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
             await _context.BrandsSet.AddAsync(brandDbModel);
             await _context.SaveChangesAsync();
 
@@ -110,7 +110,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Brand>> DeleteBrand(Guid id)
+        public async Task<ActionResult<BrandDto>> DeleteBrand(Guid id)
         {
             var brandDbModel = await _context.BrandsSet.FindAsync(id);
             if (brandDbModel == null)

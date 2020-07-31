@@ -10,19 +10,19 @@
 
 @code {
     [Parameter] public Guid Id { get; set; }
-    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     private BrandViewModel _brandViewModel = new BrandViewModel();
 
     protected override async Task OnInitializedAsync()
     {
         var brand = await BrandRepository.GetOne(Id);
-        _brandViewModel = Mapper.Map<Brand, BrandViewModel>(brand);
+        _brandViewModel = Mapper.Map<BrandDto, BrandViewModel>(brand);
     }
 
     private async Task Edit()
     {
-        var brand = Mapper.Map<BrandViewModel, Brand>(_brandViewModel);
+        var brand = Mapper.Map<BrandViewModel, BrandDto>(_brandViewModel);
         await BrandRepository.UpdateOne(brand.Id, brand);
         NavigationManager.NavigateTo("/brands");
     }

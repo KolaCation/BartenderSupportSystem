@@ -29,27 +29,27 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct()
         {
             var productDbModels = await _context.ProductsSet.ToListAsync();
-            var products = _mapper.Map<List<ProductDbModel>, List<Product>>(productDbModels);
+            var products = _mapper.Map<List<ProductDbModel>, List<ProductDto>>(productDbModels);
             return products;
         }
 
         //GET: api/Products (paginated count)
         [HttpGet]
-        public async Task<List<Product>> GetProduct([FromQuery] PaginationDto paginationDto)
+        public async Task<List<ProductDto>> GetProduct([FromQuery] PaginationDto paginationDto)
         {
             var productsQueryable = _context.ProductsSet.AsQueryable();
             await HttpContext.InsertPaginationParamsIntoResponse(productsQueryable, paginationDto);
             var productDbModels = await productsQueryable.InsertPagination(paginationDto).ToListAsync();
-            var products = _mapper.Map<List<ProductDbModel>, List<Product>>(productDbModels);
+            var products = _mapper.Map<List<ProductDbModel>, List<ProductDto>>(productDbModels);
             return products;
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(Guid id)
+        public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
         {
             var productDbModel = await _context.ProductsSet.FindAsync(id);
 
@@ -58,7 +58,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var product = _mapper.Map<ProductDbModel, Product>(productDbModel);
+            var product = _mapper.Map<ProductDbModel, ProductDto>(productDbModel);
             return product;
         }
 
@@ -66,14 +66,14 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(Guid id, Product product)
+        public async Task<IActionResult> PutProduct(Guid id, ProductDto product)
         {
             if (!id.Equals(product.Id))
             {
                 return BadRequest();
             }
 
-            var productDbModel = _mapper.Map<Product, ProductDbModel>(product);
+            var productDbModel = _mapper.Map<ProductDto, ProductDbModel>(product);
             _context.Entry(productDbModel).State = EntityState.Modified;
 
             try
@@ -99,9 +99,9 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> PostProduct(Product product)
+        public async Task<IActionResult> PostProduct(ProductDto product)
         {
-            var productDbModel = _mapper.Map<Product, ProductDbModel>(product);
+            var productDbModel = _mapper.Map<ProductDto, ProductDbModel>(product);
             await _context.ProductsSet.AddAsync(productDbModel);
             await _context.SaveChangesAsync();
 

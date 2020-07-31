@@ -16,17 +16,17 @@ namespace BartenderSupportSystem.Server.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<Brand, BrandDbModel>().ReverseMap();
-            CreateMap<Cocktail, CocktailDbModel>().ReverseMap();
-            CreateMap<Drink, DrinkDbModel>().ReverseMap();
-            CreateMap<Ingredient, IngredientDbModel>().ReverseMap();
-            CreateMap<Menu, MenuDbModel>().ReverseMap();
-            CreateMap<Product, ProductDbModel>().ReverseMap();
-            CreateMap<Snack, SnackDbModel>().ReverseMap();
-            CreateMap<Bartender, BartenderDbModel>().ReverseMap();
-            CreateMap<CustomAnswer, CustomAnswerDbModel>().ReverseMap();
-            CreateMap<CustomQuestion, CustomQuestionDbModel>().ReverseMap();
-            CreateMap<CustomTest, CustomTestDbModel>().ReverseMap();
+            CreateMap<BrandDto, BrandDbModel>().ReverseMap();
+            CreateMap<CocktailDto, CocktailDbModel>().ReverseMap();
+            CreateMap<DrinkDto, DrinkDbModel>().ReverseMap();
+            CreateMap<IngredientDto, IngredientDbModel>().ReverseMap();
+            CreateMap<MenuDto, MenuDbModel>().ReverseMap();
+            CreateMap<ProductDto, ProductDbModel>().ReverseMap();
+            CreateMap<SnackDto, SnackDbModel>().ReverseMap();
+            CreateMap<BartenderDto, BartenderDbModel>().ReverseMap();
+            CreateMap<CustomAnswerDto, CustomAnswerDbModel>().ReverseMap();
+            CreateMap<CustomQuestionDto, CustomQuestionDbModel>().ReverseMap();
+            CreateMap<CustomTestDto, CustomTestDbModel>().ReverseMap();
         }
     }
 }

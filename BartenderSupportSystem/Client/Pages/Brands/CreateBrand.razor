@@ -10,13 +10,13 @@
 <BrandsForm BrandViewModel="BrandViewModel" OnValidSubmit="Create"/>
 
 @code {
-    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     public BrandViewModel BrandViewModel { get; set; } = new BrandViewModel { Id = Guid.NewGuid() };
 
     private async Task Create()
     {
-        var brand = Mapper.Map<BrandViewModel, Brand>(BrandViewModel);
+        var brand = Mapper.Map<BrandViewModel, BrandDto>(BrandViewModel);
         await BrandRepository.AddOne(brand);
         NavigationManager.NavigateTo("/brands");
     }

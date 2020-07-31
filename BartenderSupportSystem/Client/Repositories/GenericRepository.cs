@@ -16,7 +16,7 @@ namespace BartenderSupportSystem.Client.Repositories
         public GenericRepository(IHttpService httpService)
         {
             _httpService = httpService;
-            Url = $"api/{typeof(T).Name.ToLower()}s";
+            Url = $"api/{typeof(T).Name.Substring(0, typeof(T).Name.Length-3).ToLower()}s";
         }
 
         public async Task AddOne(T item)
@@ -54,10 +54,10 @@ namespace BartenderSupportSystem.Client.Repositories
             }
         }
 
-        public async Task<List<T>> GetAll(bool includeAllPrefix = false)
+        public async Task<List<T>> GetAll(bool includePrefix = false)
         {
             var url = Url;
-            if (includeAllPrefix)
+            if (includePrefix)
             {
                 url = $"{Url}/all";
             }

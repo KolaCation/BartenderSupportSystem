@@ -71,9 +71,9 @@
 @code {
     [Parameter] public DrinkViewModel DrinkViewModel { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
-    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
     private string _imageUrl;
-    private List<Brand> _brands = new List<Brand>();
+    private List<BrandDto> _brands = new List<BrandDto>();
 
     protected override async Task OnInitializedAsync()
     {

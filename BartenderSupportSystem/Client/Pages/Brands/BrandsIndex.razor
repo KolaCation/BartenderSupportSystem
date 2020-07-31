@@ -35,7 +35,7 @@
    
 
 @code {
-    [Inject] public IRepository<Brand> BrandRepository { get; set; }
+    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     public PaginationDto PaginationDto { get; set; } = new PaginationDto {AmountOfRecordsPerPage = 6};
     private List<BrandViewModel> _brands;
@@ -56,7 +56,7 @@
     {
         var paginatedBrandModelsResponse = await BrandRepository.GetPaginated(PaginationDto);
         _totalAmountOfPages = paginatedBrandModelsResponse.TotalAmountOfPages;
-        _brands = Mapper.Map<List<Brand>, List<BrandViewModel>>(paginatedBrandModelsResponse.Content.ToList());
+        _brands = Mapper.Map<List<BrandDto>, List<BrandViewModel>>(paginatedBrandModelsResponse.Content.ToList());
     }
 
     private async Task Delete(Guid id)

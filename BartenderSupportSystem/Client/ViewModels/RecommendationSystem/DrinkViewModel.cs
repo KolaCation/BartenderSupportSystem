@@ -26,7 +26,7 @@ namespace BartenderSupportSystem.Client.ViewModels.RecommendationSystem
         [Required]
         [NotGuidEmpty]
         public Guid BrandId { get; set; }
-        public Brand Brand { get; set; }
+        public BrandDto Brand { get; set; }
         [Required]
         [Range(0, 10000)]
         public double PricePerMl { get; set; }

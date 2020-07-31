@@ -29,29 +29,29 @@ namespace BartenderSupportSystem.Server.Controllers
             _storageService = storageService;
         }
 
-        // GET: api/Drinks
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Drink>>> GetDrink()
+        // GET: api/Drinks/all
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<DrinkDto>>> GetDrink()
         {
             var drinkDbModels = await _context.DrinksSet.ToListAsync();
-            var drinks = _mapper.Map<List<DrinkDbModel>, List<Drink>>(drinkDbModels);
+            var drinks = _mapper.Map<List<DrinkDbModel>, List<DrinkDto>>(drinkDbModels);
             return drinks;
         }
 
         //GET: api/Drinks (paginated count)
         [HttpGet]
-        public async Task<List<Drink>> GetDrink([FromQuery] PaginationDto paginationDto)
+        public async Task<List<DrinkDto>> GetDrink([FromQuery] PaginationDto paginationDto)
         {
             var drinksQueryable = _context.DrinksSet.AsQueryable();
             await HttpContext.InsertPaginationParamsIntoResponse(drinksQueryable, paginationDto);
             var drinkDbModels = await drinksQueryable.InsertPagination(paginationDto).ToListAsync();
-            var drinks = _mapper.Map<List<DrinkDbModel>, List<Drink>>(drinkDbModels);
+            var drinks = _mapper.Map<List<DrinkDbModel>, List<DrinkDto>>(drinkDbModels);
             return drinks;
         }
 
         // GET: api/Drinks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Drink>> GetDrink(Guid id)
+        public async Task<ActionResult<DrinkDto>> GetDrink(Guid id)
         {
             var drinkDbModel = await _context.DrinksSet.FindAsync(id);
 
@@ -60,7 +60,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var drink = _mapper.Map<DrinkDbModel, Drink>(drinkDbModel);
+            var drink = _mapper.Map<DrinkDbModel, DrinkDto>(drinkDbModel);
             return drink;
         }
 
@@ -68,7 +68,7 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDrink(Guid id, Drink drink)
+        public async Task<IActionResult> PutDrink(Guid id, DrinkDto drink)
         {
             if (!id.Equals(drink.Id))
             {
@@ -82,7 +82,7 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             var fileRoute = drinkDbModelToUpdate.PhotoPath;
-            drinkDbModelToUpdate = _mapper.Map<Drink, DrinkDbModel>(drink);
+            drinkDbModelToUpdate = _mapper.Map<DrinkDto, DrinkDbModel>(drink);
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
                 drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(drink.PhotoPath), "jpg", "drinks", fileRoute));
@@ -112,14 +112,14 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> PostDrink(Drink drink)
+        public async Task<IActionResult> PostDrink(DrinkDto drink)
         {
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
                 drink.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(drink.PhotoPath), "jpg", "drinks");
             }
 
-            var drinkDbModel = _mapper.Map<Drink, DrinkDbModel>(drink);
+            var drinkDbModel = _mapper.Map<DrinkDto, DrinkDbModel>(drink);
             await _context.DrinksSet.AddAsync(drinkDbModel);
             await _context.SaveChangesAsync();
 

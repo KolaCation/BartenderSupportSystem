@@ -2,7 +2,7 @@
 
 namespace BartenderSupportSystem.Shared.Models
 {
-    public sealed class Bartender
+    public sealed class BartenderDto
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }

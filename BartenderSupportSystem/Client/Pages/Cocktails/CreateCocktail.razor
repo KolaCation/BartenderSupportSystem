@@ -10,13 +10,13 @@
 <CocktailsForm CocktailViewModel="CocktailViewModel" OnValidSubmit="Create" />
 
 @code {
-    [Inject] public IRepository<Cocktail> CocktailRepository { get; set; }
+    [Inject] public IRepository<CocktailDto> CocktailRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     public CocktailViewModel CocktailViewModel { get; set; } = new CocktailViewModel { Id = Guid.NewGuid() };
 
     private async Task Create()
     {
-        var cocktail = Mapper.Map<CocktailViewModel, Cocktail>(CocktailViewModel);
+        var cocktail = Mapper.Map<CocktailViewModel, CocktailDto>(CocktailViewModel);
         await CocktailRepository.AddOne(cocktail);
         NavigationManager.NavigateTo("/cocktails");
     }

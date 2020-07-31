@@ -2,12 +2,12 @@
 
 namespace BartenderSupportSystem.Shared.Models.TestSystem
 {
-    public sealed class CustomAnswer
+    public sealed class CustomAnswerDto
     {
         public Guid Id { get; set; }
         public string Statement { get; set; }
         public bool IsCorrect { get; set; }
         public Guid QuestionId { get; set; }
-        public CustomQuestion Question { get; set; }
+        public CustomQuestionDto Question { get; set; }
     }
 }
