@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.FilterImpl;
+using BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.Specifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Utils;
+using BartenderSupportSystem.Shared.Utils.RecommendationSystem.Drinks;
+using Microsoft.VisualBasic;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -29,22 +33,11 @@ namespace BartenderSupportSystem.Server.Controllers
             _storageService = storageService;
         }
 
-        // GET: api/Drinks/all
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<DrinkDto>>> GetDrink()
+        // GET: api/Drinks
+        [HttpGet]
+        public async Task<ActionResult<List<DrinkDto>>> GetDrink()
         {
             var drinkDbModels = await _context.DrinksSet.ToListAsync();
-            var drinks = _mapper.Map<List<DrinkDbModel>, List<DrinkDto>>(drinkDbModels);
-            return drinks;
-        }
-
-        //GET: api/Drinks (paginated count)
-        [HttpGet]
-        public async Task<List<DrinkDto>> GetDrink([FromQuery] PaginationDto paginationDto)
-        {
-            var drinksQueryable = _context.DrinksSet.AsQueryable();
-            await HttpContext.InsertPaginationParamsIntoResponse(drinksQueryable, paginationDto);
-            var drinkDbModels = await drinksQueryable.InsertPagination(paginationDto).ToListAsync();
             var drinks = _mapper.Map<List<DrinkDbModel>, List<DrinkDto>>(drinkDbModels);
             return drinks;
         }
@@ -81,6 +74,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
+            _context.Entry(drinkDbModelToUpdate).State = EntityState.Detached;
             var fileRoute = drinkDbModelToUpdate.PhotoPath;
             drinkDbModelToUpdate = _mapper.Map<DrinkDto, DrinkDbModel>(drink);
             if (!string.IsNullOrEmpty(drink.PhotoPath))
@@ -91,7 +85,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); 
             }
             catch (DbUpdateConcurrencyException)
             {

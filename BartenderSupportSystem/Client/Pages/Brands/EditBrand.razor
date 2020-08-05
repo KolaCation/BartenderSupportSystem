@@ -3,27 +3,33 @@
 @using BartenderSupportSystem.Client.Repositories
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem
 @using AutoMapper
+@using BartenderSupportSystem.Client.Repositories.Interfaces
 @inject NavigationManager NavigationManager
 
 <h3>Edit Brand</h3>
-<BrandsForm BrandViewModel="@_brandViewModel" OnValidSubmit="Edit"/>
+
+@if (_brandViewModel != null)
+{
+    <BrandsForm BrandViewModel="@_brandViewModel" OnValidSubmit="Edit"/>
+}
+
 
 @code {
     [Parameter] public Guid Id { get; set; }
-    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
+    [Inject] public IBrandRepository BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
-    private BrandViewModel _brandViewModel = new BrandViewModel();
+    private BrandViewModel _brandViewModel;
 
     protected override async Task OnInitializedAsync()
     {
-        var brand = await BrandRepository.GetOne(Id);
+        var brand = await BrandRepository.GetBrand(Id);
         _brandViewModel = Mapper.Map<BrandDto, BrandViewModel>(brand);
     }
 
     private async Task Edit()
     {
         var brand = Mapper.Map<BrandViewModel, BrandDto>(_brandViewModel);
-        await BrandRepository.UpdateOne(brand.Id, brand);
+        await BrandRepository.UpdateBrand(brand.Id, brand);
         NavigationManager.NavigateTo("/brands");
     }
 }

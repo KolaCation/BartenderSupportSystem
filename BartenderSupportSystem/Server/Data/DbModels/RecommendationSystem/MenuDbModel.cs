@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
+namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class MenuDbModel
     {
         public Guid Id { get; private set; }
         public Guid DrinkId { get; private set; }
-        public Guid SnackId { get; private set; }
+        public Guid MealId { get; private set; }
 
-        public MenuDbModel(Guid id, Guid drinkId, Guid snackId)
+        public MenuDbModel(Guid id, Guid drinkId, Guid mealId)
         {
             Id = id;
             DrinkId = drinkId;
-            SnackId = snackId;
+            MealId = mealId;
         }
     }
 }

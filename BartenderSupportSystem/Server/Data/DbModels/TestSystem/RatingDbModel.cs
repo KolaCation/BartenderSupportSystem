@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem
+namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
     internal sealed class RatingDbModel
     {

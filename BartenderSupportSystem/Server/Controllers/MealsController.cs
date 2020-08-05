@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -16,54 +17,54 @@ namespace BartenderSupportSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BrandsController : ControllerBase
+    public class MealsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public BrandsController(ApplicationDbContext context, IMapper mapper)
+        public MealsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        //GET: api/Brands
+        // GET: api/Meals
         [HttpGet]
-        public async Task<ActionResult<List<BrandDto>>> GetBrand()
+        public async Task<ActionResult<List<MealDto>>> GetMeal()
         {
-            var brandDbModels = await _context.BrandsSet.ToListAsync();
-            var brands = _mapper.Map<List<BrandDbModel>, List<BrandDto>>(brandDbModels);
-            return brands;
+            var mealDbModels = await _context.MealsSet.ToListAsync();
+            var meals = _mapper.Map<List<MealDbModel>, List<MealDto>>(mealDbModels);
+            return meals;
         }
 
-        // GET: api/Brands/5
+        // GET: api/Meals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BrandDto>> GetBrand(Guid id)
+        public async Task<ActionResult<MealDto>> GetMeal(Guid id)
         {
-            var brandDbModel = await _context.BrandsSet.FindAsync(id);
+            var mealDbModel = await _context.MealsSet.FindAsync(id);
 
-            if (brandDbModel == null)
+            if (mealDbModel == null)
             {
                 return NotFound();
             }
 
-            var brand = _mapper.Map<BrandDbModel, BrandDto>(brandDbModel);
-            return brand;
+            var meal = _mapper.Map<MealDbModel, MealDto>(mealDbModel);
+            return meal;
         }
 
-        // PUT: api/Brands/5
+        // PUT: api/Meals/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(Guid id, BrandDto brand)
+        public async Task<IActionResult> PutMeal(Guid id, MealDto meal)
         {
-            if (!id.Equals(brand.Id))
+            if (!id.Equals(meal.Id))
             {
                 return BadRequest();
             }
 
-            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
-            _context.Entry(brandDbModel).State = EntityState.Modified;
+            var mealDbModel = _mapper.Map<MealDto, MenuDbModel>(meal);
+            _context.Entry(mealDbModel).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +72,7 @@ namespace BartenderSupportSystem.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
+                if (!MealExists(id))
                 {
                     return NotFound();
                 }
@@ -84,38 +85,38 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Brands
+        // POST: api/Meals
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
+        public async Task<IActionResult> PostMeal(MealDto meal)
         {
-            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
-            await _context.BrandsSet.AddAsync(brandDbModel);
+            var mealDbModel = _mapper.Map<MealDto, MealDbModel>(meal);
+            await _context.MealsSet.AddAsync(mealDbModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // DELETE: api/Brands/5
+        // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<BrandDto>> DeleteBrand(Guid id)
+        public async Task<IActionResult> DeleteMeal(Guid id)
         {
-            var brandDbModel = await _context.BrandsSet.FindAsync(id);
-            if (brandDbModel == null)
+            var mealDbModel = await _context.MealsSet.FindAsync(id);
+            if (mealDbModel == null)
             {
                 return NotFound();
             }
 
-            _context.BrandsSet.Remove(brandDbModel);
+            _context.MealsSet.Remove(mealDbModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool BrandExists(Guid id)
+        private bool MealExists(Guid id)
         {
-            return _context.BrandsSet.Any(e => e.Id.Equals(id));
+            return _context.MealsSet.Any(e => e.Id.Equals(id));
         }
     }
 }

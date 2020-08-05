@@ -3,6 +3,7 @@
 @using BartenderSupportSystem.Client.Repositories
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem
 @using AutoMapper
+@using BartenderSupportSystem.Client.Repositories.Interfaces
 @inject NavigationManager NavigationManager
 
 <h3>Edit Drink</h3>
@@ -14,20 +15,20 @@
 
 @code {
     [Parameter] public Guid Id { get; set; }
-    [Inject] public IRepository<DrinkDto> DrinkRepository { get; set; }
+    [Inject] public IDrinkRepository DrinkRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     private DrinkViewModel _drinkViewModel;
 
     protected override async Task OnInitializedAsync()
     {
-        var drink = await DrinkRepository.GetOne(Id);
+        var drink = await DrinkRepository.GetDrink(Id);
         _drinkViewModel = Mapper.Map<DrinkDto, DrinkViewModel>(drink);
     }
 
     private async Task Edit()
     {
         var drink = Mapper.Map<DrinkViewModel, DrinkDto>(_drinkViewModel);
-        await DrinkRepository.UpdateOne(drink.Id, drink);
+        await DrinkRepository.UpdateDrink(drink.Id, drink);
         NavigationManager.NavigateTo("/drinks");
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Utils;
@@ -29,20 +29,9 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // GET: api/Ingredients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredient()
+        public async Task<ActionResult<List<IngredientDto>>> GetIngredient()
         {
             var ingredientDbModels = await _context.IngredientsSet.ToListAsync();
-            var ingredients = _mapper.Map<List<IngredientDbModel>, List<IngredientDto>>(ingredientDbModels);
-            return ingredients;
-        }
-
-        //GET: api/Ingredients (paginated count)
-        [HttpGet]
-        public async Task<List<IngredientDto>> GetIngredient([FromQuery] PaginationDto paginationDto)
-        {
-            var ingredientsQueryable = _context.IngredientsSet.AsQueryable();
-            await HttpContext.InsertPaginationParamsIntoResponse(ingredientsQueryable, paginationDto);
-            var ingredientDbModels = await ingredientsQueryable.InsertPagination(paginationDto).ToListAsync();
             var ingredients = _mapper.Map<List<IngredientDbModel>, List<IngredientDto>>(ingredientDbModels);
             return ingredients;
         }

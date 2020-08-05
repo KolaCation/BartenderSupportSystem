@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BartenderSupportSystem.Server.DomainServices.DbModels
+namespace BartenderSupportSystem.Server.Data.DbModels
 {
     internal sealed class BartenderDbModel
     {

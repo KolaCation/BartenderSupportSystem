@@ -2,7 +2,7 @@
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using BartenderSupportSystem.Shared.Utils;
 
-namespace BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem
+namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class CocktailDbModel
     {

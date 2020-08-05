@@ -1,12 +1,12 @@
 ﻿@page "/drinks"
-@using BartenderSupportSystem.Client.Repositories
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem
 @using AutoMapper
+@using BartenderSupportSystem.Client.Repositories.Interfaces
 @using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
-@using BartenderSupportSystem.Shared.Utils
+@using BartenderSupportSystem.Shared.Utils.RecommendationSystem.Drinks
 <h3>Drinks Index</h3>
 
-<Pagination CurrentPage="@PaginationDto.Page" TotalAmountOfPages="_totalAmountOfPages" OnSelectedPage="OnSelectedPage" />
+<DrinksFilter DrinkFilterDto="@DrinkFilterDto" OnSubmit="OnSubmit" />
 <GenericList List="@_drinks">
     <WholeListTemplate>
         <div class="row justify-content-start m-3">
@@ -15,7 +15,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
                     @if (drink.PhotoPath != null)
                     {
-                        <img class="card-img-top" src="@drink.PhotoPath" stype="width: 400px; height: 400px;" alt="Card image cap">
+                        <div style="border: 2px solid #e3e3f1;">
+                            <img class="card-img-top" src="@drink.PhotoPath" stype="width: 400px; height: 400px;" alt="Card image cap">
+                        </div>
                     }
                     <div class="card text-center">
                         <h5 class="card-header"><a href="/drinks/@drink.Id">@drink.Name</a></h5>
@@ -33,33 +35,23 @@
 </GenericList>
 
 @code {
-    [Inject] IRepository<DrinkDto> DrinkRepository { get; set; }
+    [Inject] IDrinkRepository DrinkRepository { get; set; }
     [Inject] IMapper Mapper { get; set; }
-    public PaginationDto PaginationDto { get; set; } = new PaginationDto { AmountOfRecordsPerPage = 6 };
+    public DrinkFilterDto DrinkFilterDto { get; set; } = new DrinkFilterDto();
     private List<DrinkViewModel> _drinks;
-    private int _totalAmountOfPages;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadDrinks();
-    }
-
-    protected async Task OnSelectedPage(int page)
-    {
-        PaginationDto.Page = page;
-        await LoadDrinks();
-    }
-
-    private async Task LoadDrinks()
-    {
-        var paginatedDrinkModelsResponse = await DrinkRepository.GetPaginated(PaginationDto);
-        _totalAmountOfPages = paginatedDrinkModelsResponse.TotalAmountOfPages;
-        _drinks = Mapper.Map<List<DrinkDto>, List<DrinkViewModel>>(paginatedDrinkModelsResponse.Content.ToList());
+        var drinks = await DrinkRepository.GetDrinks();
+        _drinks = Mapper.Map<List<DrinkDto>, List<DrinkViewModel>>(drinks);
     }
 
     private async Task Delete(Guid id)
     {
-        await DrinkRepository.DeleteOne(id);
-        await LoadDrinks();
+        await DrinkRepository.DeleteDrink(id);
+    }
+
+    private async Task OnSubmit()
+    {
     }
 }

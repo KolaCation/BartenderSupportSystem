@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Utils;
@@ -31,20 +31,9 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // GET: api/Cocktails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CocktailDto>>> GetCocktail()
+        public async Task<ActionResult<List<CocktailDto>>> GetCocktail()
         {
             var cocktailDbModels = await _context.CocktailsSet.ToListAsync();
-            var cocktails = _mapper.Map<List<CocktailDbModel>, List<CocktailDto>>(cocktailDbModels);
-            return cocktails;
-        }
-
-        //GET: api/Cocktails (paginated count)
-        [HttpGet]
-        public async Task<List<CocktailDto>> GetCocktail([FromQuery] PaginationDto paginationDto)
-        {
-            var cocktailsQueryable = _context.CocktailsSet.AsQueryable();
-            await HttpContext.InsertPaginationParamsIntoResponse(cocktailsQueryable, paginationDto);
-            var cocktailDbModels = await cocktailsQueryable.InsertPagination(paginationDto).ToListAsync();
             var cocktails = _mapper.Map<List<CocktailDbModel>, List<CocktailDto>>(cocktailDbModels);
             return cocktails;
         }

@@ -1,16 +1,11 @@
-﻿using BartenderSupportSystem.Server.Models;
+﻿using BartenderSupportSystem.Server.Data.DbModels;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+using BartenderSupportSystem.Server.Models;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Server.DomainServices.DbModels;
-using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Data
 {
@@ -27,13 +22,13 @@ namespace BartenderSupportSystem.Server.Data
         internal DbSet<DrinkDbModel> DrinksSet { get; set; }
         internal DbSet<IngredientDbModel> IngredientsSet { get; set; }
         internal DbSet<MenuDbModel> MenusSet { get; set; }
-        internal DbSet<ProductDbModel> ProductsSet { get; set; }
-        internal DbSet<SnackDbModel> SnacksSet { get; set; }
         internal DbSet<CustomAnswerDbModel> AnswersSet { get; set; }
         internal DbSet<CustomQuestionDbModel> QuestionsSet { get; set; }
         internal DbSet<CustomTestDbModel> TestsSet { get; set; }
         internal DbSet<RatingDbModel> RatingsSet { get; set; }
         internal DbSet<BartenderDbModel> BartendersSet { get; set; }
+        internal DbSet<MealDbModel> MealsSet { get; set; }
+        internal DbSet<CreationDate> CreationDates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

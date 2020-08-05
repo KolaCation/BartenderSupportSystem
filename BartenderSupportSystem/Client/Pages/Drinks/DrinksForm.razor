@@ -4,6 +4,7 @@
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem
 @using System.Linq;
 @using BartenderSupportSystem.Client.Helpers
+@using BartenderSupportSystem.Client.Repositories.Interfaces
 
 <h3>Drinks Form</h3>
 
@@ -71,7 +72,7 @@
 @code {
     [Parameter] public DrinkViewModel DrinkViewModel { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
-    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
+    [Inject] public IBrandRepository BrandRepository { get; set; }
     private string _imageUrl;
     private List<BrandDto> _brands = new List<BrandDto>();
 
@@ -82,7 +83,7 @@
             _imageUrl = DrinkViewModel.PhotoPath;
             DrinkViewModel.PhotoPath = null;
         }
-        _brands = await BrandRepository.GetAll(true);
+        _brands = await BrandRepository.GetBrands();
         _brands = _brands.OrderBy(el=>el.Name).ToList();
     }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem
+namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
     internal sealed class CustomQuestionDbModel
     {

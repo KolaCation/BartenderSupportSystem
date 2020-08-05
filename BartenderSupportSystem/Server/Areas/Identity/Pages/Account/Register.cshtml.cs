@@ -8,7 +8,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels;
+using BartenderSupportSystem.Server.Data.DbModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BartenderSupportSystem.Server.Models;

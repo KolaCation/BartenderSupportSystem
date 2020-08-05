@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using BartenderSupportSystem.Client.Helpers;
 using BartenderSupportSystem.Client.Repositories;
+using BartenderSupportSystem.Client.Repositories.Implementation;
+using BartenderSupportSystem.Client.Repositories.Interfaces;
 
 namespace BartenderSupportSystem.Client
 {
@@ -26,7 +28,8 @@ namespace BartenderSupportSystem.Client
             builder.Services.AddFileReaderService();
             builder.Services.AddScoped<IHttpService, HttpService>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IDrinkRepository, DrinkRepository>();
+            builder.Services.AddScoped<IBrandRepository, BrandRepository>();
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();

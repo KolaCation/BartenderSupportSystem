@@ -2,6 +2,7 @@
 @using BartenderSupportSystem.Client.Repositories
 @using BartenderSupportSystem.Shared.Models.RecommendationSystem
 @using AutoMapper
+@using BartenderSupportSystem.Client.Repositories.Interfaces
 @using BartenderSupportSystem.Client.ViewModels.RecommendationSystem
 @inject NavigationManager NavigationManager
 
@@ -10,14 +11,14 @@
 <BrandsForm BrandViewModel="BrandViewModel" OnValidSubmit="Create"/>
 
 @code {
-    [Inject] public IRepository<BrandDto> BrandRepository { get; set; }
+    [Inject] public IBrandRepository BrandRepository { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     public BrandViewModel BrandViewModel { get; set; } = new BrandViewModel { Id = Guid.NewGuid() };
 
     private async Task Create()
     {
         var brand = Mapper.Map<BrandViewModel, BrandDto>(BrandViewModel);
-        await BrandRepository.AddOne(brand);
+        await BrandRepository.CreateBrand(brand);
         NavigationManager.NavigateTo("/brands");
     }
 }
