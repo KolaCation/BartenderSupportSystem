@@ -17,6 +17,8 @@ using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Server.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using System;
 
 namespace BartenderSupportSystem.Server
 {
@@ -45,7 +47,11 @@ namespace BartenderSupportSystem.Server
 
             services.AddScoped<IStorageService, InAppStorageService>();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+            {
+                options.Authentication.CookieLifetime = TimeSpan.FromDays(30);
+                options.Authentication.CookieSlidingExpiration = true;
+            })
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
                 .AddProfileService<IdentityProfileService>();
 
@@ -54,6 +60,11 @@ namespace BartenderSupportSystem.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,20 +84,35 @@ namespace BartenderSupportSystem.Server
             }
 
             app.UseHttpsRedirection();
-            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
 
             app.UseRouting();
 
-            app.UseIdentityServer();
+            
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseIdentityServer();
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
+            });
+
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }

@@ -19,7 +19,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.BartenderDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.BartenderDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,24 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("BartendersSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.BrandDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.CreationDate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CreationDates");
+                });
+
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.BrandDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +73,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("BrandsSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.CocktailDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.CocktailDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +93,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("CocktailsSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.DrinkDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.DrinkDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +125,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("DrinksSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.IngredientDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.IngredientDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,7 +137,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.Property<Guid>("ComponentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Weight")
+                    b.Property<int>("ProportionType")
+                        .HasColumnType("int");
+
+                    b.Property<double>("ProportionValue")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -128,7 +148,27 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("IngredientsSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.MenuDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.MealDbModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PricePerGr")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MealsSet");
+                });
+
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.MenuDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +177,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.Property<Guid>("DrinkId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SnackId")
+                    b.Property<Guid>("MealId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -145,41 +185,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("MenusSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.ProductDbModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("PricePerGr")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductsSet");
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem.SnackDbModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("PricePerGr")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SnacksSet");
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomAnswerDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomAnswerDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,7 +207,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("AnswersSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomQuestionDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomQuestionDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,7 +226,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("QuestionsSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomTestDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +246,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("TestsSet");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.RatingDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.RatingDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -329,26 +335,6 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Shared.Models.RecommendationSystem.Cocktail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cocktail");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -568,18 +554,18 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomAnswerDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomAnswerDbModel", b =>
                 {
-                    b.HasOne("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomQuestionDbModel", "Question")
+                    b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomQuestionDbModel", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomQuestionDbModel", b =>
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomQuestionDbModel", b =>
                 {
-                    b.HasOne("BartenderSupportSystem.Server.DomainServices.DbModels.TestSystem.CustomTestDbModel", "Test")
+                    b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -8,7 +8,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels;
+using BartenderSupportSystem.Server.Data.DbModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BartenderSupportSystem.Server.Models;
@@ -103,8 +103,8 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
-                    var userDetails = new Bartender {Id = id, FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = "NoImg" };//pictureService
-                    var userDetailsDb = _mapper.Map<Bartender, BartenderDbModel>(userDetails);
+                    var userDetails = new BartenderDto {Id = id, FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = "NoImg" };//pictureService
+                    var userDetailsDb = _mapper.Map<BartenderDto, BartenderDbModel>(userDetails);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

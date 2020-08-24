@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.DomainServices.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Utils;
@@ -31,27 +31,16 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // GET: api/Cocktails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cocktail>>> GetCocktail()
+        public async Task<ActionResult<List<CocktailDto>>> GetCocktail()
         {
             var cocktailDbModels = await _context.CocktailsSet.ToListAsync();
-            var cocktails = _mapper.Map<List<CocktailDbModel>, List<Cocktail>>(cocktailDbModels);
-            return cocktails;
-        }
-
-        //GET: api/Cocktails (paginated count)
-        [HttpGet]
-        public async Task<List<Cocktail>> GetCocktail([FromQuery] PaginationDto paginationDto)
-        {
-            var cocktailsQueryable = _context.CocktailsSet.AsQueryable();
-            await HttpContext.InsertPaginationParamsIntoResponse(cocktailsQueryable, paginationDto);
-            var cocktailDbModels = await cocktailsQueryable.InsertPagination(paginationDto).ToListAsync();
-            var cocktails = _mapper.Map<List<CocktailDbModel>, List<Cocktail>>(cocktailDbModels);
+            var cocktails = _mapper.Map<List<CocktailDbModel>, List<CocktailDto>>(cocktailDbModels);
             return cocktails;
         }
 
         // GET: api/Cocktails/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cocktail>> GetCocktail(Guid id)
+        public async Task<ActionResult<CocktailDto>> GetCocktail(Guid id)
         {
             var cocktailDbModel = await _context.CocktailsSet.FindAsync(id);
 
@@ -60,7 +49,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var cocktail = _mapper.Map<CocktailDbModel, Cocktail>(cocktailDbModel);
+            var cocktail = _mapper.Map<CocktailDbModel, CocktailDto>(cocktailDbModel);
             return cocktail;
         }
 
@@ -68,7 +57,7 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCocktail(Guid id, Cocktail cocktail)
+        public async Task<IActionResult> PutCocktail(Guid id, CocktailDto cocktail)
         {
             if (!id.Equals(cocktail.Id))
             {
@@ -82,7 +71,7 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             var fileRoute = cocktailDbModelToUpdate.PhotoPath;
-            cocktailDbModelToUpdate = _mapper.Map<Cocktail, CocktailDbModel>(cocktail);
+            cocktailDbModelToUpdate = _mapper.Map<CocktailDto, CocktailDbModel>(cocktail);
             if (!string.IsNullOrEmpty(cocktail.PhotoPath))
             {
                 cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(cocktail.PhotoPath), "jpg", "cocktails", fileRoute));
@@ -113,13 +102,13 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> PostCocktail(Cocktail cocktail)
+        public async Task<IActionResult> PostCocktail(CocktailDto cocktail)
         {
             if(!string.IsNullOrEmpty(cocktail.PhotoPath))
             {
                 cocktail.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(cocktail.PhotoPath), "jpg", "cocktails");
             }
-            var cocktailDbModel = _mapper.Map<Cocktail, CocktailDbModel>(cocktail);
+            var cocktailDbModel = _mapper.Map<CocktailDto, CocktailDbModel>(cocktail);
             await _context.CocktailsSet.AddAsync(cocktailDbModel);
             await _context.SaveChangesAsync();
 
