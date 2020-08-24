@@ -74,7 +74,6 @@ namespace BartenderSupportSystem.Server
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseWebAssemblyDebugging();
             }
             else
             {
