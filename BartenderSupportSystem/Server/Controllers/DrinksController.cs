@@ -81,6 +81,10 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(drink.PhotoPath), "jpg", "drinks", fileRoute));
             }
+            else
+            {
+                drinkDbModelToUpdate.UpdatePhotoPath(fileRoute);
+            }
             _context.Entry(drinkDbModelToUpdate).State = EntityState.Modified;
 
             try

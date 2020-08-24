@@ -17,7 +17,7 @@ namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.
                 foreach (var item in items)
                 {
                     var resultList = specifications.Select(specification => specification.IsSatisfied(item)).ToList();
-                    if (resultList.Contains(true))
+                    if (!resultList.Contains(false))
                     {
                         filteredItemIds.Add(item.Id);
                     }
@@ -36,7 +36,7 @@ namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.
                 foreach (var item in items)
                 {
                     var resultList = specifications.Select(specification => specification.IsSatisfied(item)).ToList();
-                    if (resultList.Contains(true))
+                    if (!resultList.Contains(false))
                     {
                         filteredItemIds.Add(item.Id);
                     }

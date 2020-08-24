@@ -42,7 +42,7 @@ namespace BartenderSupportSystem.Server.Helpers
             var filePath = Path.Combine(_environment.WebRootPath, domainName, fileName);
             if (File.Exists(filePath))
             {
-                File.Delete(fileRoute);
+                File.Delete(filePath);
             }
 
             await Task.FromResult(0);
