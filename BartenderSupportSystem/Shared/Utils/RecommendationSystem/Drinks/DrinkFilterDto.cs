@@ -12,7 +12,7 @@ namespace BartenderSupportSystem.Shared.Utils.RecommendationSystem.Drinks
         public double AlcoholPercentageMinValue { get; set; }
         public double AlcoholPercentageMaxValue { get; set; }
         public string Flavor { get; set; }
-        public Guid BrandId { get; set; }
+        public int BrandId { get; set; }
         public PriceSort PriceSort { get; set; }
     }
 }

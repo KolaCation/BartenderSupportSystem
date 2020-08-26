@@ -21,9 +21,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.BartenderDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -41,15 +42,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.CreationDate", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreationTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -58,9 +60,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.BrandDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CountryOfOrigin")
                         .HasColumnType("int");
@@ -75,9 +78,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.CocktailDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -95,15 +99,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.DrinkDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("AlcoholPercentage")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Flavor")
                         .HasColumnType("nvarchar(max)");
@@ -127,15 +132,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.IngredientDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("CocktailId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CocktailId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ComponentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ComponentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProportionType")
                         .HasColumnType("int");
@@ -150,9 +156,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.MealDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -170,15 +177,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.MenuDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("DrinkId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("DrinkId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("MealId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("MealId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -187,15 +195,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomAnswerDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Statement")
                         .HasColumnType("nvarchar(max)");
@@ -209,15 +218,16 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomQuestionDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Statement")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -228,9 +238,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -248,9 +259,10 @@ namespace BartenderSupportSystem.Server.Data.Migrations
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.RatingDbModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("Mark")
                         .HasColumnType("float");
@@ -258,8 +270,8 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.Property<int>("QuantityOfRaters")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -274,8 +286,8 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("BartenderId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BartenderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

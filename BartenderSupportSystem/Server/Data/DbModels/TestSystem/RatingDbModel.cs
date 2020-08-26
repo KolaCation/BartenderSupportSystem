@@ -4,12 +4,12 @@ namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
     internal sealed class RatingDbModel
     {
-        public Guid Id { get; private set; }
-        public Guid TestId { get; private set; }
+        public int Id { get; private set; }
+        public int TestId { get; private set; }
         public double Mark { get; private set; }
         public int QuantityOfRaters { get; private set; }
 
-        public RatingDbModel(Guid id, Guid testId, double mark, int quantityOfRaters)
+        public RatingDbModel(int id, int testId, double mark, int quantityOfRaters)
         {
             Id = id;
             TestId = testId;

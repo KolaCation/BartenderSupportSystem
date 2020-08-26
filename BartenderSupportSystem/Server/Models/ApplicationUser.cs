@@ -9,6 +9,6 @@ namespace BartenderSupportSystem.Server.Models
     public class ApplicationUser : IdentityUser
     {
         public DateTimeOffset RegistrationDate { get; set; }
-        public Guid BartenderId { get; set; }
+        public int BartenderId { get; set; }
     }
 }

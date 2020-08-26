@@ -78,6 +78,8 @@
 
 
 	<ItemGroup>
+		<Folder Include="Data\Mappers\Implementation\TestSystem\" />
+		<Folder Include="Data\Mappers\Interfaces\TestSystem\" />
 		<Folder Include="wwwroot\" />
 	</ItemGroup>
 

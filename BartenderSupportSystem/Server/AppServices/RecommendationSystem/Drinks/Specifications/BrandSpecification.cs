@@ -5,9 +5,9 @@ namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.
 {
     internal sealed class BrandSpecification : ISpecification<DrinkDbModel>
     {
-        public Guid BrandId { get; }
+        public int BrandId { get; }
 
-        public BrandSpecification(Guid brandId)
+        public BrandSpecification(int brandId)
         {
             BrandId = brandId;
         }

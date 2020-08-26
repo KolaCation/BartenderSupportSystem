@@ -11,7 +11,7 @@ namespace BartenderSupportSystem.Shared.Utils
             if (obj == null) throw new ArgumentNullException(nameof(obj));
         }
 
-        public static void ValidateNumber(double number, int minVal, int maxVal)
+        public static void ValidateNumber(double number, double minVal, double maxVal)
         {
             if (number < minVal || number > maxVal) throw new ArgumentException(nameof(number));
         }
@@ -29,11 +29,6 @@ namespace BartenderSupportSystem.Shared.Utils
             }
 
             if (str.Length < minLength || str.Length > maxLength) throw new ArgumentException(nameof(str));
-        }
-
-        public static void ValidateId(Guid id)
-        {
-            if (id.Equals(Guid.Empty)) throw new ArgumentException(nameof(id));
         }
     }
 }
