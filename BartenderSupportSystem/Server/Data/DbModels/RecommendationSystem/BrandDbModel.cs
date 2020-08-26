@@ -13,7 +13,7 @@ namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 
         public BrandDbModel(string name, Countries countryOfOrigin)
         {
-            CustomValidator.ValidateString(name, 2, 40);
+            CustomValidator.ValidateString(name, CustomValidatorDefaultValues.StrDefaultMinLength, CustomValidatorDefaultValues.StrDefaultMaxLength);
             Name = name;
             CountryOfOrigin = countryOfOrigin;
         }
