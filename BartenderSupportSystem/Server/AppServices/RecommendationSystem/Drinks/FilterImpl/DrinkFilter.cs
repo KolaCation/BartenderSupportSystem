@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Shared.Utils.RecommendationSystem.Drinks;
 
 namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.FilterImpl
 {
@@ -13,7 +11,7 @@ namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.
         {
             if (specifications != null && items != null)
             {
-                var filteredItemIds = new List<Guid>();
+                var filteredItemIds = new List<int>();
                 foreach (var item in items)
                 {
                     var resultList = specifications.Select(specification => specification.IsSatisfied(item)).ToList();
@@ -32,7 +30,7 @@ namespace BartenderSupportSystem.Server.AppServices.RecommendationSystem.Drinks.
         {
             if (specifications != null && items != null)
             {
-                var filteredItemIds = new List<Guid>();
+                var filteredItemIds = new List<int>();
                 foreach (var item in items)
                 {
                     var resultList = specifications.Select(specification => specification.IsSatisfied(item)).ToList();

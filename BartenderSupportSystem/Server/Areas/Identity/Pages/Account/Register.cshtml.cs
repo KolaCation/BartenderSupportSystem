@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using AutoMapper;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.DbModels;
 using Microsoft.AspNetCore.Authentication;
@@ -20,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -31,22 +31,19 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context,
-            IMapper mapper)
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
-            _mapper = mapper;
         }
 
         [BindProperty]
@@ -95,17 +92,19 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var id = Guid.NewGuid();
-                var user = new ApplicationUser { Id = id.ToString(), UserName = Input.Email, Email = Input.Email, BartenderId = id, RegistrationDate = DateTimeOffset.Now };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTimeOffset.Now };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
-                    var userDetails = new BartenderDto {Id = id, FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = "NoImg" };//pictureService
-                    var userDetailsDb = _mapper.Map<BartenderDto, BartenderDbModel>(userDetails);
+                    var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = null };//pictureService
+                    var userDetailsDb = new BartenderDbModel(userDetails.FirstName, userDetails.LastName, userDetails.PhotoPath);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
+                    await _context.SaveChangesAsync();
+                    var storedData = _context.BartendersSet.FromSqlRaw("SELECT * FROM dbo.BartendersSet WHERE Id=(SELECT max(Id) FROM dbo.BartendersSet)").FirstOrDefault();
+                    user.BartenderId = storedData == null ? default : storedData.Id;
                     await _context.SaveChangesAsync();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

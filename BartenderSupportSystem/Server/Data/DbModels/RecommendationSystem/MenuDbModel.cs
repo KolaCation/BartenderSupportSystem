@@ -4,11 +4,11 @@ namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class MenuDbModel
     {
-        public Guid Id { get; private set; }
-        public Guid DrinkId { get; private set; }
-        public Guid MealId { get; private set; }
+        public int Id { get; private set; }
+        public int DrinkId { get; private set; }
+        public int MealId { get; private set; }
 
-        public MenuDbModel(Guid id, Guid drinkId, Guid mealId)
+        public MenuDbModel(int id, int drinkId, int mealId)
         {
             Id = id;
             DrinkId = drinkId;

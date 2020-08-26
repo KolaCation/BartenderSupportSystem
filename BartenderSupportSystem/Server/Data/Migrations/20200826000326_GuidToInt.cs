@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BartenderSupportSystem.Server.Data.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class GuidToInt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,11 +39,71 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    RegistrationDate = table.Column<DateTimeOffset>(nullable: false),
+                    BartenderId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BartendersSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    PhotoPath = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BartendersSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BrandsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    CountryOfOrigin = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BrandsSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CocktailsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    PhotoPath = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CocktailsSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CreationDates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(nullable: false),
+                    CreationTime = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CreationDates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,6 +124,70 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DrinksSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    AlcoholPercentage = table.Column<double>(nullable: false),
+                    Flavor = table.Column<string>(nullable: true),
+                    BrandId = table.Column<int>(nullable: false),
+                    PricePerMl = table.Column<double>(nullable: false),
+                    PhotoPath = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DrinksSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IngredientsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ComponentId = table.Column<int>(nullable: false),
+                    CocktailId = table.Column<int>(nullable: false),
+                    ProportionType = table.Column<int>(nullable: false),
+                    ProportionValue = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IngredientsSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MealsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    PricePerGr = table.Column<double>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MealsSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MenusSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DrinkId = table.Column<int>(nullable: false),
+                    MealId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenusSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -78,6 +202,36 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RatingsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TestId = table.Column<int>(nullable: false),
+                    Mark = table.Column<double>(nullable: false),
+                    QuantityOfRaters = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RatingsSet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Topic = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestsSet", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +340,52 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "QuestionsSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Statement = table.Column<string>(nullable: true),
+                    TestId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionsSet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuestionsSet_TestsSet_TestId",
+                        column: x => x.TestId,
+                        principalTable: "TestsSet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AnswersSet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Statement = table.Column<string>(nullable: true),
+                    IsCorrect = table.Column<bool>(nullable: false),
+                    QuestionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnswersSet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AnswersSet_QuestionsSet_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "QuestionsSet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnswersSet_QuestionId",
+                table: "AnswersSet",
+                column: "QuestionId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -245,10 +445,18 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionsSet_TestId",
+                table: "QuestionsSet",
+                column: "TestId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AnswersSet");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -265,16 +473,49 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BartendersSet");
+
+            migrationBuilder.DropTable(
+                name: "BrandsSet");
+
+            migrationBuilder.DropTable(
+                name: "CocktailsSet");
+
+            migrationBuilder.DropTable(
+                name: "CreationDates");
+
+            migrationBuilder.DropTable(
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
+                name: "DrinksSet");
+
+            migrationBuilder.DropTable(
+                name: "IngredientsSet");
+
+            migrationBuilder.DropTable(
+                name: "MealsSet");
+
+            migrationBuilder.DropTable(
+                name: "MenusSet");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
+
+            migrationBuilder.DropTable(
+                name: "RatingsSet");
+
+            migrationBuilder.DropTable(
+                name: "QuestionsSet");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TestsSet");
         }
     }
 }

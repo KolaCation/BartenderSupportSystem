@@ -7,11 +7,11 @@ namespace BartenderSupportSystem.Server.Data.DbModels
 {
     internal sealed class CreationDate
     {
-        public Guid Id { get; private set; }
-        public Guid ItemId { get; private set; }
+        public int Id { get; private set; }
+        public int ItemId { get; private set; }
         public DateTimeOffset CreationTime { get; private set; }
 
-        public CreationDate(Guid id, Guid itemId, DateTimeOffset creationTime)
+        public CreationDate(int id, int itemId, DateTimeOffset creationTime)
         {
             Id = id;
             ItemId = itemId;
