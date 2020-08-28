@@ -6,11 +6,13 @@ import { AuthorizeGuard } from '../api-authorization/authorize.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'data', component: DataComponent, canActivate: [AuthorizeGuard] }
+  { path: 'data', component: DataComponent, canActivate: [AuthorizeGuard] },
+  { path: 'brands', loadChildren: () => import('./recommendationSystem/brands/brand/brand.module').then(m => m.BrandModule) }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
