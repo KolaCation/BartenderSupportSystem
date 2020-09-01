@@ -28,7 +28,6 @@ namespace BartenderSupportSystem.Server.Data
         internal DbSet<RatingDbModel> RatingsSet { get; set; }
         internal DbSet<BartenderDbModel> BartendersSet { get; set; }
         internal DbSet<MealDbModel> MealsSet { get; set; }
-        internal DbSet<CreationDate> CreationDates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -103,7 +104,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                     var userDetailsDb = new BartenderDbModel(userDetails.FirstName, userDetails.LastName, userDetails.PhotoPath);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
-                    var storedData = _context.BartendersSet.FromSqlRaw("SELECT * FROM dbo.BartendersSet WHERE Id=(SELECT max(Id) FROM dbo.BartendersSet)").FirstOrDefault();
+                    var storedData = _context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                     user.BartenderId = storedData == null ? default : storedData.Id;
                     await _context.SaveChangesAsync();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

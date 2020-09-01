@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/fo
 import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
 import { CustomValidators } from '../../../shared/CustomValidators';
+import { BrandService } from '../brand/brand.service';
 
 @Component({
   selector: 'app-brand-form',
@@ -31,7 +32,7 @@ export class BrandFormComponent implements OnInit {
     "countryOfOrigin": ""
   }
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder, private _brandService: BrandService) { }
 
   ngOnInit(): void {
     this.brandForm = this._formBuilder.group({
@@ -59,7 +60,18 @@ export class BrandFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(Object.keys(Countries).find(key => key === this.brandForm.controls.countryOfOrigin.value))
-    console.log(this.brandForm);
+    console.log(this.brandForm.get('countryOfOrigin').value);
+    console.log(typeof this.brandForm.get('countryOfOrigin').value);
+    let countryCode: string = Object.keys(Countries).find(key => Countries[key] === this.brandForm.get('countryOfOrigin').value);
+    console.log(countryCode);
+    let brand: IBrand = {
+      id: 0,
+      name: this.brandForm.get('name').value,
+      countryOfOrigin: countryCode
+    }
+    this._brandService.createBrand(brand).subscribe(
+      response => console.log(response),
+      error => console.log(error)
+    );
   }
 }

@@ -11,20 +11,26 @@ using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Utils;
+using Microsoft.AspNetCore.Cors;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CorsPolicy")]
     public class BrandsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IBrandMapper _brandMapper;
 
         public BrandsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _brandMapper = new BrandMapper();
         }
 
         //GET: api/Brands
@@ -88,13 +94,14 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
+        public async Task<ActionResult<int>> PostBrand(BrandDto brand)
         {
-            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
+            var brandDbModel = _brandMapper.ToDbModel(brand);
             await _context.BrandsSet.AddAsync(brandDbModel);
             await _context.SaveChangesAsync();
+            var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).FirstOrDefault();
 
-            return NoContent();
+            return createdBrand.Id;
         }
 
         // DELETE: api/Brands/5
