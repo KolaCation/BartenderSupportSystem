@@ -68,7 +68,7 @@ export class BrandListComponent implements OnInit {
           'Deleted!',
           'Your record has been deleted.',
           'success'
-        )
+        );
       }
     })
   }

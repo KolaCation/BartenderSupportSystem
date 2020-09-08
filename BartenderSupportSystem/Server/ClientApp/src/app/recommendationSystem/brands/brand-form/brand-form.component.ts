@@ -56,7 +56,15 @@ export class BrandFormComponent implements OnInit {
         this.fillFormWithValuesToEdit(brandId);
       }
     },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
     );
   }
 
@@ -92,7 +100,15 @@ export class BrandFormComponent implements OnInit {
           countryOfOrigin: countryName
         });
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
     );
   }
 
@@ -109,7 +125,15 @@ export class BrandFormComponent implements OnInit {
           timer: 1500
         })
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
     );
   }
 
@@ -124,9 +148,17 @@ export class BrandFormComponent implements OnInit {
           title: 'Successfully created!',
           showConfirmButton: false,
           timer: 1500
-        })
+        });
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
     );
   }
 
