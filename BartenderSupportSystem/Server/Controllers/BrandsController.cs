@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Utils;
 using Microsoft.AspNetCore.Cors;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
@@ -23,13 +18,11 @@ namespace BartenderSupportSystem.Server.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
         private readonly IBrandMapper _brandMapper;
 
-        public BrandsController(ApplicationDbContext context, IMapper mapper)
+        public BrandsController(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
             _brandMapper = new BrandMapper();
         }
 
@@ -38,13 +31,13 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<ActionResult<List<BrandDto>>> GetBrand()
         {
             var brandDbModels = await _context.BrandsSet.ToListAsync();
-            var brands = _mapper.Map<List<BrandDbModel>, List<BrandDto>>(brandDbModels);
+            var brands = (from brandDbModel in brandDbModels select _brandMapper.ToDto(brandDbModel)).ToList();
             return brands;
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BrandDto>> GetBrand(Guid id)
+        public async Task<ActionResult<BrandDto>> GetBrand(int id)
         {
             var brandDbModel = await _context.BrandsSet.FindAsync(id);
 
@@ -53,7 +46,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var brand = _mapper.Map<BrandDbModel, BrandDto>(brandDbModel);
+            var brand = _brandMapper.ToDto(brandDbModel);
             return brand;
         }
 
@@ -61,14 +54,14 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(Guid id, BrandDto brand)
+        public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
             if (!id.Equals(brand.Id))
             {
                 return BadRequest();
             }
 
-            var brandDbModel = _mapper.Map<BrandDto, BrandDbModel>(brand);
+            var brandDbModel = _brandMapper.ToDbModel(brand);
             _context.Entry(brandDbModel).State = EntityState.Modified;
 
             try
@@ -94,19 +87,19 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<int>> PostBrand(BrandDto brand)
+        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
         {
             var brandDbModel = _brandMapper.ToDbModel(brand);
             await _context.BrandsSet.AddAsync(brandDbModel);
             await _context.SaveChangesAsync();
             var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).FirstOrDefault();
 
-            return createdBrand.Id;
+            return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.Id }, _brandMapper.ToDto(createdBrand));
         }
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<BrandDto>> DeleteBrand(Guid id)
+        public async Task<IActionResult> DeleteBrand(int id)
         {
             var brandDbModel = await _context.BrandsSet.FindAsync(id);
             if (brandDbModel == null)
@@ -120,7 +113,7 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        private bool BrandExists(Guid id)
+        private bool BrandExists(int id)
         {
             return _context.BrandsSet.Any(e => e.Id.Equals(id));
         }

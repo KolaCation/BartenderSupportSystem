@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { BrandService } from '../brand/brand.service';
+import { Router } from '@angular/router';
+import { IBrand } from '../brand/IBrand';
+import { Countries } from '../brand/Countries';
 
 @Component({
   selector: 'app-brand-list',
@@ -7,9 +11,47 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrandListComponent implements OnInit {
 
-  constructor() { }
+  brands: IBrand[];
+  statusMessage: string = "Loading...";
+
+
+  constructor(private _brandService: BrandService, private _router: Router) { }
 
   ngOnInit(): void {
+    this._brandService.getBrands().subscribe(
+      data => {
+        if (data.length === 0) {
+          this.statusMessage = "No brands to display.";
+        } else {
+          this.brands = data;
+          this.brands.forEach((brand: IBrand) => {
+            let countryName: string;
+            Object.keys(Countries).forEach((country: Countries) => {
+              if (brand.countryOfOrigin == country) {
+                countryName = Countries[country];
+              }
+            });
+            brand.countryOfOrigin = countryName;
+          });
+        }
+      },
+      error => {
+        this.statusMessage = error;
+      }
+    );
   }
 
+  editBrand(id: number): void {
+    this._router.navigate(['/brands/edit', id]);
+  }
+
+  deleteBrand(brand: IBrand): void {
+    this._brandService.deleteBrand(brand.id).subscribe(
+      () => {
+        let brandIndex: number = this.brands.indexOf(brand, 0);
+        this.brands.splice(brandIndex, 1);
+      },
+      (error: any) => console.log(error)
+    );
+  }
 }

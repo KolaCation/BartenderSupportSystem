@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Shared.Utils;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -32,6 +34,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
+        private readonly IBartenderMapper _bartenderMapper;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -45,6 +48,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _bartenderMapper = new BartenderMapper();
         }
 
         [BindProperty]
@@ -101,7 +105,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
                     var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = null };//pictureService
-                    var userDetailsDb = new BartenderDbModel(userDetails.FirstName, userDetails.LastName, userDetails.PhotoPath);
+                    var userDetailsDb = _bartenderMapper.ToDbModel(userDetails);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
                     var storedData = _context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();

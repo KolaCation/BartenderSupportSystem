@@ -4,6 +4,7 @@ import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
 import { CustomValidators } from '../../../shared/CustomValidators';
 import { BrandService } from '../brand/brand.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-brand-form',
@@ -14,6 +15,7 @@ export class BrandFormComponent implements OnInit {
 
   brandForm: FormGroup;
   countryArray: Countries[] = Object.values(Countries);
+  brand: IBrand;
 
   messages = {
     "name": {
@@ -32,14 +34,29 @@ export class BrandFormComponent implements OnInit {
     "countryOfOrigin": ""
   }
 
-  constructor(private _formBuilder: FormBuilder, private _brandService: BrandService) { }
+  constructor(private _formBuilder: FormBuilder, private _brandService: BrandService,
+    private _activatedRoute: ActivatedRoute, private _router: Router) { }
 
   ngOnInit(): void {
+    this.brand = {
+      id: 0,
+      name: null,
+      countryOfOrigin: null
+    }
     this.brandForm = this._formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       countryOfOrigin: ['', [Validators.required, CustomValidators.validateCountry()]]
     })
     this.brandForm.valueChanges.subscribe(() => this.validateFormValue(this.brandForm));
+
+    this._activatedRoute.paramMap.subscribe(params => {
+      const brandId = +params.get('id');
+      if (brandId) {
+        this.fillFormWithValuesToEdit(brandId);
+      }
+    },
+      error => console.log(error)
+    );
   }
 
   validateFormValue(formGroup: FormGroup = this.brandForm) {
@@ -59,19 +76,58 @@ export class BrandFormComponent implements OnInit {
     })
   }
 
-  onSubmit() {
-    console.log(this.brandForm.get('countryOfOrigin').value);
-    console.log(typeof this.brandForm.get('countryOfOrigin').value);
-    let countryCode: string = Object.keys(Countries).find(key => Countries[key] === this.brandForm.get('countryOfOrigin').value);
-    console.log(countryCode);
-    let brand: IBrand = {
-      id: 0,
-      name: this.brandForm.get('name').value,
-      countryOfOrigin: countryCode
-    }
-    this._brandService.createBrand(brand).subscribe(
-      response => console.log(response),
+  fillFormWithValuesToEdit(id: number): void {
+    this._brandService.getBrand(id).subscribe(
+      (brand: IBrand) => {
+        let countryName: string;
+        Object.keys(Countries).forEach((country: Countries) => {
+          if (brand.countryOfOrigin == country) {
+            countryName = Countries[country];
+          }
+        });
+        Object.assign(this.brand, brand);
+        this.brandForm.patchValue({
+          name: this.brand.name,
+          countryOfOrigin: countryName
+        });
+      },
       error => console.log(error)
     );
+  }
+
+  handleEditAction(brand: IBrand): void {
+    this.mapFormValuesToModel();
+    this._brandService.updateBrand(brand).subscribe(
+      () => {
+        this._router.navigate(['/brands']);
+      },
+      error => console.log(error)
+    );
+  }
+
+  handleCreateAction(): void {
+    this.mapFormValuesToModel();
+    this._brandService.createBrand(this.brand).subscribe(
+      () => {
+        this._router.navigate(['/brands']);
+      },
+      error => console.log(error)
+    );
+  }
+
+  mapFormValuesToModel(): void {
+    this.brand.name = this.brandForm.get('name').value;
+    let countryCode: string = Object.keys(Countries).find(key => Countries[key] === this.brandForm.get('countryOfOrigin').value);
+    this.brand.countryOfOrigin = countryCode;
+  }
+
+
+  onSubmit() {
+    if (this.brand.id != 0) {
+      this.handleEditAction(this.brand);
+    }
+    else {
+      this.handleCreateAction();
+    }
   }
 }
