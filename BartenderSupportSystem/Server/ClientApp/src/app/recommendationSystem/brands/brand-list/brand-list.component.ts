@@ -3,6 +3,7 @@ import { BrandService } from '../brand/brand.service';
 import { Router } from '@angular/router';
 import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-brand-list',
@@ -46,12 +47,29 @@ export class BrandListComponent implements OnInit {
   }
 
   deleteBrand(brand: IBrand): void {
-    this._brandService.deleteBrand(brand.id).subscribe(
-      () => {
-        let brandIndex: number = this.brands.indexOf(brand, 0);
-        this.brands.splice(brandIndex, 1);
-      },
-      (error: any) => console.log(error)
-    );
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result: { isConfirmed: boolean; }) => {
+      if (result.isConfirmed) {
+        this._brandService.deleteBrand(brand.id).subscribe(
+          () => {
+            let brandIndex: number = this.brands.indexOf(brand, 0);
+            this.brands.splice(brandIndex, 1);
+          },
+          (error: any) => console.log(error)
+        );
+        Swal.fire(
+          'Deleted!',
+          'Your record has been deleted.',
+          'success'
+        )
+      }
+    })
   }
 }

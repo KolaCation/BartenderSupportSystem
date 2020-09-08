@@ -5,6 +5,7 @@ import { Countries } from '../brand/Countries';
 import { CustomValidators } from '../../../shared/CustomValidators';
 import { BrandService } from '../brand/brand.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-brand-form',
@@ -100,6 +101,13 @@ export class BrandFormComponent implements OnInit {
     this._brandService.updateBrand(brand).subscribe(
       () => {
         this._router.navigate(['/brands']);
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Successfully edited!',
+          showConfirmButton: false,
+          timer: 1500
+        })
       },
       error => console.log(error)
     );
@@ -110,6 +118,13 @@ export class BrandFormComponent implements OnInit {
     this._brandService.createBrand(this.brand).subscribe(
       () => {
         this._router.navigate(['/brands']);
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Successfully created!',
+          showConfirmButton: false,
+          timer: 1500
+        })
       },
       error => console.log(error)
     );
