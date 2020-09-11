@@ -10,6 +10,7 @@ import { NavmenuComponent } from './navmenu/navmenu.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizeInterceptor } from '../api-authorization/authorize.interceptor';
 import { BrandService } from './recommendationSystem/brands/brand/brand.service';
+import { DrinkService } from './recommendationSystem/drinks/drink/drink.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { BrandService } from './recommendationSystem/brands/brand/brand.service'
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
-    BrandService
+    BrandService,
+    DrinkService
   ],
   bootstrap: [AppComponent]
 })

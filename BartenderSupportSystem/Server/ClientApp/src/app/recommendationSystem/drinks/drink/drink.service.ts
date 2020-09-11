@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { IBrand } from './IBrand';
+import { IDrink } from './IDrink';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BrandService {
+export class DrinkService {
 
   private _url: string;
 
   constructor(private _httpClient: HttpClient) {
-    this._url = `${environment.apiUrl}/brands`
+    this._url = `${environment.apiUrl}/drinks`
   }
 
-  createBrand(brand: IBrand): Observable<IBrand> {
-    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.logError));
+  createDrink(drink: IDrink): Observable<IDrink> {
+    return this._httpClient.post<IDrink>(this._url, drink).pipe(catchError(this.logError));
   }
 
-  getBrands(): Observable<IBrand[]> {
-    return this._httpClient.get<IBrand[]>(this._url).pipe(catchError(this.logError));
+  getDrinks(): Observable<IDrink[]> {
+    return this._httpClient.get<IDrink[]>(this._url).pipe(catchError(this.logError));
   }
 
-  getBrand(id: number): Observable<IBrand> {
-    return this._httpClient.get<IBrand>(`${this._url}/${id}`).pipe(catchError(this.logError));
+  getDrink(id: number): Observable<IDrink> {
+    return this._httpClient.get<IDrink>(`${this._url}/${id}`).pipe(catchError(this.logError));
   }
 
-  updateBrand(brand: IBrand): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${brand.id}`, brand).pipe(catchError(this.logError));
+  updateDrink(drink: IDrink): Observable<void> {
+    return this._httpClient.put<void>(`${this._url}/${drink.id}`, drink).pipe(catchError(this.logError));
   }
 
-  deleteBrand(id: number): Observable<void> {
+  deleteDrink(id: number): Observable<void> {
     return this._httpClient.delete<void>(`${this._url}/${id}`).pipe(catchError(this.logError));
   }
 
