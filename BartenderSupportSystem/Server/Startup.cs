@@ -65,6 +65,15 @@ namespace BartenderSupportSystem.Server
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("https://localhost:44340")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,8 +90,8 @@ namespace BartenderSupportSystem.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
+           
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
@@ -90,8 +99,8 @@ namespace BartenderSupportSystem.Server
             }
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
-            
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseIdentityServer();
@@ -113,6 +122,8 @@ namespace BartenderSupportSystem.Server
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+           
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using BartenderSupportSystem.Shared.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,23 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         public BrandDbModel ToDbModel(BrandDto item)
         {
             CustomValidator.ValidateObject(item);
-            if (item.Id == 0)
+            var brandCountry = Enum.TryParse(typeof(Countries), item.CountryOfOrigin, out var result);
+            if(brandCountry)
             {
-                return new BrandDbModel(item.Name, item.CountryOfOrigin);
+                if (item.Id == 0)
+                {
+                    return new BrandDbModel(item.Name, (Countries)result);
+                }
+                else
+                {
+                    return new BrandDbModel(item.Id, item.Name, (Countries)result);
+                }
             }
             else
             {
-                return new BrandDbModel(item.Id, item.Name, item.CountryOfOrigin);
+                throw new InvalidCastException(nameof(result));
             }
+
         }
 
         public BrandDto ToDto(BrandDbModel item)
@@ -31,7 +41,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
             {
                 Id = item.Id,
                 Name = item.Name,
-                CountryOfOrigin = item.CountryOfOrigin
+                CountryOfOrigin = item.CountryOfOrigin.ToString()
             };
         }
     }

@@ -1,1 +1,28 @@
-<p>brand-list works!</p>
+<div class="mt-3">
+    <h4 class="text">Brand List</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Country Of Origin</th>
+        </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="brands">
+                <tr *ngFor="let brand of brands">
+                    <td>{{brand.name}}</td>
+                    <td>{{brand.countryOfOrigin}}</td>
+                    <td><a class="btn btn-success" (click)="editBrand(brand.id)">Edit</a></td>
+                    <td><button class="btn btn-danger" (click)="deleteBrand(brand)">Delete</button></td>
+                </tr>
+            </ng-container>
+            <tr *ngIf="brands && brands.length === 0">
+                <td>{{statusMessage}}</td>
+            </tr>
+            <tr *ngIf="!brands">
+                <td>{{statusMessage}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

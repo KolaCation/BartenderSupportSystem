@@ -4,7 +4,7 @@
     {
         Beer,
         Wine,
-        Hard_Cider,
+        Cider,
         Mead,
         Sake,
         Gin,

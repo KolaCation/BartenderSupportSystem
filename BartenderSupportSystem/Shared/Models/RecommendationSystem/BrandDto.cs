@@ -7,6 +7,6 @@ namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Countries CountryOfOrigin { get; set; }
+        public string CountryOfOrigin { get; set; }
     }
 }
