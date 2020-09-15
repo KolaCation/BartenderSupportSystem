@@ -70,6 +70,6 @@ export class BrandListComponent implements OnInit {
           'success'
         );
       }
-    })
+    });
   }
 }

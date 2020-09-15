@@ -81,6 +81,8 @@
 		<Folder Include="Data\Mappers\Implementation\TestSystem\" />
 		<Folder Include="Data\Mappers\Interfaces\TestSystem\" />
 		<Folder Include="wwwroot\" />
+		<Folder Include="wwwroot\cocktails\" />
+		<Folder Include="wwwroot\drinks\" />
 	</ItemGroup>
 
 </Project>
