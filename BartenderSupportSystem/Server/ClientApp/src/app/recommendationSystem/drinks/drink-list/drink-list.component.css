@@ -1,3 +1,5 @@
-.custom-card-img {
-    border: 2px solid #e3e3f1;
+.image-limiter {
+    width: auto;
+    height: 250px;
+    object-fit: fill;
 }
