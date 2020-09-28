@@ -42,8 +42,12 @@
 
 	<ItemGroup>
 		<!-- Don't publish the SPA source files, but do show them in the project files list -->
+		<Compile Remove="wwwroot\**" />
 		<Content Remove="$(SpaRoot)**" />
+		<Content Remove="wwwroot\**" />
+		<EmbeddedResource Remove="wwwroot\**" />
 		<None Remove="$(SpaRoot)**" />
+		<None Remove="wwwroot\**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
 	</ItemGroup>
 
@@ -80,9 +84,6 @@
 	<ItemGroup>
 		<Folder Include="Data\Mappers\Implementation\TestSystem\" />
 		<Folder Include="Data\Mappers\Interfaces\TestSystem\" />
-		<Folder Include="wwwroot\" />
-		<Folder Include="wwwroot\cocktails\" />
-		<Folder Include="wwwroot\drinks\" />
 	</ItemGroup>
 
 </Project>
