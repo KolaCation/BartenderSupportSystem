@@ -7,7 +7,7 @@ namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public AlcoholType Type { get; set; }
+        public string AlcoholType { get; set; }
         public double AlcoholPercentage { get; set; }
         public string Flavor { get; set; }
         public int BrandId { get; set; }

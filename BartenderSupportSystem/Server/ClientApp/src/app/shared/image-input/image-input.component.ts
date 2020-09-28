@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ThrowStmt } from '@angular/compiler';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'image-input',
@@ -8,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class ImageInputComponent implements OnInit {
 
   selectedFile: File;
-  pictureUrl: string = null;
+  @Input() pictureUrl: string = null;
+  @Output() onFileSelected: EventEmitter<string> = new EventEmitter<string>();
 
   constructor() { }
 
@@ -18,10 +20,14 @@ export class ImageInputComponent implements OnInit {
   processFile(imageInput: any) {
     this.selectedFile = <File>imageInput.files[0];
     const reader = new FileReader();
-    console.log(this.selectedFile);
     if (this.selectedFile) {
+      this.pictureUrl = null;
       reader.readAsDataURL(this.selectedFile);
-      reader.onload = () => this.pictureUrl = reader.result.toString();
+      reader.onload = () => {
+        let result: string = reader.result.toString();
+        this.pictureUrl = result;
+        this.onFileSelected.emit(this.pictureUrl);
+      }
     }
   }
 }

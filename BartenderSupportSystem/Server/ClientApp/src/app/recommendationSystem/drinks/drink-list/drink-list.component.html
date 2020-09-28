@@ -1,1 +1,27 @@
-<p>drink-list works!</p>
+<h4 class="text mt-3">Drink List</h4>
+<div class="col">
+    <a class="btn btn-primary btn-lg m-2" routerLink="/drinks/create">Create Drink</a>
+    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+</div>
+<div *ngIf="drinks">
+    <drink-filter (filterDrinks)="filterDrinks($event)"></drink-filter>
+</div>
+<div *ngIf="drinks" class="row justify-content-start m-3">
+    <div *ngFor="let drink of filteredDrinks" class="col-lg-4 col-md-6 col-sm-12 mt-3">
+        <div class="card text-center">
+            <div *ngIf="drink.photoPath != null">
+                <img *ngIf="drink.photoPath != null" class="card-img-top image-limiter" [src]="drink.photoPath"
+                    alt="No image">
+            </div>
+            <h5 class="card-header"><a [routerLink]="['/drinks', drink.id]">{{drink.name}}</a></h5>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <a class="btn btn-success m-2" (click)="editDrink(drink.id)">Edit</a>
+                    <button class="btn btn-danger m-2" (click)="deleteDrink(drink)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p *ngIf="drinks && drinks.length === 0" class="m-3 text-center">{{statusMessage}}</p>
+<p *ngIf="!drinks" class="m-3 text-center">{{statusMessage}}</p>

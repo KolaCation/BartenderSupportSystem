@@ -82,7 +82,7 @@ export class BrandFormComponent implements OnInit {
       if (abstractControl && abstractControl instanceof FormGroup) {
         this.validateFormValue(abstractControl);
       }
-    })
+    });
   }
 
   fillFormWithValuesToEdit(id: number): void {

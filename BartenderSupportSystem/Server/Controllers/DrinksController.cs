@@ -21,14 +21,12 @@ namespace BartenderSupportSystem.Server.Controllers
     public class DrinksController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
         private readonly IStorageService _storageService;
         private readonly IDrinkMapper _drinkMapper;
 
-        public DrinksController(ApplicationDbContext context, IMapper mapper, IStorageService storageService)
+        public DrinksController(ApplicationDbContext context, IStorageService storageService)
         {
             _context = context;
-            _mapper = mapper;
             _storageService = storageService;
             _drinkMapper = new DrinkMapper();
         }
@@ -79,7 +77,7 @@ namespace BartenderSupportSystem.Server.Controllers
             drinkDbModelToUpdate = _drinkMapper.ToDbModel(drink);
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
-                drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(drink.PhotoPath), "jpg", "drinks", fileRoute));
+                drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks", fileRoute));
             }
             else
             {
@@ -114,10 +112,10 @@ namespace BartenderSupportSystem.Server.Controllers
         {
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
-                drink.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(drink.PhotoPath), "jpg", "drinks");
+                drink.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks");
             }
 
-            var drinkDbModel = _mapper.Map<DrinkDto, DrinkDbModel>(drink);
+            var drinkDbModel = _drinkMapper.ToDbModel(drink);
             await _context.DrinksSet.AddAsync(drinkDbModel);
             await _context.SaveChangesAsync();
             var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).FirstOrDefault();
