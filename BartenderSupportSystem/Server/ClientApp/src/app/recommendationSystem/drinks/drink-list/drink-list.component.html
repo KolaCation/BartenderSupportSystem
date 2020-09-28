@@ -3,8 +3,11 @@
     <a class="btn btn-primary btn-lg m-2" routerLink="/drinks/create">Create Drink</a>
     <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
 </div>
+<div *ngIf="drinks">
+    <drink-filter (filterDrinks)="filterDrinks($event)"></drink-filter>
+</div>
 <div *ngIf="drinks" class="row justify-content-start m-3">
-    <div *ngFor="let drink of drinks" class="col-lg-4 col-md-6 col-sm-12 mt-3">
+    <div *ngFor="let drink of filteredDrinks" class="col-lg-4 col-md-6 col-sm-12 mt-3">
         <div class="card text-center">
             <div *ngIf="drink.photoPath != null">
                 <img *ngIf="drink.photoPath != null" class="card-img-top image-limiter" [src]="drink.photoPath"

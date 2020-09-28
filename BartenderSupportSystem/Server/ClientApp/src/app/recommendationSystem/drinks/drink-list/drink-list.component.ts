@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { IDrinkFilter } from '../drink-filter/IDrinkFilter';
 import { DrinkService } from '../drink/drink.service';
 import { IDrink } from '../drink/IDrink';
 
@@ -12,6 +13,7 @@ import { IDrink } from '../drink/IDrink';
 export class DrinkListComponent implements OnInit {
 
   drinks: IDrink[];
+  filteredDrinks: IDrink[];
   statusMessage: string = "Loading...";
 
   constructor(private _drinkService: DrinkService, private activatedRoute: ActivatedRoute, private _router: Router) { }
@@ -23,6 +25,7 @@ export class DrinkListComponent implements OnInit {
           this.statusMessage = "No drinks to display."
         } else {
           this.drinks = data;
+          this.filteredDrinks = this.drinks;
         }
       },
       error => {
@@ -30,6 +33,7 @@ export class DrinkListComponent implements OnInit {
       }
     );
   }
+
 
   editDrink(id: number): void {
     this._router.navigate(['/drinks/edit', id]);
@@ -60,5 +64,74 @@ export class DrinkListComponent implements OnInit {
         );
       }
     });
+  }
+
+  filterDrinks(drinkFilterModel: IDrinkFilter) {
+    if (drinkFilterModel != null) {
+      this.filteredDrinks = this.drinks;
+      if (drinkFilterModel.flavor != "") {
+        this.filteredDrinks = this.filteredDrinks.filter(e => e.flavor.toLowerCase().includes(drinkFilterModel.flavor.toLowerCase()));
+      }
+      if (drinkFilterModel.name != "") {
+        this.filteredDrinks = this.filteredDrinks.filter(e => e.name.toLowerCase().includes(drinkFilterModel.name.toLowerCase()));
+      }
+      if (drinkFilterModel.alcoholType != "") {
+        this.filteredDrinks = this.filteredDrinks.filter(e => e.alcoholType.toLowerCase() === drinkFilterModel.alcoholType.toLowerCase());
+      }
+      if (drinkFilterModel.brandId != 0) {
+        this.filteredDrinks = this.filteredDrinks.filter(e => e.brandId === drinkFilterModel.brandId);
+      }
+      if (!drinkFilterModel.isNonAlcohol) {
+        let minVal: number = drinkFilterModel.alcoholPercentageMinValue;
+        let maxVal: number = drinkFilterModel.alcoholPercentageMaxValue;
+        if (minVal > maxVal) {
+          this.filteredDrinks = this.filteredDrinks.filter(e => e.alcoholPercentage >= minVal);
+        }
+        if (minVal == maxVal && maxVal != 0) {
+          this.filteredDrinks = this.filteredDrinks.filter(e => e.alcoholPercentage <= maxVal);
+        }
+        if (minVal < maxVal) {
+          this.filteredDrinks = this.filteredDrinks.filter(e => e.alcoholPercentage <= maxVal && e.alcoholPercentage >= minVal);
+        }
+      }
+      if (drinkFilterModel.isNonAlcohol) {
+        this.filteredDrinks = this.filteredDrinks.filter(e => e.alcoholPercentage == 0);
+      }
+      if (drinkFilterModel.pricePerMl != "") {
+        if (drinkFilterModel.pricePerMl === "1") {
+          this.filteredDrinks = this.filteredDrinks.sort((a, b) => {
+            if (a.pricePerMl < b.pricePerMl) {
+              return -1;
+            }
+            if (a.pricePerMl > b.pricePerMl) {
+              return 1
+            }
+            return 0;
+          });
+        } else {
+          this.filteredDrinks = this.filteredDrinks.sort((a, b) => {
+            if (a.pricePerMl > b.pricePerMl) {
+              return -1;
+            }
+            if (a.pricePerMl < b.pricePerMl) {
+              return 1
+            }
+            return 0;
+          });
+        }
+      } else {
+        this.filteredDrinks = this.filteredDrinks.sort((a, b) => {
+          if (a.id < b.id) {
+            return -1;
+          }
+          if (a.id > b.id) {
+            return 1
+          }
+          return 0;
+        });
+      }
+    } else {
+      this.filteredDrinks = this.drinks;
+    }
   }
 }
