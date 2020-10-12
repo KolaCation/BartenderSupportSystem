@@ -59,6 +59,10 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var brandDbModel = _brandMapper.ToDbModel(brand);
             _context.Entry(brandDbModel).State = EntityState.Modified;
@@ -88,7 +92,7 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

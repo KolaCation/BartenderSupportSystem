@@ -12,9 +12,13 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
     {
         public BrandValidator()
         {
-            RuleFor(e => e.Name).NotEmpty().WithMessage("Country of origin is required.");
-            RuleFor(b => b.CountryOfOrigin).Must(BeValidCountryCode)
-                .WithMessage("Provide a country from the list.");
+            RuleFor(e => e.Name)
+                .NotEmpty().WithMessage("Name is required.")
+                .MinimumLength(2).WithMessage("Name must be at least 2 chars long.")
+                .MaximumLength(60).WithMessage("Name must not exceed 60 chars.");
+            RuleFor(e => e.CountryOfOrigin)
+                .NotEmpty().WithMessage("Country of origin is required.")
+                .Must(BeValidCountryCode).WithMessage("Provide a country from the list.");
         }
 
         private bool BeValidCountryCode(string countryCode)

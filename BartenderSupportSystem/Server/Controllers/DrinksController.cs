@@ -63,6 +63,10 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var drinkDbModelToUpdate = await _context.DrinksSet.FindAsync(id);
             if (drinkDbModelToUpdate == null)
@@ -108,6 +112,10 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<DrinkDto>> PostDrink(DrinkDto drink)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
                 drink.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks");

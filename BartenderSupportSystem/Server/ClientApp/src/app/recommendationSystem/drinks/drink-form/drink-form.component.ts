@@ -33,14 +33,14 @@ export class DrinkFormComponent implements OnInit {
       "alcoholTypeError": "Provide a type from the list."
     },
     "alcoholPercentage": {
-      "required": "Alcohol percentage is required",
+      "required": "Alcohol percentage is required.",
       "min": "Min value: 0.",
       "max": "Max value: 100."
     },
     "flavor": {
       "required": "Flavor is required.",
-      "minlength": "Name must be at least 2 chars long.",
-      "maxlength": "Name must not exceed 255 chars.",
+      "minlength": "Flavor must be at least 2 chars long.",
+      "maxlength": "Flavor must not exceed 255 chars.",
     },
     "pricePerMl": {
       "required": "Price per ml is required.",
