@@ -17,7 +17,7 @@ export class BrandService {
   }
 
   createBrand(brand: IBrand): Observable<IBrand> {
-    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.logError));
+    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.handlePostBrandError));
   }
 
   getBrands(): Observable<IBrand[]> {
@@ -43,5 +43,11 @@ export class BrandService {
       console.error("Server Side Error", errorResponse);
     }
     return throwError("There is a problem with the service. Please, try again later.");
+  }
+
+  private handlePostBrandError(errorResponse: HttpErrorResponse) {
+    if(!(errorResponse.error instanceof ErrorEvent)) {
+      return throwError(errorResponse.error);
+    }
   }
 }

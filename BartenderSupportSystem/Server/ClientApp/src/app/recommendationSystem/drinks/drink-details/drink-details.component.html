@@ -1,4 +1,4 @@
-<div *ngIf="drink" class="mt-3">
+<div *ngIf="drink && brand" class="mt-3">
     <div class="col">
         <a class="btn btn-primary btn-lg m-2" [routerLink]="['/drinks/edit', drink.id]">Edit Drink</a>
         <a class="btn btn-primary btn-lg m-2" routerLink="/drinks">Back To List</a>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
 import Swal from 'sweetalert2';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-brand-list',
@@ -16,7 +17,7 @@ export class BrandListComponent implements OnInit {
   statusMessage: string = "Loading...";
 
 
-  constructor(private _brandService: BrandService, private _router: Router) { }
+  constructor(private _brandService: BrandService, private _router: Router, private _authorizeService: AuthorizeService) { }
 
   ngOnInit(): void {
     this._brandService.getBrands().subscribe(
@@ -34,12 +35,17 @@ export class BrandListComponent implements OnInit {
             });
             brand.countryOfOrigin = countryName;
           });
+          
         }
       },
       error => {
         this.statusMessage = error;
       }
     );
+  }
+  
+  getUserProfile() {
+    this._authorizeService.getUserRole().subscribe(u=>console.log(u));
   }
 
   editBrand(id: number): void {

@@ -14,6 +14,7 @@
         Tequila,
         Vodka,
         Absinthe,
-        Everclear
+        Everclear,
+        Cognac
     }
 }

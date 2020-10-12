@@ -6,6 +6,7 @@ import { CustomValidators } from '../../../shared/CustomValidators';
 import { BrandService } from '../brand/brand.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-brand-form',
@@ -151,7 +152,12 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
+        console.log(error.errors);
+        /*Object.keys(error.errors).forEach((key:string)=> {
+          let formErrorsKeyProperValue = key.charAt(0).toLowerCase() + key.slice(1);
+          this.formErrors[formErrorsKeyProperValue] += error.errors[key];
+          console.log("Cycle " + error.errors[key]);
+        });*/
         Swal.fire({
           position: 'center',
           icon: 'error',
