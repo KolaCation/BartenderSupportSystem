@@ -12,8 +12,9 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
     {
         public BrandValidator()
         {
+            RuleFor(e => e.Name).NotEmpty().WithMessage("Country of origin is required.");
             RuleFor(b => b.CountryOfOrigin).Must(BeValidCountryCode)
-                .WithMessage("Country is not valid (server side validaton)");
+                .WithMessage("Provide a country from the list.");
         }
 
         private bool BeValidCountryCode(string countryCode)

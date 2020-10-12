@@ -34,22 +34,24 @@ namespace BartenderSupportSystem.Server.Data
 
                 if (!context.Users.Any(u => u.NormalizedUserName == email.ToUpper()))
                 {
-                    try
+
+                    var res = await userManager.CreateAsync(user, password);
+                    if (res.Succeeded)
                     {
-                        var res = await userManager.CreateAsync(user, password);
-                        if (res.Succeeded)
+                        await userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "Admin"));
+                        try
                         {
-                            await userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "Admin"));
                             context.BartendersSet.Add(new BartenderDbModel("Husk", "Heidegger", null));
                             await context.SaveChangesAsync();
                             var storedData = context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                             user.BartenderId = storedData == null ? default : storedData.Id;
                             await context.SaveChangesAsync();
                         }
-                    }
-                    catch (Exception)
-                    {
-                        throw new ApplicationException("Error generating admin user.");
+                        catch (Exception)
+                        {
+                            user.BartenderId = default;
+                            await context.SaveChangesAsync();
+                        }
                     }
                 }
             }
