@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
 import { CustomValidators } from '../../../shared/CustomValidators';
@@ -151,7 +151,14 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
+        Object.keys(error.errors).forEach((key: string) => {
+          let formErrorsKeyProperValue = key.charAt(0).toLowerCase() + key.slice(1);
+          this.formErrors[formErrorsKeyProperValue] = "SERVER VALIDATON: ";
+          const messagesForControl = error.errors[key];
+          for (let msg of messagesForControl) {
+            this.formErrors[formErrorsKeyProperValue] += msg + " ";
+          }
+        });
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -176,5 +183,9 @@ export class BrandFormComponent implements OnInit {
     else {
       this.handleCreateAction();
     }
+  }
+
+  handleServerErrors(errorArray : any) {
+    //make errorHandler
   }
 }

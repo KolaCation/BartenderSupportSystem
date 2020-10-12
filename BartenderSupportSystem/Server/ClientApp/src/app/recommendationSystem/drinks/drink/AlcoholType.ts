@@ -11,5 +11,6 @@ export enum AlcoholType {
     Tequila = 'Tequila',
     Vodka = 'Vodka',
     Absinthe = 'Absinthe',
-    Everclear = 'Everclear'
+    Everclear = 'Everclear',
+    Cognac = 'Cognac'
 }

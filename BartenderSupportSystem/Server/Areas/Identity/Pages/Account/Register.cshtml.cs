@@ -98,18 +98,25 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTimeOffset.Now };
-
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                try
                 {
-                    _logger.LogInformation("User created a new account with password.");
-                    await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
                     var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = null };//pictureService
                     var userDetailsDb = _bartenderMapper.ToDbModel(userDetails);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
                     var storedData = _context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                     user.BartenderId = storedData == null ? default : storedData.Id;
+                }
+                catch(Exception)
+                {
+                    ModelState.AddModelError(string.Empty, "Error registering new user. Please, try again later.");
+                    return Page();
+                }
+                var result = await _userManager.CreateAsync(user, Input.Password);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "User"));
                     await _context.SaveChangesAsync();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

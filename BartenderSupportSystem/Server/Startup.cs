@@ -1,24 +1,21 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using AutoMapper;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Server.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using System;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Server.Validators.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server
 {
@@ -46,6 +43,8 @@ namespace BartenderSupportSystem.Server
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
             services.AddScoped<IStorageService, InAppStorageService>();
+            services.AddTransient<IValidator<BrandDto>, BrandValidator>();
+            services.AddTransient<IValidator<DrinkDto>, DrinkValidator>();
 
             services.AddIdentityServer(options =>
             {
@@ -58,7 +57,7 @@ namespace BartenderSupportSystem.Server
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddFluentValidation();
             services.AddRazorPages();
             services.AddSpaStaticFiles(configuration =>
             {
@@ -123,7 +122,7 @@ namespace BartenderSupportSystem.Server
                 }
             });
 
-           
+            ApplicationDbContextSeedData.Initialize(app.ApplicationServices, Configuration).Wait();
         }
     }
 }
