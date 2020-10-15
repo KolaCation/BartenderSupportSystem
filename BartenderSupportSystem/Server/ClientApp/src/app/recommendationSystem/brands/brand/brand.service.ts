@@ -17,7 +17,7 @@ export class BrandService {
   }
 
   createBrand(brand: IBrand): Observable<IBrand> {
-    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.handlePostBrandError));
+    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.handlePostPutBrandErrors));
   }
 
   getBrands(): Observable<IBrand[]> {
@@ -29,7 +29,7 @@ export class BrandService {
   }
 
   updateBrand(brand: IBrand): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${brand.id}`, brand).pipe(catchError(this.logError));
+    return this._httpClient.put<void>(`${this._url}/${brand.id}`, brand).pipe(catchError(this.handlePostPutBrandErrors));
   }
 
   deleteBrand(id: number): Observable<void> {
@@ -45,7 +45,7 @@ export class BrandService {
     return throwError("There is a problem with the service. Please, try again later.");
   }
 
-  private handlePostBrandError(errorResponse: HttpErrorResponse) {
+  private handlePostPutBrandErrors(errorResponse: HttpErrorResponse) {
     if(!(errorResponse.error instanceof ErrorEvent)) {
       return throwError(errorResponse.error);
     }

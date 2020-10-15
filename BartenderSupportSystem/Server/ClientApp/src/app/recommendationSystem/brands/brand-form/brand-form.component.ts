@@ -6,6 +6,8 @@ import { CustomValidators } from '../../../shared/CustomValidators';
 import { BrandService } from '../brand/brand.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
+import { CountryConverter } from '../brand/CountryConverter';
 
 @Component({
   selector: 'app-brand-form',
@@ -36,7 +38,7 @@ export class BrandFormComponent implements OnInit {
   }
 
   constructor(private _formBuilder: FormBuilder, private _brandService: BrandService,
-    private _activatedRoute: ActivatedRoute, private _router: Router) { }
+    private _activatedRoute: ActivatedRoute, private _router: Router, private _errService: ErrorHandlerService) { }
 
   ngOnInit(): void {
     this.brand = {
@@ -68,32 +70,14 @@ export class BrandFormComponent implements OnInit {
     );
   }
 
-  validateFormValue(formGroup: FormGroup = this.brandForm) {
-    Object.keys(formGroup.controls).forEach((key: string) => {
-      this.formErrors[key] = "";
-      const abstractControl = this.brandForm.get(key);
-      if (abstractControl && abstractControl.invalid && (abstractControl.touched || abstractControl.dirty)) {
-        const messagesForControl = this.messages[key];
-        for (let errorKey in abstractControl.errors) {
-          this.formErrors[key] += messagesForControl[errorKey] + " ";
-        }
-      }
-
-      if (abstractControl && abstractControl instanceof FormGroup) {
-        this.validateFormValue(abstractControl);
-      }
-    });
+  validateFormValue(formGroup: FormGroup = this.brandForm): void {
+    this.formErrors = this._errService.handleClientErrors(formGroup, this.messages);
   }
 
   fillFormWithValuesToEdit(id: number): void {
     this._brandService.getBrand(id).subscribe(
       (brand: IBrand) => {
-        let countryName: string;
-        Object.keys(Countries).forEach((country: Countries) => {
-          if (brand.countryOfOrigin == country) {
-            countryName = Countries[country];
-          }
-        });
+        let countryName: string = CountryConverter.fromCodeToName(brand.countryOfOrigin);
         Object.assign(this.brand, brand);
         this.brandForm.patchValue({
           name: this.brand.name,
@@ -126,7 +110,7 @@ export class BrandFormComponent implements OnInit {
         })
       },
       error => {
-        console.log(error);
+        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -151,14 +135,7 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        Object.keys(error.errors).forEach((key: string) => {
-          let formErrorsKeyProperValue = key.charAt(0).toLowerCase() + key.slice(1);
-          this.formErrors[formErrorsKeyProperValue] = "SERVER VALIDATON: ";
-          const messagesForControl = error.errors[key];
-          for (let msg of messagesForControl) {
-            this.formErrors[formErrorsKeyProperValue] += msg + " ";
-          }
-        });
+        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -171,7 +148,7 @@ export class BrandFormComponent implements OnInit {
 
   mapFormValuesToModel(): void {
     this.brand.name = this.brandForm.get('name').value;
-    let countryCode: string = Object.keys(Countries).find(key => Countries[key] === this.brandForm.get('countryOfOrigin').value);
+    let countryCode: string = CountryConverter.fromNameToCode(this.brandForm.get('countryOfOrigin').value);
     this.brand.countryOfOrigin = countryCode;
   }
 
@@ -183,9 +160,5 @@ export class BrandFormComponent implements OnInit {
     else {
       this.handleCreateAction();
     }
-  }
-
-  handleServerErrors(errorArray : any) {
-    //make errorHandler
   }
 }
