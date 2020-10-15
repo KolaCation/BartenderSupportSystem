@@ -124,7 +124,7 @@ namespace BartenderSupportSystem.Server.Controllers
             var drinkDbModel = _drinkMapper.ToDbModel(drink);
             await _context.DrinksSet.AddAsync(drinkDbModel);
             await _context.SaveChangesAsync();
-            var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).FirstOrDefault();
+            var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).First();
 
             return CreatedAtAction(nameof(GetDrink), new { id = createdDrink.Id }, _drinkMapper.ToDto(createdDrink));
         }
