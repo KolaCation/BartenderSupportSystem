@@ -1,30 +1,30 @@
-﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using BartenderSupportSystem.Shared.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
-    internal sealed class BrandMapper : IBrandMapper
+    internal sealed class MealMapper : IMealMapper
     {
-        public BrandDbModel ToDbModel(BrandDto item)
+        public MealDbModel ToDbModel(MealDto item)
         {
             CustomValidator.ValidateObject(item);
-            var brandCountry = Enum.TryParse(typeof(Countries), item.CountryOfOrigin, out var result);
-            if (brandCountry)
+            var mealType = Enum.TryParse(typeof(MealType), item.MealType, out var result);
+            if (mealType)
             {
                 if (item.Id == 0)
                 {
-                    return new BrandDbModel(item.Name, (Countries) result);
+                    return new MealDbModel(item.Name, item.PricePerGr, (MealType) result);
                 }
                 else
                 {
-                    return new BrandDbModel(item.Id, item.Name, (Countries) result);
+                    return new MealDbModel(item.Id, item.Name, item.PricePerGr, (MealType) result);
                 }
             }
             else
@@ -33,14 +33,15 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
             }
         }
 
-        public BrandDto ToDto(BrandDbModel item)
+        public MealDto ToDto(MealDbModel item)
         {
             CustomValidator.ValidateObject(item);
-            return new BrandDto
+            return new MealDto
             {
                 Id = item.Id,
                 Name = item.Name,
-                CountryOfOrigin = item.CountryOfOrigin.ToString()
+                PricePerGr = item.PricePerGr,
+                MealType = item.Type.ToString()
             };
         }
     }

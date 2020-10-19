@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Server.Helpers;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Utils;
+using Microsoft.AspNetCore.Cors;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CorsPolicy")]
     public class MealsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IMealMapper _mealMapper;
 
-        public MealsController(ApplicationDbContext context, IMapper mapper)
+        public MealsController(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
+            _mealMapper = new MealMapper();
         }
 
         // GET: api/Meals
@@ -33,13 +30,13 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<ActionResult<List<MealDto>>> GetMeal()
         {
             var mealDbModels = await _context.MealsSet.ToListAsync();
-            var meals = _mapper.Map<List<MealDbModel>, List<MealDto>>(mealDbModels);
+            var meals = (from mealDbModel in mealDbModels select _mealMapper.ToDto(mealDbModel)).ToList();
             return meals;
         }
 
         // GET: api/Meals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MealDto>> GetMeal(Guid id)
+        public async Task<ActionResult<MealDto>> GetMeal(int id)
         {
             var mealDbModel = await _context.MealsSet.FindAsync(id);
 
@@ -48,7 +45,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var meal = _mapper.Map<MealDbModel, MealDto>(mealDbModel);
+            var meal = _mealMapper.ToDto(mealDbModel);
             return meal;
         }
 
@@ -56,14 +53,18 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMeal(Guid id, MealDto meal)
+        public async Task<IActionResult> PutMeal(int id, MealDto meal)
         {
             if (!id.Equals(meal.Id))
             {
                 return BadRequest();
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            var mealDbModel = _mapper.Map<MealDto, MenuDbModel>(meal);
+            var mealDbModel = _mealMapper.ToDbModel(meal);
             _context.Entry(mealDbModel).State = EntityState.Modified;
 
             try
@@ -91,16 +92,21 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> PostMeal(MealDto meal)
         {
-            var mealDbModel = _mapper.Map<MealDto, MealDbModel>(meal);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var mealDbModel = _mealMapper.ToDbModel(meal);
             await _context.MealsSet.AddAsync(mealDbModel);
             await _context.SaveChangesAsync();
+            var createdMeal = _context.MealsSet.OrderByDescending(e => e.Id).First();
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetMeal), new { id = createdMeal.Id }, _mealMapper.ToDto(createdMeal));
         }
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMeal(Guid id)
+        public async Task<IActionResult> DeleteMeal(int id)
         {
             var mealDbModel = await _context.MealsSet.FindAsync(id);
             if (mealDbModel == null)
@@ -114,7 +120,7 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        private bool MealExists(Guid id)
+        private bool MealExists(int id)
         {
             return _context.MealsSet.Any(e => e.Id.Equals(id));
         }

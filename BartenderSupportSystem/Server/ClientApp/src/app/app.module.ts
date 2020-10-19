@@ -11,7 +11,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizeInterceptor } from '../api-authorization/authorize.interceptor';
 import { BrandService } from './recommendationSystem/brands/brand/brand.service';
 import { DrinkService } from './recommendationSystem/drinks/drink/drink.service';
+import { MealService } from './recommendationSystem/meals/meal/meal.service';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
+import { ErrorHandlerService } from './shared/ErrorHandlerService';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { AuthorizeService } from 'src/api-authorization/authorize.service';
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     BrandService,
     DrinkService,
-    AuthorizeService
+    MealService,
+    AuthorizeService,
+    ErrorHandlerService
   ],
   bootstrap: [AppComponent]
 })

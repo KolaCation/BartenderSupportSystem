@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Utils;
+using Microsoft.AspNetCore.Cors;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CorsPolicy")]
     public class CocktailsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICocktailMapper _cocktailMapper;
         private readonly IStorageService _storageService;
 
-        public CocktailsController(ApplicationDbContext context, IMapper mapper, IStorageService storageService)
+        public CocktailsController(ApplicationDbContext context, IStorageService storageService)
         {
             _context = context;
-            _mapper = mapper;
+            _cocktailMapper = new CocktailMapper();
             _storageService = storageService;
         }
 
@@ -34,13 +34,14 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<ActionResult<List<CocktailDto>>> GetCocktail()
         {
             var cocktailDbModels = await _context.CocktailsSet.ToListAsync();
-            var cocktails = _mapper.Map<List<CocktailDbModel>, List<CocktailDto>>(cocktailDbModels);
+            var cocktails = (from cocktailDbModel in cocktailDbModels select _cocktailMapper.ToDto(cocktailDbModel))
+                .ToList();
             return cocktails;
         }
 
         // GET: api/Cocktails/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CocktailDto>> GetCocktail(Guid id)
+        public async Task<ActionResult<CocktailDto>> GetCocktail(int id)
         {
             var cocktailDbModel = await _context.CocktailsSet.FindAsync(id);
 
@@ -49,7 +50,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
-            var cocktail = _mapper.Map<CocktailDbModel, CocktailDto>(cocktailDbModel);
+            var cocktail = _cocktailMapper.ToDto(cocktailDbModel);
             return cocktail;
         }
 
@@ -57,11 +58,15 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCocktail(Guid id, CocktailDto cocktail)
+        public async Task<IActionResult> PutCocktail(int id, CocktailDto cocktail)
         {
             if (!id.Equals(cocktail.Id))
             {
                 return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             var cocktailDbModelToUpdate = await _context.CocktailsSet.FindAsync(id);
@@ -69,12 +74,16 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return NotFound();
             }
-
+            _context.Entry(cocktailDbModelToUpdate).State = EntityState.Detached;
             var fileRoute = cocktailDbModelToUpdate.PhotoPath;
-            cocktailDbModelToUpdate = _mapper.Map<CocktailDto, CocktailDbModel>(cocktail);
+            cocktailDbModelToUpdate = _cocktailMapper.ToDbModel(cocktail);
             if (!string.IsNullOrEmpty(cocktail.PhotoPath))
             {
-                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(cocktail.PhotoPath), "jpg", "cocktails", fileRoute));
+                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails", fileRoute));
+            }
+            else
+            {
+                cocktailDbModelToUpdate.UpdatePhotoPath(fileRoute);
             }
 
             _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
@@ -102,22 +111,27 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> PostCocktail(CocktailDto cocktail)
+        public async Task<ActionResult<CocktailDto>> PostCocktail(CocktailDto cocktail)
         {
-            if(!string.IsNullOrEmpty(cocktail.PhotoPath))
+            if (!ModelState.IsValid)
             {
-                cocktail.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(cocktail.PhotoPath), "jpg", "cocktails");
+                return BadRequest(ModelState);
             }
-            var cocktailDbModel = _mapper.Map<CocktailDto, CocktailDbModel>(cocktail);
+            if (!string.IsNullOrEmpty(cocktail.PhotoPath))
+            {
+                cocktail.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails");
+            }
+            var cocktailDbModel = _cocktailMapper.ToDbModel(cocktail);
             await _context.CocktailsSet.AddAsync(cocktailDbModel);
             await _context.SaveChangesAsync();
+            var createdCocktail = _context.CocktailsSet.OrderByDescending(e => e.Id).First();
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetCocktail), new { id = createdCocktail.Id }, _cocktailMapper.ToDto(createdCocktail));
         }
 
         // DELETE: api/Cocktails/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCocktail(Guid id)
+        public async Task<IActionResult> DeleteCocktail(int id)
         {
             var cocktailDbModel = await _context.CocktailsSet.FindAsync(id);
             if (cocktailDbModel == null)
@@ -131,7 +145,7 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        private bool CocktailExists(Guid id)
+        private bool CocktailExists(int id)
         {
             return _context.CocktailsSet.Any(e => e.Id.Equals(id));
         }

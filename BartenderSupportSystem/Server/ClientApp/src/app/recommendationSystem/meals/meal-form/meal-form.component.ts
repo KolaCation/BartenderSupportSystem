@@ -1,24 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { IBrand } from '../brand/IBrand';
-import { Countries } from '../brand/Countries';
+import { IMeal } from '../meal/IMeal';
+import { MealType } from '../meal/MealType';
 import { CustomValidators } from '../../../shared/CustomValidators';
-import { BrandService } from '../brand/brand.service';
+import { MealService } from '../meal/meal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
-import { CountryConverter } from '../brand/CountryConverter';
 
 @Component({
-  selector: 'app-brand-form',
-  templateUrl: './brand-form.component.html',
-  styleUrls: ['./brand-form.component.css']
+  selector: 'app-meal-form',
+  templateUrl: './meal-form.component.html',
+  styleUrls: ['./meal-form.component.css']
 })
-export class BrandFormComponent implements OnInit {
-
-  brandForm: FormGroup;
-  countryArray: Countries[] = Object.values(Countries);
-  brand: IBrand;
+export class MealFormComponent implements OnInit {
+  mealForm: FormGroup;
+  meal: IMeal;
+  mealTypeArray = Object.values(MealType);
 
   messages = {
     "name": {
@@ -26,36 +24,43 @@ export class BrandFormComponent implements OnInit {
       "maxlength": "Name must not exceed 60 chars.",
       "required": "Name is required."
     },
-    "countryOfOrigin": {
-      "required": "Country of origin is required.",
-      "countryError": "Provide a country from the list."
+    "pricePerGr": {
+      "required": "Price per gram is required.",
+      "min": "Min value: 0.",
+      "max": "Max value: 10000."
+    },
+    "mealType": {
+      "mealTypeError": "Select meal type from the list."
     }
   }
 
   formErrors = {
     "name": "",
-    "countryOfOrigin": ""
+    "pricePerGr": "",
+    "mealType": ""
   }
 
-  constructor(private _formBuilder: FormBuilder, private _brandService: BrandService,
+  constructor(private _formBuilder: FormBuilder, private _mealService: MealService,
     private _activatedRoute: ActivatedRoute, private _router: Router, private _errService: ErrorHandlerService) { }
 
   ngOnInit(): void {
-    this.brand = {
+    this.meal = {
       id: 0,
       name: null,
-      countryOfOrigin: null
+      pricePerGr: 0,
+      mealType: null
     }
-    this.brandForm = this._formBuilder.group({
+    this.mealForm = this._formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      countryOfOrigin: ['', [Validators.required, CustomValidators.validateCountry()]]
+      pricePerGr: ['', [Validators.required, Validators.min(0), Validators.max(10000)]],
+      mealType: ['', [CustomValidators.validateMealType()]]
     })
-    this.brandForm.valueChanges.subscribe(() => this.validateFormValue(this.brandForm));
+    this.mealForm.valueChanges.subscribe(() => this.validateFormValue(this.mealForm));
 
     this._activatedRoute.paramMap.subscribe(params => {
-      const brandId = +params.get('id');
-      if (brandId) {
-        this.fillFormWithValuesToEdit(brandId);
+      const mealId = +params.get('id');
+      if (mealId) {
+        this.fillFormWithValuesToEdit(mealId);
       }
     },
       error => {
@@ -70,18 +75,18 @@ export class BrandFormComponent implements OnInit {
     );
   }
 
-  validateFormValue(formGroup: FormGroup = this.brandForm): void {
+  validateFormValue(formGroup: FormGroup = this.mealForm): void {
     this.formErrors = this._errService.handleClientErrors(formGroup, this.messages);
   }
 
   fillFormWithValuesToEdit(id: number): void {
-    this._brandService.getBrand(id).subscribe(
-      (brand: IBrand) => {
-        let countryName: string = CountryConverter.fromCodeToName(brand.countryOfOrigin);
-        Object.assign(this.brand, brand);
-        this.brandForm.patchValue({
-          name: this.brand.name,
-          countryOfOrigin: countryName
+    this._mealService.getMeal(id).subscribe(
+      (meal: IMeal) => {
+        Object.assign(this.meal, meal);
+        this.mealForm.patchValue({
+          name: this.meal.name,
+          pricePerGr: this.meal.pricePerGr,
+          mealType: this.meal.mealType
         });
       },
       error => {
@@ -96,11 +101,11 @@ export class BrandFormComponent implements OnInit {
     );
   }
 
-  handleEditAction(brand: IBrand): void {
+  handleEditAction(meal: IMeal): void {
     this.mapFormValuesToModel();
-    this._brandService.updateBrand(brand).subscribe(
+    this._mealService.updateMeal(meal).subscribe(
       () => {
-        this._router.navigate(['/brands']);
+        this._router.navigate(['/meals']);
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -110,7 +115,7 @@ export class BrandFormComponent implements OnInit {
         })
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
+        this.formErrors = this._errService.handleServerErrors(this.mealForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -123,9 +128,9 @@ export class BrandFormComponent implements OnInit {
 
   handleCreateAction(): void {
     this.mapFormValuesToModel();
-    this._brandService.createBrand(this.brand).subscribe(
+    this._mealService.createMeal(this.meal).subscribe(
       () => {
-        this._router.navigate(['/brands']);
+        this._router.navigate(['/meals']);
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -135,7 +140,7 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
+        this.formErrors = this._errService.handleServerErrors(this.mealForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -147,15 +152,15 @@ export class BrandFormComponent implements OnInit {
   }
 
   mapFormValuesToModel(): void {
-    this.brand.name = this.brandForm.get('name').value;
-    let countryCode: string = CountryConverter.fromNameToCode(this.brandForm.get('countryOfOrigin').value);
-    this.brand.countryOfOrigin = countryCode;
+    this.meal.name = this.mealForm.get('name').value;
+    this.meal.pricePerGr = +this.mealForm.get('pricePerGr').value;
+    this.meal.mealType = this.mealForm.get('mealType').value;
   }
 
 
   onSubmit() {
-    if (this.brand.id != 0) {
-      this.handleEditAction(this.brand);
+    if (this.meal.id != 0) {
+      this.handleEditAction(this.meal);
     }
     else {
       this.handleCreateAction();

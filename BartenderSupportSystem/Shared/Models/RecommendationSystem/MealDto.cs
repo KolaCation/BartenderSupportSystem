@@ -8,6 +8,6 @@ namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
         public int Id { get; set; }
         public string Name { get; set; }
         public double PricePerGr { get; set; }
-        public MealType Type { get; set; }
+        public string MealType { get; set; }
     }
 }

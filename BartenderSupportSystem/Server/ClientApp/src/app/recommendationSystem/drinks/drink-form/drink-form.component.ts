@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
+import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
 import Swal from 'sweetalert2';
 import { BrandService } from '../../brands/brand/brand.service';
 import { IBrand } from '../../brands/brand/IBrand';
@@ -62,7 +63,8 @@ export class DrinkFormComponent implements OnInit {
   }
 
   constructor(private _formBuilder: FormBuilder, private _drinkService: DrinkService,
-    private _activatedRoute: ActivatedRoute, private _router: Router, private _brandService: BrandService) { }
+    private _activatedRoute: ActivatedRoute, private _router: Router, private _brandService: BrandService,
+    private _errService: ErrorHandlerService) { }
 
   ngOnInit(): void {
     this._brandService.getBrands().subscribe(
@@ -132,20 +134,7 @@ export class DrinkFormComponent implements OnInit {
   }
 
   validateFormValue(formGroup: FormGroup = this.drinkForm) {
-    Object.keys(formGroup.controls).forEach((key: string) => {
-      this.formErrors[key] = "";
-      const abstractControl = this.drinkForm.get(key);
-      if (abstractControl && abstractControl.invalid && (abstractControl.touched || abstractControl.dirty)) {
-        const messagesForControl = this.messages[key];
-        for (let errorKey in abstractControl.errors) {
-          this.formErrors[key] += messagesForControl[errorKey] + " ";
-        }
-      }
-
-      if (abstractControl && abstractControl instanceof FormGroup) {
-        this.validateFormValue(abstractControl);
-      }
-    });
+    this.formErrors = this._errService.handleClientErrors(formGroup, this.messages);
   }
 
   fillFormWithValuesToEdit(id: number): void {
@@ -178,7 +167,7 @@ export class DrinkFormComponent implements OnInit {
 
   handleEditAction(drink: IDrink): void {
     this.mapFormValuesToModel();
-    if(this._photoPath == this.drink.photoPath) {
+    if (this._photoPath == this.drink.photoPath) {
       this.drink.photoPath = null;
     }
     this._drinkService.updateDrink(drink).subscribe(
@@ -193,7 +182,7 @@ export class DrinkFormComponent implements OnInit {
         })
       },
       error => {
-        console.log(error);
+        this.formErrors = this._errService.handleServerErrors(this.drinkForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -218,7 +207,7 @@ export class DrinkFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
+        this.formErrors = this._errService.handleServerErrors(this.drinkForm, error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',

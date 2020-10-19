@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { IBrand } from './IBrand';
+import { IMeal } from './IMeal';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BrandService {
+export class MealService {
 
   private _url: string;
 
   constructor(private _httpClient: HttpClient) {
-    this._url = `${environment.apiUrl}/brands`
+    this._url = `${environment.apiUrl}/meals`
   }
 
-  createBrand(brand: IBrand): Observable<IBrand> {
-    return this._httpClient.post<IBrand>(this._url, brand).pipe(catchError(this.handlePostPutBrandErrors));
+  createMeal(meal: IMeal): Observable<IMeal> {
+    return this._httpClient.post<IMeal>(this._url, meal).pipe(catchError(this.handlePostPutMealErrors));
   }
 
-  getBrands(): Observable<IBrand[]> {
-    return this._httpClient.get<IBrand[]>(this._url).pipe(catchError(this.logError));
+  getMeals(): Observable<IMeal[]> {
+    return this._httpClient.get<IMeal[]>(this._url).pipe(catchError(this.logError));
   }
 
-  getBrand(id: number): Observable<IBrand> {
-    return this._httpClient.get<IBrand>(`${this._url}/${id}`).pipe(catchError(this.logError));
+  getMeal(id: number): Observable<IMeal> {
+    return this._httpClient.get<IMeal>(`${this._url}/${id}`).pipe(catchError(this.logError));
   }
 
-  updateBrand(brand: IBrand): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${brand.id}`, brand).pipe(catchError(this.handlePostPutBrandErrors));
+  updateMeal(meal: IMeal): Observable<void> {
+    return this._httpClient.put<void>(`${this._url}/${meal.id}`, meal).pipe(catchError(this.handlePostPutMealErrors));
   }
 
-  deleteBrand(id: number): Observable<void> {
+  deleteMeal(id: number): Observable<void> {
     return this._httpClient.delete<void>(`${this._url}/${id}`).pipe(catchError(this.logError));
   }
 
@@ -45,7 +45,7 @@ export class BrandService {
     return throwError("There is a problem with the service. Please, try again later.");
   }
 
-  private handlePostPutBrandErrors(errorResponse: HttpErrorResponse) {
+  private handlePostPutMealErrors(errorResponse: HttpErrorResponse) {
     if(!(errorResponse.error instanceof ErrorEvent)) {
       return throwError(errorResponse.error);
     }

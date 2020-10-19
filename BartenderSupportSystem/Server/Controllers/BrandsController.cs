@@ -99,7 +99,7 @@ namespace BartenderSupportSystem.Server.Controllers
             var brandDbModel = _brandMapper.ToDbModel(brand);
             await _context.BrandsSet.AddAsync(brandDbModel);
             await _context.SaveChangesAsync();
-            var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).FirstOrDefault();
+            var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).First();
 
             return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.Id }, _brandMapper.ToDto(createdBrand));
         }
