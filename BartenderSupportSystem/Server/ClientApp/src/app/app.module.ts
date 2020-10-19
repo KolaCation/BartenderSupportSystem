@@ -11,6 +11,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizeInterceptor } from '../api-authorization/authorize.interceptor';
 import { BrandService } from './recommendationSystem/brands/brand/brand.service';
 import { DrinkService } from './recommendationSystem/drinks/drink/drink.service';
+import { MealService } from './recommendationSystem/meals/meal/meal.service';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { ErrorHandlerService } from './shared/ErrorHandlerService';
 
@@ -30,6 +31,7 @@ import { ErrorHandlerService } from './shared/ErrorHandlerService';
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     BrandService,
     DrinkService,
+    MealService,
     AuthorizeService,
     ErrorHandlerService
   ],

@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'brands', loadChildren: () => import('./recommendationSystem/brands/brand/brand.module').then(m => m.BrandModule) },
   { path: 'drinks', loadChildren: () => import('./recommendationSystem/drinks/drink/drink.module').then(m => m.DrinkModule) },
   { path: 'cocktails', loadChildren: () => import('./recommendationSystem/cocktails/cocktail/cocktail.module').then(m => m.CocktailModule) },
+  { path: 'meals', loadChildren: () => import('./recommendationSystem/meals/meal/meal.module').then(m => m.MealModule) },
 ];
 
 @NgModule({

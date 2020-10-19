@@ -16,22 +16,21 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         {
             CustomValidator.ValidateObject(item);
             var brandCountry = Enum.TryParse(typeof(Countries), item.CountryOfOrigin, out var result);
-            if(brandCountry)
+            if (brandCountry)
             {
                 if (item.Id == 0)
                 {
-                    return new BrandDbModel(item.Name, (Countries)result);
+                    return new BrandDbModel(item.Name, (Countries) result);
                 }
                 else
                 {
-                    return new BrandDbModel(item.Id, item.Name, (Countries)result);
+                    return new BrandDbModel(item.Id, item.Name, (Countries) result);
                 }
             }
             else
             {
                 throw new InvalidCastException(nameof(result));
             }
-
         }
 
         public BrandDto ToDto(BrandDbModel item)
