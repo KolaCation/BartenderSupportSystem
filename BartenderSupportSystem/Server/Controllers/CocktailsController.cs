@@ -9,11 +9,13 @@ using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSy
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using Microsoft.AspNetCore.Cors;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CorsPolicy")]
     public class CocktailsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

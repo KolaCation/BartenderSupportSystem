@@ -12,14 +12,19 @@ namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
         public ProportionType ProportionType { get; private set; }
         public double ProportionValue { get; private set; }
 
-        public IngredientDbModel(int id, int componentId, int cocktailId, ProportionType proportionType, double proportionValue)
+        public IngredientDbModel(int componentId, int cocktailId, ProportionType proportionType, double proportionValue)
         {
             CustomValidator.ValidateNumber(proportionValue, CustomValidatorDefaultValues.NonNegativeDouble, 100000);
-            Id = id;
             ComponentId = componentId;
             CocktailId = cocktailId;
             ProportionType = proportionType;
             ProportionValue = proportionValue;
+        }
+
+        public IngredientDbModel(int id, int componentId, int cocktailId, ProportionType proportionType,
+            double proportionValue) : this(componentId, cocktailId, proportionType, proportionValue)
+        {
+            Id = id;
         }
     }
 }
