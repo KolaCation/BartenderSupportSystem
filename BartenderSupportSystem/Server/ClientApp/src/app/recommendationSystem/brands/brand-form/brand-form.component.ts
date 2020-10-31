@@ -59,7 +59,6 @@ export class BrandFormComponent implements OnInit {
       }
     },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -85,7 +84,6 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',

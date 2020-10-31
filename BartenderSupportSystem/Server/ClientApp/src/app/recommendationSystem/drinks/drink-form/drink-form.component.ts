@@ -81,7 +81,6 @@ export class DrinkFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -122,7 +121,6 @@ export class DrinkFormComponent implements OnInit {
       }
     },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -154,7 +152,6 @@ export class DrinkFormComponent implements OnInit {
         this._photoPath = this.drink.photoPath;
       },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
