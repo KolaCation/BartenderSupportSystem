@@ -26,18 +26,24 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         public IngredientDbModel ToDbModel(IngredientDto item)
         {
             CustomValidator.ValidateObject(item);
-            if (item.Id == 0)
+            var proportionType = Enum.TryParse(typeof(ProportionType), item.ProportionType, out var result);
+            if (proportionType)
             {
-                return new IngredientDbModel(item.ComponentId, item.CocktailId, item.ProportionType,
-                    item.ProportionValue);
+                if (item.Id == 0)
+                {
+                    return new IngredientDbModel(item.ComponentId, item.CocktailId, (ProportionType) result,
+                        item.ProportionValue);
+                }
+                else
+                {
+                    return new IngredientDbModel(item.Id, item.ComponentId, (ProportionType) result,
+                        item.ProportionValue);
+                }
             }
             else
             {
-                return new IngredientDbModel(item.Id, item.ComponentId, item.CocktailId, item.ProportionType,
-                    item.ProportionValue);
+                throw new InvalidCastException(nameof(result));
             }
-
-            ;
         }
 
         public IngredientDto ToDto(IngredientDbModel item)
@@ -48,7 +54,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 Id = item.Id,
                 CocktailId = item.Id,
                 ComponentId = item.ComponentId,
-                ProportionType = item.ProportionType,
+                ProportionType = item.ProportionType.ToString(),
                 ProportionValue = item.ProportionValue
             };
             if (item.ProportionType.Equals(ProportionType.Milliliter))
@@ -65,6 +71,18 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
             }
 
             return ingredientDtoToReturn;
+        }
+
+        public List<IngredientDbModel> ToDbModelList(List<IngredientDto> items)
+        {
+            CustomValidator.ValidateObject(items);
+            return (from item in items select ToDbModel(item)).ToList();
+        }
+
+        public List<IngredientDto> ToDtoList(List<IngredientDbModel> items)
+        {
+            CustomValidator.ValidateObject(items);
+            return (from item in items select ToDto(item)).ToList();
         }
     }
 }

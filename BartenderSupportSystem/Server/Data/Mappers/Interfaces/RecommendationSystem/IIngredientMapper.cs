@@ -9,5 +9,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSy
 {
     internal interface IIngredientMapper : IMapper<IngredientDto, IngredientDbModel>
     {
+        List<IngredientDbModel> ToDbModelList(List<IngredientDto> items);
+        List<IngredientDto> ToDtoList(List<IngredientDbModel> items);
     }
 }

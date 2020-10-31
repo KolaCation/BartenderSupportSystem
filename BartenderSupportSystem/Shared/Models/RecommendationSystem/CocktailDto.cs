@@ -8,8 +8,9 @@ namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public CocktailType Type { get; set; }
+        public string CocktailType { get; set; }
         public string PhotoPath { get; set; }
         public List<IngredientDto> Ingredients { get; set; }
+        public string Description { get; set; }
     }
 }

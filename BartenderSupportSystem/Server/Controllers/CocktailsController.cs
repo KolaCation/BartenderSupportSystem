@@ -20,12 +20,14 @@ namespace BartenderSupportSystem.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICocktailMapper _cocktailMapper;
+        private readonly IIngredientMapper _ingredientMapper;
         private readonly IStorageService _storageService;
 
         public CocktailsController(ApplicationDbContext context, IStorageService storageService)
         {
             _context = context;
-            _cocktailMapper = new CocktailMapper();
+            _cocktailMapper = new CocktailMapper(context);
+            _ingredientMapper = new IngredientMapper(context);
             _storageService = storageService;
         }
 
@@ -49,7 +51,6 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return NotFound();
             }
-
             var cocktail = _cocktailMapper.ToDto(cocktailDbModel);
             return cocktail;
         }
@@ -69,6 +70,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+
             var cocktailDbModelToUpdate = await _context.CocktailsSet.FindAsync(id);
             if (cocktailDbModelToUpdate == null)
             {
@@ -87,6 +89,8 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
+            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+            _context.Entry(ingredientDbModels).State = EntityState.Modified;
 
             try
             {
@@ -121,10 +125,14 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 cocktail.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails");
             }
+            
             var cocktailDbModel = _cocktailMapper.ToDbModel(cocktail);
             await _context.CocktailsSet.AddAsync(cocktailDbModel);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             var createdCocktail = _context.CocktailsSet.OrderByDescending(e => e.Id).First();
+            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+            await _context.IngredientsSet.AddRangeAsync(ingredientDbModels);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCocktail), new { id = createdCocktail.Id }, _cocktailMapper.ToDto(createdCocktail));
         }
@@ -139,6 +147,9 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
+            var cocktail = _cocktailMapper.ToDto(cocktailDbModel);
+            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+            _context.IngredientsSet.RemoveRange(ingredientDbModels);
             _context.CocktailsSet.Remove(cocktailDbModel);
             await _context.SaveChangesAsync();
 
