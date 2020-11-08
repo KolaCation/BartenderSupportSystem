@@ -51,6 +51,7 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return NotFound();
             }
+
             var cocktail = _cocktailMapper.ToDto(cocktailDbModel);
             return cocktail;
         }
@@ -65,6 +66,7 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -76,12 +78,15 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return NotFound();
             }
+
             _context.Entry(cocktailDbModelToUpdate).State = EntityState.Detached;
             var fileRoute = cocktailDbModelToUpdate.PhotoPath;
             cocktailDbModelToUpdate = _cocktailMapper.ToDbModel(cocktail);
             if (!string.IsNullOrEmpty(cocktail.PhotoPath))
             {
-                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails", fileRoute));
+                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
+                    Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails",
+                    fileRoute));
             }
             else
             {
@@ -90,8 +95,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
             _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
             var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-            _context.Entry(ingredientDbModels).State = EntityState.Modified;
-
+            ingredientDbModels.ForEach(e => _context.Entry(e).State = EntityState.Modified);
             try
             {
                 await _context.SaveChangesAsync();
@@ -121,20 +125,28 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             if (!string.IsNullOrEmpty(cocktail.PhotoPath))
             {
-                cocktail.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails");
+                cocktail.PhotoPath = await _storageService.SaveFile(
+                    Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails");
             }
-            
+
             var cocktailDbModel = _cocktailMapper.ToDbModel(cocktail);
             await _context.CocktailsSet.AddAsync(cocktailDbModel);
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             var createdCocktail = _context.CocktailsSet.OrderByDescending(e => e.Id).First();
+            foreach (var ingredientDto in cocktail.Ingredients)
+            {
+                ingredientDto.CocktailId = createdCocktail.Id;
+            }
+
             var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
             await _context.IngredientsSet.AddRangeAsync(ingredientDbModels);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCocktail), new { id = createdCocktail.Id }, _cocktailMapper.ToDto(createdCocktail));
+            return CreatedAtAction(nameof(GetCocktail), new {id = createdCocktail.Id},
+                _cocktailMapper.ToDto(createdCocktail));
         }
 
         // DELETE: api/Cocktails/5

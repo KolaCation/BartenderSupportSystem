@@ -36,7 +36,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 }
                 else
                 {
-                    return new IngredientDbModel(item.Id, item.ComponentId, (ProportionType) result,
+                    return new IngredientDbModel(item.Id, item.ComponentId, item.CocktailId, (ProportionType) result,
                         item.ProportionValue);
                 }
             }

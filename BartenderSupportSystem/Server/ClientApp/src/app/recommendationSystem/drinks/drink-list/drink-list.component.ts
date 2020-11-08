@@ -54,6 +54,7 @@ export class DrinkListComponent implements OnInit {
           () => {
             let drinkIndex: number = this.drinks.indexOf(drink, 0);
             this.drinks.splice(drinkIndex, 1);
+            this.filteredDrinks = this.drinks;
           },
           (error: any) => console.log(error)
         );

@@ -1,1 +1,27 @@
-<p>cocktail-list works!</p>
+<h4 class="text mt-3">Cocktail List</h4>
+<div class="col">
+    <a class="btn btn-primary btn-lg m-2" routerLink="/cocktails/create">Create Cocktail</a>
+    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+</div>
+<div *ngIf="cocktails">
+    <cocktail-filter (filterCocktails)="filterCocktails($event)"></cocktail-filter>
+</div>
+<div *ngIf="cocktails" class="row justify-content-start m-3">
+    <div *ngFor="let cocktail of filteredCocktails" class="col-lg-4 col-md-6 col-sm-12 mt-3">
+        <div class="card text-center">
+            <div *ngIf="cocktail.photoPath != null">
+                <img *ngIf="cocktail.photoPath != null" class="card-img-top image-limiter" [src]="cocktail.photoPath"
+                    alt="No image">
+            </div>
+            <h5 class="card-header"><a [routerLink]="['/cocktails', cocktail.id]">{{cocktail.name}}</a></h5>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <a class="btn btn-success m-2" (click)="editCocktail(cocktail.id)">Edit</a>
+                    <button class="btn btn-danger m-2" (click)="deleteCocktail(cocktail)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p *ngIf="cocktails && cocktails.length === 0" class="m-3 text-center">{{statusMessage}}</p>
+<p *ngIf="!cocktails" class="m-3 text-center">{{statusMessage}}</p>
