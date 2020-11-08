@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
 import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
@@ -30,6 +30,7 @@ export class CocktailFormComponent implements OnInit {
   proportionTypeArray = Object.values(ProportionType);
   cocktailTypeArray = Object.values(CocktailType);
   componentList: any[] = new Array();
+  formArrayServerErrors = {}
 
   messages = {
     "name": {
@@ -120,9 +121,7 @@ export class CocktailFormComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       cocktailType: ['', [Validators.required, CustomValidators.validateCocktailType()]],
       description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
-      ingredients: this._formBuilder.array([
-        this.addIngredientFormGroup()
-      ])
+      ingredients: this._formBuilder.array([])
     });
 
     this.cocktailForm.valueChanges.subscribe(() => {
@@ -224,7 +223,8 @@ export class CocktailFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
+        this.cocktailForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -252,7 +252,8 @@ export class CocktailFormComponent implements OnInit {
         })
       },
       error => {
-        console.log(error);
+        this.cocktailForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -281,3 +282,4 @@ export class CocktailFormComponent implements OnInit {
     this.cocktail.photoPath = result;
   }
 }
+

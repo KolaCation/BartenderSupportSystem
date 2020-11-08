@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
@@ -45,7 +46,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         {
             CustomValidator.ValidateObject(item);
             var ingredientDbModels = _context.IngredientsSet.Where(e => e.CocktailId.Equals(item.Id)).ToList();
-            var ingredients = _ingredientMapper.ToDtoList(ingredientDbModels);
+            var ingredients = ingredientDbModels.Count == 0 ? null : _ingredientMapper.ToDtoList(ingredientDbModels);
             return new CocktailDto
             {
                 Id = item.Id,

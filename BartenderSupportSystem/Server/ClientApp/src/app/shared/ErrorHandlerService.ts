@@ -1,4 +1,4 @@
-import { FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
 export class ErrorHandlerService {
 
@@ -19,23 +19,6 @@ export class ErrorHandlerService {
                 this.handleClientErrors(abstractControl, messages);
             }
         });
-        return this.formErrors;
-    }
-
-    handleServerErrors(formGroupToValidate: FormGroup, errors: any): any {
-        for (let formControlName in formGroupToValidate.controls) {
-            this.formErrors[formControlName] = "";
-        }
-        if (errors != null) {
-            Object.keys(errors).forEach((key: string) => {
-                let formControlName = key.charAt(0).toLowerCase() + key.slice(1);
-                this.formErrors[formControlName] = "SERVER VALIDATON: ";
-                const messagesForControl = errors[key];
-                for (let msg of messagesForControl) {
-                    this.formErrors[formControlName] += msg + " ";
-                }
-            });
-        }
         return this.formErrors;
     }
 }

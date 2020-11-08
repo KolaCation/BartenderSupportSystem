@@ -94,8 +94,11 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
-            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-            ingredientDbModels.ForEach(e => _context.Entry(e).State = EntityState.Modified);
+            if (cocktail.Ingredients != null)
+            {
+                var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+                ingredientDbModels.ForEach(e => _context.Entry(e).State = EntityState.Modified);
+            }
             try
             {
                 await _context.SaveChangesAsync();
@@ -136,15 +139,18 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.CocktailsSet.AddAsync(cocktailDbModel);
             await _context.SaveChangesAsync();
             var createdCocktail = _context.CocktailsSet.OrderByDescending(e => e.Id).First();
-            foreach (var ingredientDto in cocktail.Ingredients)
+            if (cocktail.Ingredients != null)
             {
-                ingredientDto.CocktailId = createdCocktail.Id;
+                foreach (var ingredientDto in cocktail.Ingredients)
+                {
+                    ingredientDto.CocktailId = createdCocktail.Id;
+                }
+
+                var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+                await _context.IngredientsSet.AddRangeAsync(ingredientDbModels);
+                await _context.SaveChangesAsync();
             }
-
-            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-            await _context.IngredientsSet.AddRangeAsync(ingredientDbModels);
-            await _context.SaveChangesAsync();
-
+            
             return CreatedAtAction(nameof(GetCocktail), new {id = createdCocktail.Id},
                 _cocktailMapper.ToDto(createdCocktail));
         }
@@ -160,8 +166,11 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             var cocktail = _cocktailMapper.ToDto(cocktailDbModel);
-            var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-            _context.IngredientsSet.RemoveRange(ingredientDbModels);
+            if (cocktail.Ingredients != null)
+            {
+                var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+                _context.IngredientsSet.RemoveRange(ingredientDbModels);
+            }
             _context.CocktailsSet.Remove(cocktailDbModel);
             await _context.SaveChangesAsync();
 

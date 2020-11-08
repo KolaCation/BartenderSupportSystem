@@ -108,7 +108,8 @@ export class BrandFormComponent implements OnInit {
         })
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
+        this.brandForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -133,7 +134,8 @@ export class BrandFormComponent implements OnInit {
         });
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.brandForm, error.errors);
+        this.brandForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',

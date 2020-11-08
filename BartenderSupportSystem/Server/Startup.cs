@@ -46,6 +46,8 @@ namespace BartenderSupportSystem.Server
             services.AddTransient<IValidator<BrandDto>, BrandValidator>();
             services.AddTransient<IValidator<DrinkDto>, DrinkValidator>();
             services.AddTransient<IValidator<MealDto>, MealValidator>();
+            services.AddScoped<IValidator<CocktailDto>, CocktailValidator>();
+            services.AddScoped<IValidator<IngredientDto>, IngredientValidator>();
 
             services.AddIdentityServer(options =>
             {
