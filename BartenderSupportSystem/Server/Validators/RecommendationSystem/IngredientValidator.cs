@@ -29,7 +29,7 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
         private bool ExistComponent(int id)
         {
             return _context.DrinksSet.Any(e => e.Id.Equals(id)) ||
-                   _context.MealsSet.Any(e => e.Id.Equals(id) && e.Type.Equals(MealType.Ingredient));
+                   _context.MealsSet.Any(e => e.Id.Equals(id));
         }
 
         private bool ExistCocktail(int id)

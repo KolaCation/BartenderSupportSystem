@@ -99,6 +99,14 @@ namespace BartenderSupportSystem.Server.Controllers
                 var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
                 ingredientDbModels.ForEach(e => _context.Entry(e).State = EntityState.Modified);
             }
+            else
+            {
+                var ingredientDbModels = _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).ToList();
+                if (ingredientDbModels.Count != 0)
+                {
+                    _context.IngredientsSet.RemoveRange(ingredientDbModels);
+                }
+            }
             try
             {
                 await _context.SaveChangesAsync();
