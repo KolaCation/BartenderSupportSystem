@@ -17,7 +17,7 @@
       <div class="form-group">
         <label for="pricePerGr">Price Per Gram</label>
         <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.pricePerGr"
-          [class.is-valid]="mealForm.controls.pricePerGr.valid" type="number" class="form-control col-sm-6" id="pricePerGr"
+          [class.is-valid]="mealForm.controls.pricePerGr.valid" type="number" class="form-control col-sm-6" id="pricePerGr" min="0" max="10000"
           formControlName="pricePerGr" placeholder="Enter price per gram">
         <div class="invalid-feedback" *ngIf="formErrors.pricePerGr">
           {{formErrors.pricePerGr}}
@@ -42,12 +42,7 @@
             Looks good!
         </div>
     </div>
-  
+    
       <button type="submit" [disabled]="mealForm.invalid" class="btn btn-primary col-sm-6">Submit</button>
     </form>
-  
-    <div>
-      <p>{{mealForm.value | json}}</p>
-      <p>Form is NOT valid: {{mealForm.invalid}}</p>
-    </div>
   </div>

@@ -11,7 +11,7 @@ namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
         public DrinkDto Drink { get; set; }
         public int CocktailId { get; set; }
         public CocktailDto Cocktail { get; set; }
-        public ProportionType ProportionType { get; set; }
+        public string ProportionType { get; set; }
         public double ProportionValue { get; set; }
     }
 }

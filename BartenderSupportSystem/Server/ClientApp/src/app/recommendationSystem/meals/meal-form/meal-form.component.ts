@@ -64,7 +64,6 @@ export class MealFormComponent implements OnInit {
       }
     },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -90,7 +89,6 @@ export class MealFormComponent implements OnInit {
         });
       },
       error => {
-        console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -115,7 +113,8 @@ export class MealFormComponent implements OnInit {
         })
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.mealForm, error.errors);
+        this.mealForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -140,7 +139,8 @@ export class MealFormComponent implements OnInit {
         });
       },
       error => {
-        this.formErrors = this._errService.handleServerErrors(this.mealForm, error.errors);
+        this.mealForm.markAllAsTouched();
+        this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',

@@ -31,7 +31,7 @@
         <div class="form-group">
             <label for="alcoholPercentage">Alcohol Percentage</label>
             <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.alcoholPercentage"
-                [class.is-valid]="drinkForm.controls.alcoholPercentage.valid" type="number"
+                [class.is-valid]="drinkForm.controls.alcoholPercentage.valid" type="number" min="0" max="100"
                 class="form-control col-sm-6" id="alcoholPercentage" formControlName="alcoholPercentage"
                 placeholder="Enter alcohol percentage">
             <div class="invalid-feedback" *ngIf="formErrors.alcoholPercentage">
@@ -73,7 +73,7 @@
         <div class="form-group">
             <label for="pricePerMl">Price Per Ml</label>
             <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.pricePerMl"
-                [class.is-valid]="drinkForm.controls.pricePerMl.valid" type="number" class="form-control col-sm-6"
+                [class.is-valid]="drinkForm.controls.pricePerMl.valid" type="number" class="form-control col-sm-6" min="0" max="10000"
                 id="pricePerMl" formControlName="pricePerMl" placeholder="Enter price per Ml">
             <div class="invalid-feedback" *ngIf="formErrors.pricePerMl">
                 {{formErrors.pricePerMl}}
@@ -88,9 +88,4 @@
             <button type="submit" [disabled]="drinkForm.invalid" class="btn btn-primary">Submit</button>
         </div>
     </form>
-
-    <div>
-        <p>{{drinkForm.value | json}}</p>
-        <p>Form is NOT valid: {{drinkForm.invalid}}</p>
-    </div>
 </div>
