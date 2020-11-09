@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ICocktailFilter } from '../cocktail-filter/ICocktailFilter';
 import { CocktailService } from '../cocktail/cocktail.service';
 import { ICocktail } from '../cocktail/ICocktail';
 
@@ -25,7 +26,6 @@ export class CocktailListComponent implements OnInit {
         } else {
           this.cocktails = data;
           this.filteredCocktails = this.cocktails;
-          console.log(this.cocktails);
         }
       },
       error => {
@@ -65,5 +65,22 @@ export class CocktailListComponent implements OnInit {
         );
       }
     });
+  }
+
+  filterCocktails(cocktailFilterModel: ICocktailFilter) {
+    if (cocktailFilterModel != null) {
+      this.filteredCocktails = this.cocktails;
+      if (cocktailFilterModel.description != "") {
+        this.filteredCocktails = this.filteredCocktails.filter(e => e.description.toLowerCase().includes(cocktailFilterModel.description.toLowerCase()));
+      }
+      if (cocktailFilterModel.name != "") {
+        this.filteredCocktails = this.filteredCocktails.filter(e => e.name.toLowerCase().includes(cocktailFilterModel.name.toLowerCase()));
+      }
+      if (cocktailFilterModel.cocktailType != "") {
+        this.filteredCocktails = this.filteredCocktails.filter(e => e.cocktailType.toLowerCase() === cocktailFilterModel.cocktailType.toLowerCase());
+      }
+    } else {
+      this.filteredCocktails = this.cocktails;
+    }
   }
 }

@@ -21,7 +21,6 @@ namespace BartenderSupportSystem.Server.Data
         internal DbSet<CocktailDbModel> CocktailsSet { get; set; }
         internal DbSet<DrinkDbModel> DrinksSet { get; set; }
         internal DbSet<IngredientDbModel> IngredientsSet { get; set; }
-        internal DbSet<MenuDbModel> MenusSet { get; set; }
         internal DbSet<CustomAnswerDbModel> AnswersSet { get; set; }
         internal DbSet<CustomQuestionDbModel> QuestionsSet { get; set; }
         internal DbSet<CustomTestDbModel> TestsSet { get; set; }

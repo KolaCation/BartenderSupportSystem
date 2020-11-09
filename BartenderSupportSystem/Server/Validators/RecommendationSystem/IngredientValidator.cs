@@ -21,7 +21,7 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
                 .Must(BeValidProportionType).WithMessage("Provide a type from the list.");
             RuleFor(e => e.ProportionValue)
                 .GreaterThanOrEqualTo(0).WithMessage("Min value: 0.")
-                .LessThanOrEqualTo(100).WithMessage("Max value: 10000.");
+                .LessThanOrEqualTo(10000).WithMessage("Max value: 10000.");
             RuleFor(e => e.ComponentId).Must(ExistComponent).WithMessage("Component not found.");
             RuleFor(e => e.CocktailId).Must(ExistCocktail).WithMessage("Cocktail not found.");
         }
@@ -29,7 +29,7 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
         private bool ExistComponent(int id)
         {
             return _context.DrinksSet.Any(e => e.Id.Equals(id)) ||
-                   _context.MealsSet.Any(e => e.Id.Equals(id) && e.Type.Equals(MealType.Ingredient));
+                   _context.MealsSet.Any(e => e.Id.Equals(id));
         }
 
         private bool ExistCocktail(int id)

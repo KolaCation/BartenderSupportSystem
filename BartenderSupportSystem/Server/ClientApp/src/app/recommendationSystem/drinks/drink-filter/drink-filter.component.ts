@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import { BrandService } from '../../brands/brand/brand.service';
 import { IBrand } from '../../brands/brand/IBrand';
 import { AlcoholType } from '../drink/AlcoholType';
-import { DrinkService } from '../drink/drink.service';
 import { IDrinkFilter } from './IDrinkFilter';
 
 @Component({
@@ -20,8 +19,10 @@ export class DrinkFilterComponent implements OnInit {
   drinkFilterModel: IDrinkFilter;
   @Output() filterDrinks: EventEmitter<IDrinkFilter> = new EventEmitter<IDrinkFilter>();
   alcoholTypesArray: AlcoholType[] = Object.values(AlcoholType);
+  title: string = "Show";
+  isExpanded: boolean = false;
 
-  constructor(private _formBuilder: FormBuilder, private _drinkService: DrinkService,
+  constructor(private _formBuilder: FormBuilder,
     private _activatedRoute: ActivatedRoute, private _router: Router, private _brandService: BrandService) { }
 
   ngOnInit(): void {
@@ -69,7 +70,7 @@ export class DrinkFilterComponent implements OnInit {
       brandId: [''],
       isNonAlcohol: ['']
     });
-    
+
     this.drinkFilterForm.valueChanges.subscribe(
       () => this.onSubmit(),
       error => {
@@ -112,5 +113,14 @@ export class DrinkFilterComponent implements OnInit {
       isNonAlcohol: ""
     });
     this.filterDrinks.emit(null);
+  }
+
+  toggleContent(): void {
+    this.isExpanded = !this.isExpanded;
+    if (this.isExpanded) {
+      this.title = "Hide";
+    } else {
+      this.title = "Show";
+    }
   }
 }

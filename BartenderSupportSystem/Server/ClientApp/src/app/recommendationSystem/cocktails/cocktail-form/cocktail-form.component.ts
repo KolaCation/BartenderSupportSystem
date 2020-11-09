@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
 import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
@@ -254,6 +254,7 @@ export class CocktailFormComponent implements OnInit {
       error => {
         this.cocktailForm.markAllAsTouched();
         this.validateFormValue();
+        console.log(error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',

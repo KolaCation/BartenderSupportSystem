@@ -9,7 +9,6 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Price Per Gram</th>
-                <th scope="col">Meal Type</th>
             </tr>
         </thead>
         <tbody>
@@ -17,7 +16,6 @@
                 <tr *ngFor="let meal of meals">
                     <td>{{meal.name}}</td>
                     <td>{{meal.pricePerGr}}</td>
-                    <td>{{meal.mealType}}</td>
                     <td><a class="btn btn-success" (click)="editMeal(meal.id)">Edit</a></td>
                     <td><button class="btn btn-danger" (click)="deleteMeal(meal)">Delete</button></td>
                 </tr>

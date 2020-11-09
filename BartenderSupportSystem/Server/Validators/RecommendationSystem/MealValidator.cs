@@ -19,15 +19,6 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
             RuleFor(e => e.PricePerGr)
                 .GreaterThanOrEqualTo(0).WithMessage("Min value: 0.")
                 .LessThanOrEqualTo(100).WithMessage("Max value: 10000.");
-            RuleFor(e => e.MealType)
-                .NotEmpty().WithMessage("Meal Type is required.")
-                .Must(BeValidMealType).WithMessage("Provide meal type from the list.");
-        }
-
-        private bool BeValidMealType(string mealType)
-        {
-            var mealTypeEnum = Enum.TryParse(typeof(MealType), mealType, out var result);
-            return mealTypeEnum;
         }
     }
 }

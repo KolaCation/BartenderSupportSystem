@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { IMeal } from '../meal/IMeal';
-import { MealType } from '../meal/MealType';
 import { CustomValidators } from '../../../shared/CustomValidators';
 import { MealService } from '../meal/meal.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +15,6 @@ import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
 export class MealFormComponent implements OnInit {
   mealForm: FormGroup;
   meal: IMeal;
-  mealTypeArray = Object.values(MealType);
 
   messages = {
     "name": {
@@ -28,9 +26,6 @@ export class MealFormComponent implements OnInit {
       "required": "Price per gram is required.",
       "min": "Min value: 0.",
       "max": "Max value: 10000."
-    },
-    "mealType": {
-      "mealTypeError": "Select meal type from the list."
     }
   }
 
@@ -47,13 +42,11 @@ export class MealFormComponent implements OnInit {
     this.meal = {
       id: 0,
       name: null,
-      pricePerGr: 0,
-      mealType: null
+      pricePerGr: 0
     }
     this.mealForm = this._formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      pricePerGr: ['', [Validators.required, Validators.min(0), Validators.max(10000)]],
-      mealType: ['', [CustomValidators.validateMealType()]]
+      pricePerGr: ['', [Validators.required, Validators.min(0), Validators.max(10000)]]
     })
     this.mealForm.valueChanges.subscribe(() => this.validateFormValue(this.mealForm));
 
@@ -84,8 +77,7 @@ export class MealFormComponent implements OnInit {
         Object.assign(this.meal, meal);
         this.mealForm.patchValue({
           name: this.meal.name,
-          pricePerGr: this.meal.pricePerGr,
-          mealType: this.meal.mealType
+          pricePerGr: this.meal.pricePerGr
         });
       },
       error => {
@@ -154,7 +146,6 @@ export class MealFormComponent implements OnInit {
   mapFormValuesToModel(): void {
     this.meal.name = this.mealForm.get('name').value;
     this.meal.pricePerGr = +this.mealForm.get('pricePerGr').value;
-    this.meal.mealType = this.mealForm.get('mealType').value;
   }
 
 

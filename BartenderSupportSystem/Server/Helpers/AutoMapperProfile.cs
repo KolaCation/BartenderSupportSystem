@@ -20,7 +20,6 @@ namespace BartenderSupportSystem.Server.Helpers
             CreateMap<CocktailDto, CocktailDbModel>().ReverseMap();
             CreateMap<DrinkDto, DrinkDbModel>().ReverseMap();
             CreateMap<IngredientDto, IngredientDbModel>().ReverseMap();
-            CreateMap<MenuDto, MenuDbModel>().ReverseMap();
             CreateMap<BartenderDto, BartenderDbModel>().ReverseMap();
             CreateMap<CustomAnswerDto, CustomAnswerDbModel>().ReverseMap();
             CreateMap<CustomQuestionDto, CustomQuestionDbModel>().ReverseMap();

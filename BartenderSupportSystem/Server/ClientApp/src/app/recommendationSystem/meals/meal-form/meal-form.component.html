@@ -26,23 +26,7 @@
           Looks good!
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="mealType">Meal Type</label>
-        <select (blur)="validateFormValue()" [class.is-invalid]="formErrors.mealType"
-            [class.is-valid]="mealForm.controls.mealType.valid" class="form-control col-sm-6" id="mealType"
-            formControlName="mealType" placeholder="Enter meal type">
-            <option *ngFor="let mt of mealTypeArray" [value]="mt">{{mt}}</option>
-            <option value="">Select Meal Type</option>
-        </select>
-        <div class="invalid-feedback" *ngIf="formErrors.mealType">
-            {{formErrors.mealType}}
-        </div>
-        <div class="valid-feedback" *ngIf="!formErrors.mealType">
-            Looks good!
-        </div>
-    </div>
-    
+        
       <button type="submit" [disabled]="mealForm.invalid" class="btn btn-primary col-sm-6">Submit</button>
     </form>
   </div>

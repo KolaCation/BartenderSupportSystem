@@ -15,21 +15,14 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         public MealDbModel ToDbModel(MealDto item)
         {
             CustomValidator.ValidateObject(item);
-            var mealType = Enum.TryParse(typeof(MealType), item.MealType, out var result);
-            if (mealType)
+
+            if (item.Id == 0)
             {
-                if (item.Id == 0)
-                {
-                    return new MealDbModel(item.Name, item.PricePerGr, (MealType) result);
-                }
-                else
-                {
-                    return new MealDbModel(item.Id, item.Name, item.PricePerGr, (MealType) result);
-                }
+                return new MealDbModel(item.Name, item.PricePerGr);
             }
             else
             {
-                throw new InvalidCastException(nameof(result));
+                return new MealDbModel(item.Id, item.Name, item.PricePerGr);
             }
         }
 
@@ -40,8 +33,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
             {
                 Id = item.Id,
                 Name = item.Name,
-                PricePerGr = item.PricePerGr,
-                MealType = item.Type.ToString()
+                PricePerGr = item.PricePerGr
             };
         }
     }
