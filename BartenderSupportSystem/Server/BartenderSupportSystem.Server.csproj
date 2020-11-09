@@ -82,6 +82,7 @@
 		<Folder Include="Data\Mappers\Implementation\TestSystem\" />
 		<Folder Include="Data\Mappers\Interfaces\TestSystem\" />
 		<Folder Include="Validators\TestSystem\" />
+		<Folder Include="wwwroot\cocktails\" />
 		<Folder Include="wwwroot\drinks\" />
 	</ItemGroup>
 

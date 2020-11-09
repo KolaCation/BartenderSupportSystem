@@ -21,7 +21,7 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
                 .Must(BeValidProportionType).WithMessage("Provide a type from the list.");
             RuleFor(e => e.ProportionValue)
                 .GreaterThanOrEqualTo(0).WithMessage("Min value: 0.")
-                .LessThanOrEqualTo(100).WithMessage("Max value: 10000.");
+                .LessThanOrEqualTo(10000).WithMessage("Max value: 10000.");
             RuleFor(e => e.ComponentId).Must(ExistComponent).WithMessage("Component not found.");
             RuleFor(e => e.CocktailId).Must(ExistCocktail).WithMessage("Cocktail not found.");
         }

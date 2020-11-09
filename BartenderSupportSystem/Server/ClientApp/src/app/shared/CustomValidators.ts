@@ -1,7 +1,6 @@
 import { Countries } from '../recommendationSystem/brands/brand/Countries';
 import { AlcoholType } from '../recommendationSystem/drinks/drink/AlcoholType';
 import { AbstractControl } from '@angular/forms';
-import { MealType } from '../recommendationSystem/meals/meal/MealType';
 import { CocktailType } from '../recommendationSystem/cocktails/cocktail/CocktailType';
 import { ProportionType } from '../recommendationSystem/cocktails/cocktail/ingredients/ProportionType';
 
@@ -38,18 +37,7 @@ export class CustomValidators {
             }
         }
     }
-
-    static validateMealType() {
-        return (control: AbstractControl): { [key: string]: any } | null => {
-            if (control && (control.value !== "" || Object.values(MealType).includes(control.value))) {
-                return null;
-            }
-            else {
-                return { "mealTypeError": true };
-            }
-        }
-    }
-
+    
     static validateCocktailType() {
         return (control: AbstractControl): { [key: string]: any } | null => {
             if (control && (control.value !== "" || Object.values(CocktailType).includes(control.value))) {
