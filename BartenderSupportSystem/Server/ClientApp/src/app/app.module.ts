@@ -15,6 +15,7 @@ import { MealService } from './recommendationSystem/meals/meal/meal.service';
 import { CocktailService } from './recommendationSystem/cocktails/cocktail/cocktail.service';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { ErrorHandlerService } from './shared/ErrorHandlerService';
+import { CustomTestService } from './testSystem/custom-test/custom-test.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ErrorHandlerService } from './shared/ErrorHandlerService';
     MealService,
     CocktailService,
     AuthorizeService,
-    ErrorHandlerService
+    ErrorHandlerService,
+    CustomTestService
   ],
   bootstrap: [AppComponent]
 })

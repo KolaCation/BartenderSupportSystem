@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'drinks', loadChildren: () => import('./recommendationSystem/drinks/drink/drink.module').then(m => m.DrinkModule) },
   { path: 'cocktails', loadChildren: () => import('./recommendationSystem/cocktails/cocktail/cocktail.module').then(m => m.CocktailModule) },
   { path: 'meals', loadChildren: () => import('./recommendationSystem/meals/meal/meal.module').then(m => m.MealModule) },
+  { path: 'tests', loadChildren: () => import('./testSystem/custom-test/custom-test.module').then(m => m.CustomTestModule) }
 ];
 
 @NgModule({
