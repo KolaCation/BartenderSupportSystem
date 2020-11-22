@@ -63,33 +63,26 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var drinkDbModelToUpdate = await _context.DrinksSet.FindAsync(id);
-            if (drinkDbModelToUpdate == null)
+            if (!DrinkExists(id))
             {
                 return NotFound();
             }
 
-            _context.Entry(drinkDbModelToUpdate).State = EntityState.Detached;
-            var fileRoute = drinkDbModelToUpdate.PhotoPath;
-            drinkDbModelToUpdate = _drinkMapper.ToDbModel(drink);
-            if (!string.IsNullOrEmpty(drink.PhotoPath))
+            var updateDrinkSucceed = await TryUpdateDrink(drink);
+            if (!updateDrinkSucceed)
             {
-                drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks", fileRoute));
+                return BadRequest();
             }
-            else
-            {
-                drinkDbModelToUpdate.UpdatePhotoPath(fileRoute);
-            }
-            _context.Entry(drinkDbModelToUpdate).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -116,9 +109,11 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             if (!string.IsNullOrEmpty(drink.PhotoPath))
             {
-                drink.PhotoPath = await _storageService.SaveFile(Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks");
+                drink.PhotoPath = await _storageService.SaveFile(
+                    Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks");
             }
 
             var drinkDbModel = _drinkMapper.ToDbModel(drink);
@@ -126,7 +121,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetDrink), new { id = createdDrink.Id }, _drinkMapper.ToDto(createdDrink));
+            return CreatedAtAction(nameof(GetDrink), new {id = createdDrink.Id}, _drinkMapper.ToDto(createdDrink));
         }
 
         // DELETE: api/Drinks/5
@@ -148,6 +143,34 @@ namespace BartenderSupportSystem.Server.Controllers
         private bool DrinkExists(int id)
         {
             return _context.DrinksSet.Any(e => e.Id.Equals(id));
+        }
+
+        private async Task<bool> TryUpdateDrink(DrinkDto drink)
+        {
+            try
+            {
+                var drinkDbModelToUpdate = await _context.DrinksSet.FindAsync(drink.Id);
+                _context.Entry(drinkDbModelToUpdate).State = EntityState.Detached;
+                var fileRoute = drinkDbModelToUpdate.PhotoPath;
+                drinkDbModelToUpdate = _drinkMapper.ToDbModel(drink);
+                if (!string.IsNullOrEmpty(drink.PhotoPath))
+                {
+                    drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
+                        Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks",
+                        fileRoute));
+                }
+                else
+                {
+                    drinkDbModelToUpdate.UpdatePhotoPath(fileRoute);
+                }
+
+                _context.Entry(drinkDbModelToUpdate).State = EntityState.Modified;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

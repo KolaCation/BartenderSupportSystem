@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
@@ -73,51 +72,17 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-
-            var cocktailDbModelToUpdate = await _context.CocktailsSet.FindAsync(id);
-            if (cocktailDbModelToUpdate == null)
+            if (!CocktailExists(id))
             {
                 return NotFound();
             }
 
-            _context.Entry(cocktailDbModelToUpdate).State = EntityState.Detached;
-            var fileRoute = cocktailDbModelToUpdate.PhotoPath;
-            cocktailDbModelToUpdate = _cocktailMapper.ToDbModel(cocktail);
-            if (!string.IsNullOrEmpty(cocktail.PhotoPath))
-            {
-                cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
-                    Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg", "cocktails",
-                    fileRoute));
-            }
-            else
-            {
-                cocktailDbModelToUpdate.UpdatePhotoPath(fileRoute);
-            }
+            var updateCocktailSucceed = await TryUpdateCocktail(cocktail);
+            var updateCocktailIngredientsSucceed = await TryUpdateCocktailIngredients(cocktail);
 
-            _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
-
-
-            var ingredientsDbCount = await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).CountAsync();
-
-            if (cocktail.Ingredients != null && ingredientsDbCount != cocktail.Ingredients.Count)
+            if (!updateCocktailSucceed || !updateCocktailIngredientsSucceed)
             {
-                var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-                foreach (var ingredientDbModel in ingredientDbModels)
-                {
-                    if (ingredientDbModel.Id == 0)
-                    {
-                        await _context.IngredientsSet.AddAsync(ingredientDbModel);
-                    }
-                    else
-                    {
-                        _context.Entry(ingredientDbModel).State = EntityState.Modified;
-                    }
-                }
-            }
-            else if (cocktail.Ingredients == null && ingredientsDbCount != 0)
-            {
-                var ingredientDbModels = _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).ToList();
-                _context.RemoveRange(ingredientDbModels);
+                return BadRequest();
             }
 
             try
@@ -203,5 +168,73 @@ namespace BartenderSupportSystem.Server.Controllers
         {
             return _context.CocktailsSet.Any(e => e.Id.Equals(id));
         }
+
+        private async Task<bool> TryUpdateCocktail(CocktailDto cocktail)
+        {
+            try
+            {
+                var cocktailDbModelToUpdate = await _context.CocktailsSet.FindAsync(cocktail.Id);
+                _context.Entry(cocktailDbModelToUpdate).State = EntityState.Detached;
+                var fileRoute = cocktailDbModelToUpdate.PhotoPath;
+                cocktailDbModelToUpdate = _cocktailMapper.ToDbModel(cocktail);
+                if (!string.IsNullOrEmpty(cocktail.PhotoPath))
+                {
+                    cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
+                        Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg",
+                        "cocktails",
+                        fileRoute));
+                }
+                else
+                {
+                    cocktailDbModelToUpdate.UpdatePhotoPath(fileRoute);
+                }
+
+                _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> TryUpdateCocktailIngredients(CocktailDto cocktail)
+        {
+            try
+            {
+                var ingredientsDbCount =
+                    await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).CountAsync();
+
+                if (cocktail.Ingredients != null && ingredientsDbCount != cocktail.Ingredients.Count)
+                {
+                    var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
+                    foreach (var ingredientDbModel in ingredientDbModels)
+                    {
+                        if (ingredientDbModel.Id == 0)
+                        {
+                            await _context.IngredientsSet.AddAsync(ingredientDbModel);
+                        }
+                        else
+                        {
+                            _context.Entry(ingredientDbModel).State = EntityState.Modified;
+                        }
+                    }
+                }
+                else if (cocktail.Ingredients == null && ingredientsDbCount != 0)
+                {
+                    var ingredientDbModels =
+                        _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).ToList();
+                    _context.RemoveRange(ingredientDbModels);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
     }
 }
