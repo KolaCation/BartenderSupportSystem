@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CustomValidators } from 'src/app/shared/CustomValidators';
 import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
 import Swal from 'sweetalert2';
+import { ICustomAnswer } from '../custom-test/custom-questions/custom-answers/ICustomAnswer';
+import { ICustomQuestion } from '../custom-test/custom-questions/ICustomQuestion';
 import { CustomTestService } from '../custom-test/custom-test.service';
 import { ICustomTest } from '../custom-test/ICustomTest';
 
@@ -15,6 +18,8 @@ export class CustomTestFormComponent implements OnInit {
 
   customTestForm: FormGroup;
   customTest: ICustomTest;
+  errTestMsg: string = null;
+  errQuestionMsg: string = null;
 
   messages = {
     "name": {
@@ -32,12 +37,17 @@ export class CustomTestFormComponent implements OnInit {
       "minlength": "Description must be at least 2 chars long.",
       "maxlength": "Description must not exceed 255 chars.",
     },
+    "questions": {
+      "arrayminlength": "Test must have at least 4 questions.",
+      "arraymaxlength": "Test must not exceed 20 questions."
+    }
   }
 
   formErrors = {
     "name": "",
     "topic": "",
-    "description": ""
+    "description": "",
+    "questions": ""
   }
 
   constructor(private _formBuilder: FormBuilder, private _customTestService: CustomTestService,
@@ -56,7 +66,7 @@ export class CustomTestFormComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       topic: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
-      questions: this._formBuilder.array([this.addQuestionFormGroup()])
+      questions: this._formBuilder.array([this.addQuestionFormGroup()], [CustomValidators.validateArrayMinLength(4), CustomValidators.validateArrayMaxLength(20)])
     });
 
     this.customTestForm.valueChanges.subscribe(() => {
@@ -97,7 +107,8 @@ export class CustomTestFormComponent implements OnInit {
     return this._formBuilder.group({
       questionId: [0, [Validators.required]],
       questionStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      answers: this._formBuilder.array([this.addAnswerFormGroup()])
+      answers: this._formBuilder.array([this.addAnswerFormGroup()], [CustomValidators.validateArrayMinLength(2),
+      CustomValidators.validateArrayMaxLength(6), CustomValidators.atLeastOneCorrectAnswerExists()])
     });
   }
 
@@ -105,7 +116,7 @@ export class CustomTestFormComponent implements OnInit {
     return this._formBuilder.group({
       answerId: [0, [Validators.required]],
       questionId: [0, [Validators.required]],
-      answerStatement: ['', [Validators.required]],
+      answerStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       answerIsCorrect: [false, []]
     });
   }
@@ -119,7 +130,7 @@ export class CustomTestFormComponent implements OnInit {
           topic: this.customTest.topic,
           description: this.customTest.description
         });
-        //this.customTestForm.setControl('questions', this.generateFormArray(this.customTest.questions));
+        this.customTestForm.setControl('questions', this.fromModelToQuestionFormArray(this.customTest.questions));
       },
       () => {
         Swal.fire({
@@ -132,30 +143,16 @@ export class CustomTestFormComponent implements OnInit {
     );
   }
 
-  /*generateFormArray(questions: IQuestion[]): FormArray {
-    let formArr: FormArray = new FormArray([]);
-    let questionFormValues = QuestionMapper.toFormValues(questions);
-    questionFormValues.forEach((question: any) => {
-      let formGroup: FormGroup = this._formBuilder.group({
-        questionId: [question.questionId, [Validators.required]],
-        componentName: [question.componentName, [Validators.required, CustomValidators.componentExists(this.componentList)]],
-        proportionType: [question.proportionType, [Validators.required, CustomValidators.validateProportionType()]],
-        proportionValue: [question.proportionValue, [Validators.required, Validators.min(0), Validators.max(10000)]]
-      });
-      formArr.push(formGroup);
-    });
-    return formArr;
-  }*/
-
   mapFormValuesToModel(): void {
     this.customTest.name = this.customTestForm.get('name').value;
     this.customTest.topic = this.customTestForm.get('topic').value;
     this.customTest.description = this.customTestForm.get('description').value;
-    this.customTest.questions = null;
+    this.customTest.questions = this.fromQuestionFormArrayToModel(this.customTestForm.get('questions'));
   }
 
   handleCreateAction(): void {
     this.mapFormValuesToModel();
+    console.log(this.customTest);
     this._customTestService.createCustomTest(this.customTest).subscribe(
       () => {
         this._router.navigate(['/tests']);
@@ -216,11 +213,64 @@ export class CustomTestFormComponent implements OnInit {
     }
   }
 
-  RemoveQuestion(i: number): void {
+  removeQuestion(i: number): void {
     (<FormArray>this.customTestForm.get('questions')).removeAt(i);
   }
 
-  RemoveAnswer(questionIndex: number, answerIndex: number): void {
+  removeAnswer(questionIndex: number, answerIndex: number): void {
     (<FormArray>(<FormGroup>(<FormArray>this.customTestForm.get('questions')).at(questionIndex)).get('answers')).removeAt(answerIndex);
+  }
+
+  fromQuestionFormArrayToModel(control: AbstractControl): ICustomQuestion[] {
+    if (control && control instanceof FormArray) {
+      let values: any[] = (<FormArray>control).value;
+      let questionsArr: ICustomQuestion[] = new Array();
+      values.forEach(value => {
+        let question: ICustomQuestion = {
+          id: +value.questionId,
+          testId: +this.customTest.id,
+          statement: value.questionStatement,
+          answers: this.fromAnswerFormArrayToModel(value.questionId, value.answers)
+        };
+        questionsArr.push(question);
+      });
+      return questionsArr;
+    }
+  }
+  fromModelToQuestionFormArray(questions: ICustomQuestion[]): FormArray {
+    let formArr: FormArray = new FormArray([]);
+    questions.forEach(question => {
+      formArr.push(this._formBuilder.group({
+        questionId: question.id,
+        questionStatement: question.statement,
+        answers: this.fromModelToAnswerFormArray(question.answers)
+      }));
+    });
+    return formArr;
+  }
+  fromModelToAnswerFormArray(answers: ICustomAnswer[]): FormArray {
+    let formArr: FormArray = new FormArray([]);
+    answers.forEach(answer => {
+      formArr.push(this._formBuilder.group({
+        answerId: answer.id,
+        questionId: answer.questionId,
+        answerIsCorrect: answer.isCorrect,
+        answerStatement: answer.statement
+      }));
+    });
+    return formArr;
+  }
+  fromAnswerFormArrayToModel(questionId: number, answers: any[]): ICustomAnswer[] {
+    let answersArr: ICustomAnswer[] = new Array();
+    answers.forEach(value => {
+      let answer: ICustomAnswer = {
+        id: +value.answerId,
+        questionId: +questionId,
+        statement: value.answerStatement,
+        isCorrect: value.answerIsCorrect
+      };
+      answersArr.push(answer);
+    });
+    return answersArr;
   }
 }

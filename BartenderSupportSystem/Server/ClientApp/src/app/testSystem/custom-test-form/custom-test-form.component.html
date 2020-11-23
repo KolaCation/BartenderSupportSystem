@@ -1,4 +1,10 @@
 <div class="mt-3">
+    <p class="text text-center text-info">RULESET FOR CREATING TESTS:</p>
+    <ul class="list-group mb-2">
+        <li class="list-group-item">Test must have at least 4 questions and must not exceed 20 questions.</li>
+        <li class="list-group-item">Question must have at least 2 answers at must not exceed 6 answers.</li>
+        <li class="list-group-item">In every question there must be at least 1 correct answer.</li>
+    </ul>
     <h4 class="text">Test Form</h4>
     <form [formGroup]="customTestForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
@@ -38,8 +44,6 @@
             </div>
         </div>
 
-   
-
         <div formArrayName="questions"
             *ngFor="let question of customTestForm.get('questions')['controls']; let i = index">
             <div [formGroupName]="i">
@@ -74,7 +78,7 @@
                     </div>
                     <div class="form-group col-md-1">
                         <label for="'btn'+i">Del Bttn</label>
-                        <button type="button" class="btn btn-danger" (click)="RemoveQuestion(i)">
+                        <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">
                             <span>X</span>
                         </button>
                     </div>
@@ -118,24 +122,43 @@
 
                             <div class="form-group col-md-1">
                                 <label for="'btn'+j">Del Bttn</label>
-                                <button type="button" class="btn btn-danger" (click)="RemoveAnswer(i, j)">
+                                <button type="button" class="btn btn-danger" (click)="removeAnswer(i, j)">
                                     <span>X</span>
                                 </button>
                             </div>
                         </div>
                     </div>
+                    <p class="text text-center text-danger"
+                        *ngIf="question.get('answers').errors?.correctAnswersCount && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
+                        Question must have at least 1 correct answer.
+                    </p>
+                    <p class="text text-center text-danger"
+                        *ngIf="question.get('answers').errors?.arrayminlength && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
+                        Question must have at least 2 answers.
+                    </p>
+                    <p class="text text-center text-danger"
+                        *ngIf="question.get('answers').errors?.arraymaxlength && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
+                        Question must not exceed 6 answers.
+                    </p>
                 </div>
                 <div class="mt-3">
-                    <button type="button" class="btn btn-primary" [disabled]="question.get('answers').invalid" (click)="addAnswerClick(i)">
+                    <button type="button" class="btn btn-primary" [disabled]="question.get('answers').invalid && !question.get('answers').errors?.arrayminlength || 
+                        question.get('answers').value.length>=6" (click)="addAnswerClick(i)">
                         Add Answer
                     </button>
                 </div>
             </div>
         </div>
         <hr>
+        <p class="text text-center text-danger"
+            *ngIf="customTestForm.get('questions').errors?.arrayminlength || customTestForm.get('questions').errors?.arraymaxlength">
+            {{formErrors.questions}}
+        </p>
         <div class="mt-3">
-            <button type="button" (click)="addQuestionClick()" [disabled]="customTestForm.get('questions').invalid"
-                class="btn btn-primary">Add Question</button>
+            <button type="button" (click)="addQuestionClick()"
+                [disabled]="customTestForm.get('questions').invalid 
+            && !customTestForm.get('questions').errors?.arrayminlength || customTestForm.get('questions').value.length>=20" class="btn btn-primary">Add
+                Question</button>
         </div>
         <hr>
         <div class="mt-3">

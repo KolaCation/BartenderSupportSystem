@@ -13,7 +13,7 @@ export class CustomTestService {
   private _url: string;
 
   constructor(private _httpClient: HttpClient) {
-    this._url = `${environment.apiUrl}/tests`
+    this._url = `${environment.apiUrl}/customTests`
   }
 
   createCustomTest(customTest: ICustomTest): Observable<ICustomTest> {
