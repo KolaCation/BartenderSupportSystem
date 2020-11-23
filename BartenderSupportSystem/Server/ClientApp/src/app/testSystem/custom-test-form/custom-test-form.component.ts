@@ -242,7 +242,8 @@ export class CustomTestFormComponent implements OnInit {
     }
   }
   fromModelToQuestionFormArray(questions: ICustomQuestion[]): FormArray {
-    let formArr: FormArray = new FormArray([]);
+    let formArr: FormArray = new FormArray([], [CustomValidators.validateArrayMinLength(4),
+       CustomValidators.validateArrayMaxLength(20)]);
     questions.forEach(question => {
       formArr.push(this._formBuilder.group({
         questionId: question.id,
@@ -253,7 +254,8 @@ export class CustomTestFormComponent implements OnInit {
     return formArr;
   }
   fromModelToAnswerFormArray(answers: ICustomAnswer[]): FormArray {
-    let formArr: FormArray = new FormArray([]);
+    let formArr: FormArray = new FormArray([], [CustomValidators.validateArrayMinLength(2),
+    CustomValidators.validateArrayMaxLength(6), CustomValidators.atLeastOneCorrectAnswerExists()]);
     answers.forEach(answer => {
       formArr.push(this._formBuilder.group({
         answerId: answer.id,

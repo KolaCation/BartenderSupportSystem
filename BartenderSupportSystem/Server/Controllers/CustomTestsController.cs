@@ -75,9 +75,11 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var customTestDbModel = _customTestMapper.ToDbModel(customTest);
-
-            _context.Entry(customTestDbModel).State = EntityState.Modified;
+            var updateSucceed = await TryUpdateCustomTest(customTest);
+            if (!updateSucceed)
+            {
+                return BadRequest();
+            }
 
             try
             {
@@ -121,7 +123,8 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomTest(int id)
         {
-            var customTestDbModel = await _context.TestsSet.FindAsync(id);
+            var customTestDbModel = await _context.TestsSet.Where(e => e.Id.Equals(id)).Include(e => e.Questions)
+                .ThenInclude(e => e.Answers).FirstOrDefaultAsync();
             if (customTestDbModel == null)
             {
                 return NotFound();
@@ -136,6 +139,70 @@ namespace BartenderSupportSystem.Server.Controllers
         private bool CustomTestExists(int id)
         {
             return _context.TestsSet.Any(e => e.Id.Equals(id));
+        }
+
+        private async Task<bool> TryUpdateCustomTest(CustomTestDto customTest)
+        {
+            try
+            {
+                var customTestDbModel = _customTestMapper.ToDbModel(customTest);
+
+                var questionDbModelsToAdd = customTestDbModel.Questions.Where(e => e.Id == 0).ToList();
+                if (questionDbModelsToAdd.Count != 0)
+                {
+                    await _context.QuestionsSet.AddRangeAsync(questionDbModelsToAdd);
+                }
+
+                var questionIdsList = await _context.QuestionsSet.Where(e => e.TestId.Equals(customTestDbModel.Id))
+                    .Select(e => e.Id).ToListAsync();
+                foreach (var questionId in questionIdsList)
+                {
+                    if (customTestDbModel.Questions.Any(e => e.Id.Equals(questionId)))
+                    {
+                        var questionDbModelToUpdate =
+                            customTestDbModel.Questions.First(e => e.Id.Equals(questionId));
+                        var answerDbModelsToAdd = questionDbModelToUpdate.Answers
+                            .Where(e => e.Id == 0 && e.QuestionId != 0)
+                            .ToList();
+                        if (answerDbModelsToAdd.Count != 0)
+                        {
+                            await _context.AnswersSet.AddRangeAsync(answerDbModelsToAdd);
+                        }
+
+                        var answerIdsList = await _context.AnswersSet
+                            .Where(e => e.QuestionId.Equals(questionDbModelToUpdate.Id)).Select(e => e.Id)
+                            .ToListAsync();
+                        foreach (var answerId in answerIdsList)
+                        {
+                            if (questionDbModelToUpdate.Answers.Any(e => e.Id.Equals(answerId)))
+                            {
+                                var answerDbModelToUpdate =
+                                    questionDbModelToUpdate.Answers.First(e => e.Id.Equals(answerId));
+                                _context.Entry(answerDbModelToUpdate).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                var answerDbModelToRemove = await _context.AnswersSet.FindAsync(answerId);
+                                _context.AnswersSet.Remove(answerDbModelToRemove);
+                            }
+                        }
+
+                        _context.Entry(questionDbModelToUpdate).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        var questionDbModelToRemove = await _context.QuestionsSet.Where(e => e.Id.Equals(questionId))
+                            .Include(e => e.Answers).FirstOrDefaultAsync();
+                        _context.QuestionsSet.Remove(questionDbModelToRemove);
+                    }
+                }
+                _context.Entry(customTestDbModel).State = EntityState.Modified;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
