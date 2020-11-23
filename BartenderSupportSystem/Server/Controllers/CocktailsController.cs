@@ -10,6 +10,7 @@ using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -202,29 +203,37 @@ namespace BartenderSupportSystem.Server.Controllers
         {
             try
             {
-                var ingredientsDbCount =
-                    await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).CountAsync();
-
-                if (cocktail.Ingredients != null && ingredientsDbCount != cocktail.Ingredients.Count)
+                if (cocktail.Ingredients != null)
                 {
-                    var ingredientDbModels = _ingredientMapper.ToDbModelList(cocktail.Ingredients);
-                    foreach (var ingredientDbModel in ingredientDbModels)
+                    var ingredientsToAdd = cocktail.Ingredients.Where(e => e.Id == 0).ToList();
+                    if (ingredientsToAdd.Count != 0)
                     {
-                        if (ingredientDbModel.Id == 0)
+                        await _context.AddRangeAsync(_ingredientMapper.ToDbModelList(ingredientsToAdd));
+                    }
+
+                    var ingredientIdsList = await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id))
+                        .Select(e => e.Id).ToListAsync();
+
+                    foreach (var ingredientId in ingredientIdsList)
+                    {
+                        if (cocktail.Ingredients.Any(e => e.Id.Equals(ingredientId)))
                         {
-                            await _context.IngredientsSet.AddAsync(ingredientDbModel);
+                            var ingredientToUpdate = cocktail.Ingredients.First(e => e.Id.Equals(ingredientId));
+                            _context.Entry(_ingredientMapper.ToDbModel(ingredientToUpdate)).State =
+                                EntityState.Modified;
                         }
                         else
                         {
-                            _context.Entry(ingredientDbModel).State = EntityState.Modified;
+                            var ingredientToRemove = await _context.IngredientsSet.FindAsync(ingredientId);
+                            _context.IngredientsSet.Remove(ingredientToRemove);
                         }
                     }
                 }
-                else if (cocktail.Ingredients == null && ingredientsDbCount != 0)
+                else
                 {
-                    var ingredientDbModels =
-                        _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id)).ToList();
-                    _context.RemoveRange(ingredientDbModels);
+                    var ingredientsToRemove = await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id))
+                        .ToListAsync();
+                    _context.IngredientsSet.RemoveRange(ingredientsToRemove);
                 }
 
                 return true;
@@ -234,7 +243,5 @@ namespace BartenderSupportSystem.Server.Controllers
                 return false;
             }
         }
-
-
     }
 }
