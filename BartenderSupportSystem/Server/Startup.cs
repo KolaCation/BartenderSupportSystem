@@ -16,6 +16,8 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Server.Validators.RecommendationSystem;
+using BartenderSupportSystem.Server.Validators.TestSystem;
+using BartenderSupportSystem.Shared.Models.TestSystem;
 
 namespace BartenderSupportSystem.Server
 {
@@ -48,6 +50,9 @@ namespace BartenderSupportSystem.Server
             services.AddTransient<IValidator<MealDto>, MealValidator>();
             services.AddScoped<IValidator<CocktailDto>, CocktailValidator>();
             services.AddScoped<IValidator<IngredientDto>, IngredientValidator>();
+            services.AddTransient<IValidator<CustomAnswerDto>, CustomAnswerValidator>();
+            services.AddTransient<IValidator<CustomQuestionDto>, CustomQuestionValidator>();
+            services.AddTransient<IValidator<CustomTestDto>, CustomTestValidator>();
 
             services.AddIdentityServer(options =>
             {
@@ -60,7 +65,8 @@ namespace BartenderSupportSystem.Server
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddControllersWithViews().AddFluentValidation();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddFluentValidation();
             services.AddRazorPages();
             services.AddSpaStaticFiles(configuration =>
             {

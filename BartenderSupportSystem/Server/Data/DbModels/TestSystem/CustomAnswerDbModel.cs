@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
@@ -9,15 +10,21 @@ namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
         public string Statement { get; private set; }
         public bool IsCorrect { get; private set; }
         public int QuestionId { get; private set; }
-        [ForeignKey("QuestionId")]
-        public CustomQuestionDbModel Question { get; private set; }
+        [ForeignKey("QuestionId")] public CustomQuestionDbModel Question { get; private set; }
 
-        public CustomAnswerDbModel(int id, string statement, bool isCorrect, int questionId)
+        public CustomAnswerDbModel(string statement, bool isCorrect, int questionId)
         {
-            Id = id;
+            CustomValidator.ValidateString(statement, CustomValidatorDefaultValues.StrDefaultMinLength,
+                CustomValidatorDefaultValues.StrDefaultMaxLength);
             Statement = statement;
             IsCorrect = isCorrect;
             QuestionId = questionId;
+        }
+
+        public CustomAnswerDbModel(int id, string statement, bool isCorrect, int questionId) : this(statement,
+            isCorrect, questionId)
+        {
+            Id = id;
         }
     }
 }
