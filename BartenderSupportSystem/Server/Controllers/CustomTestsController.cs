@@ -28,8 +28,8 @@ namespace BartenderSupportSystem.Server.Controllers
         {
             _context = context;
             _customAnswerMapper = new CustomAnswerMapper();
-            _customQuestionMapper = new CustomQuestionMapper(context);
-            _customTestMapper = new CustomTestMapper(context);
+            _customQuestionMapper = new CustomQuestionMapper();
+            _customTestMapper = new CustomTestMapper();
         }
 
         // GET: api/CustomTests

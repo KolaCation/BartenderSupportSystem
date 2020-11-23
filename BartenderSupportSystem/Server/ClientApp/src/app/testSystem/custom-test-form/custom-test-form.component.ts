@@ -18,8 +18,6 @@ export class CustomTestFormComponent implements OnInit {
 
   customTestForm: FormGroup;
   customTest: ICustomTest;
-  errTestMsg: string = null;
-  errQuestionMsg: string = null;
 
   messages = {
     "name": {
@@ -95,14 +93,16 @@ export class CustomTestFormComponent implements OnInit {
     this.formErrors = this._errService.handleClientErrors(formGroup, this.messages);
   }
 
-  addQuestionClick(): void {
-    (<FormArray>this.customTestForm.get('questions')).push(this.addQuestionFormGroup());
+  onSubmit() {
+    if (this.customTest.id != 0) {
+      this.handleEditAction(this.customTest);
+    }
+    else {
+      this.handleCreateAction();
+    }
   }
 
-  addAnswerClick(i: number): void {
-    (<FormArray>(<FormGroup>(<FormArray>this.customTestForm.get('questions')).at(i)).get('answers')).push(this.addAnswerFormGroup());
-  }
-
+  //#region Actions
   addQuestionFormGroup(): FormGroup {
     return this._formBuilder.group({
       questionId: [0, [Validators.required]],
@@ -121,34 +121,6 @@ export class CustomTestFormComponent implements OnInit {
     });
   }
 
-  fillFormWithValuesToEdit(id: number): void {
-    this._customTestService.getCustomTest(id).subscribe(
-      (customTest: ICustomTest) => {
-        Object.assign(this.customTest, customTest);
-        this.customTestForm.patchValue({
-          name: this.customTest.name,
-          topic: this.customTest.topic,
-          description: this.customTest.description
-        });
-        this.customTestForm.setControl('questions', this.fromModelToQuestionFormArray(this.customTest.questions));
-      },
-      () => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!'
-        });
-      }
-    );
-  }
-
-  mapFormValuesToModel(): void {
-    this.customTest.name = this.customTestForm.get('name').value;
-    this.customTest.topic = this.customTestForm.get('topic').value;
-    this.customTest.description = this.customTestForm.get('description').value;
-    this.customTest.questions = this.fromQuestionFormArrayToModel(this.customTestForm.get('questions'));
-  }
 
   handleCreateAction(): void {
     this.mapFormValuesToModel();
@@ -203,22 +175,54 @@ export class CustomTestFormComponent implements OnInit {
       }
     );
   }
+  //#endregion
 
-  onSubmit() {
-    if (this.customTest.id != 0) {
-      this.handleEditAction(this.customTest);
-    }
-    else {
-      this.handleCreateAction();
-    }
-  }
-
+  //#region Events
   removeQuestion(i: number): void {
     (<FormArray>this.customTestForm.get('questions')).removeAt(i);
   }
 
   removeAnswer(questionIndex: number, answerIndex: number): void {
     (<FormArray>(<FormGroup>(<FormArray>this.customTestForm.get('questions')).at(questionIndex)).get('answers')).removeAt(answerIndex);
+  }
+
+  addQuestionClick(): void {
+    (<FormArray>this.customTestForm.get('questions')).push(this.addQuestionFormGroup());
+  }
+
+  addAnswerClick(i: number): void {
+    (<FormArray>(<FormGroup>(<FormArray>this.customTestForm.get('questions')).at(i)).get('answers')).push(this.addAnswerFormGroup());
+  }
+  //#endregion
+
+  //#region Mappers
+  fillFormWithValuesToEdit(id: number): void {
+    this._customTestService.getCustomTest(id).subscribe(
+      (customTest: ICustomTest) => {
+        Object.assign(this.customTest, customTest);
+        this.customTestForm.patchValue({
+          name: this.customTest.name,
+          topic: this.customTest.topic,
+          description: this.customTest.description
+        });
+        this.customTestForm.setControl('questions', this.fromModelToQuestionFormArray(this.customTest.questions));
+      },
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
+    );
+  }
+
+  mapFormValuesToModel(): void {
+    this.customTest.name = this.customTestForm.get('name').value;
+    this.customTest.topic = this.customTestForm.get('topic').value;
+    this.customTest.description = this.customTestForm.get('description').value;
+    this.customTest.questions = this.fromQuestionFormArrayToModel(this.customTestForm.get('questions'));
   }
 
   fromQuestionFormArrayToModel(control: AbstractControl): ICustomQuestion[] {
@@ -273,4 +277,5 @@ export class CustomTestFormComponent implements OnInit {
     });
     return answersArr;
   }
+  //#endregion
 }
