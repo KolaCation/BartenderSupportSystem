@@ -36,7 +36,8 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CustomTestDto>>> GetCustomTest()
         {
-            var testDbModels = await _context.TestsSet.ToListAsync();
+            var testDbModels =
+                await _context.TestsSet.Include(e => e.Questions).ThenInclude(e => e.Answers).ToListAsync();
             var tests = (from testDbModel in testDbModels select _customTestMapper.ToDto(testDbModel))
                 .ToList();
             return tests;
@@ -46,7 +47,8 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomTestDto>> GetCustomTest(int id)
         {
-            var customTestDbModel = await _context.TestsSet.FindAsync(id);
+            var customTestDbModel = await _context.TestsSet.Where(e => e.Id.Equals(id)).Include(e => e.Questions)
+                .ThenInclude(e => e.Answers).FirstOrDefaultAsync();
 
             if (customTestDbModel == null)
             {
@@ -68,12 +70,14 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest();
             }
 
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            _context.Entry(customTest).State = EntityState.Modified;
+            var customTestDbModel = _customTestMapper.ToDbModel(customTest);
+
+            _context.Entry(customTestDbModel).State = EntityState.Modified;
 
             try
             {
@@ -100,16 +104,17 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomTestDto>> PostCustomTest(CustomTestDto customTest)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var customTestDbModel = _customTestMapper.ToDbModel(customTest);
             await _context.TestsSet.AddAsync(customTestDbModel);
             await _context.SaveChangesAsync();
-            var createdCustomTest = _context.CocktailsSet.OrderByDescending(e => e.Id).First();
+            var createdCustomTest = _context.TestsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetCustomTest), new { id = createdCustomTest.Id }, createdCustomTest);
+            return CreatedAtAction(nameof(GetCustomTest), new {id = createdCustomTest.Id}, createdCustomTest);
         }
 
         // DELETE: api/CustomTests/5

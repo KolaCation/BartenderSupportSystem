@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
@@ -11,11 +8,8 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
     public class CocktailValidator : AbstractValidator<CocktailDto>
     {
-        private readonly ApplicationDbContext _context;
-
         public CocktailValidator(ApplicationDbContext context)
         {
-            _context = context;
             RuleFor(e => e.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(2).WithMessage("Name must be at least 2 chars long.")
