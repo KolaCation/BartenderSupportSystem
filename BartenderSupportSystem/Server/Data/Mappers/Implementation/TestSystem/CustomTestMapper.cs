@@ -23,11 +23,13 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             CustomValidator.ValidateObject(item);
             if (item.Id == 0)
             {
-                return new CustomTestDbModel(_customQuestionMapper.ToDbModelList(item.Questions), item.Name, item.Topic, item.Description);
+                return new CustomTestDbModel(_customQuestionMapper.ToDbModelList(item.Questions), item.Name, item.Topic,
+                    item.Description, item.AuthorUsername);
             }
             else
             {
-                return new CustomTestDbModel(_customQuestionMapper.ToDbModelList(item.Questions), item.Id, item.Name, item.Topic, item.Description);
+                return new CustomTestDbModel(_customQuestionMapper.ToDbModelList(item.Questions), item.Id, item.Name,
+                    item.Topic, item.Description, item.AuthorUsername);
             }
         }
 
@@ -40,7 +42,8 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
                 Description = item.Description,
                 Name = item.Name,
                 Topic = item.Topic,
-                Questions = _customQuestionMapper.ToDtoList(item.Questions)
+                Questions = _customQuestionMapper.ToDtoList(item.Questions),
+                AuthorUsername = item.AuthorUsername
             };
         }
     }

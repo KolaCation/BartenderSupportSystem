@@ -27,6 +27,8 @@ namespace BartenderSupportSystem.Server.Data
         internal DbSet<RatingDbModel> RatingsSet { get; set; }
         internal DbSet<BartenderDbModel> BartendersSet { get; set; }
         internal DbSet<MealDbModel> MealsSet { get; set; }
+        internal DbSet<CustomTestResultDbModel> TestResultsSet { get; set; }
+        internal DbSet<PickedAnswerDbModel> PickedAnswers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +36,8 @@ namespace BartenderSupportSystem.Server.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<CustomTestDbModel>().HasMany(t => t.Questions).WithOne(q => q.Test)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<CustomTestResultDbModel>().HasMany(r => r.PickedAnswers)
+                .WithOne(a => a.CustomTestResult).OnDelete(DeleteBehavior.Cascade);
             base.OnModelCreating(modelBuilder);
         }
     }

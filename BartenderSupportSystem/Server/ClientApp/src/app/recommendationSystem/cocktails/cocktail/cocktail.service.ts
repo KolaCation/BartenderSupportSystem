@@ -17,7 +17,7 @@ export class CocktailService {
   }
 
   createCocktail(cocktail: ICocktail): Observable<ICocktail> {
-    return this._httpClient.post<ICocktail>(this._url, cocktail).pipe(catchError(this.handlePostPutCocktailErrors));
+    return this._httpClient.post<ICocktail>(this._url, cocktail).pipe(catchError(this.logError));
   }
 
   getCocktails(): Observable<ICocktail[]> {
@@ -29,7 +29,7 @@ export class CocktailService {
   }
 
   updateCocktail(cocktail: ICocktail): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${cocktail.id}`, cocktail).pipe(catchError(this.handlePostPutCocktailErrors));
+    return this._httpClient.put<void>(`${this._url}/${cocktail.id}`, cocktail).pipe(catchError(this.logError));
   }
 
   deleteCocktail(id: number): Observable<void> {
@@ -43,11 +43,5 @@ export class CocktailService {
       console.error("Server Side Error", errorResponse);
     }
     return throwError("There is a problem with the service. Please, try again later.");
-  }
-
-  private handlePostPutCocktailErrors(errorResponse: HttpErrorResponse) {
-    if (!(errorResponse.error instanceof ErrorEvent)) {
-      return throwError(errorResponse.error);
-    }
   }
 }

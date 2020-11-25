@@ -17,7 +17,7 @@ export class DrinkService {
   }
 
   createDrink(drink: IDrink): Observable<IDrink> {
-    return this._httpClient.post<IDrink>(this._url, drink).pipe(catchError(this.handlePostPutDrinkErrors));
+    return this._httpClient.post<IDrink>(this._url, drink).pipe(catchError(this.logError));
   }
 
   getDrinks(): Observable<IDrink[]> {
@@ -29,7 +29,7 @@ export class DrinkService {
   }
 
   updateDrink(drink: IDrink): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${drink.id}`, drink).pipe(catchError(this.handlePostPutDrinkErrors));
+    return this._httpClient.put<void>(`${this._url}/${drink.id}`, drink).pipe(catchError(this.logError));
   }
 
   deleteDrink(id: number): Observable<void> {
@@ -43,11 +43,5 @@ export class DrinkService {
       console.error("Server Side Error", errorResponse);
     }
     return throwError("There is a problem with the service. Please, try again later.");
-  }
-
-  private handlePostPutDrinkErrors(errorResponse: HttpErrorResponse) {
-    if (!(errorResponse.error instanceof ErrorEvent)) {
-      return throwError(errorResponse.error);
-    }
   }
 }

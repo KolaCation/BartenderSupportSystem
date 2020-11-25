@@ -20,15 +20,11 @@ namespace BartenderSupportSystem.Server.Controllers
     public class CustomTestsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ICustomAnswerMapper _customAnswerMapper;
-        private readonly ICustomQuestionMapper _customQuestionMapper;
         private readonly ICustomTestMapper _customTestMapper;
 
         public CustomTestsController(ApplicationDbContext context)
         {
             _context = context;
-            _customAnswerMapper = new CustomAnswerMapper();
-            _customQuestionMapper = new CustomQuestionMapper();
             _customTestMapper = new CustomTestMapper();
         }
 
@@ -65,6 +61,11 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomTest(int id, CustomTestDto customTest)
         {
+            if (User?.Identity.Name == null || User.Identity.Name.ToLower() != customTest.AuthorUsername.ToLower())
+            {
+                return Unauthorized();
+            }
+
             if (!id.Equals(customTest.Id))
             {
                 return BadRequest();
@@ -196,6 +197,7 @@ namespace BartenderSupportSystem.Server.Controllers
                         _context.QuestionsSet.Remove(questionDbModelToRemove);
                     }
                 }
+
                 _context.Entry(customTestDbModel).State = EntityState.Modified;
                 return true;
             }

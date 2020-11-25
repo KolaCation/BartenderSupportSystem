@@ -4,14 +4,16 @@ using BartenderSupportSystem.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BartenderSupportSystem.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201125021209_RemoveColumnPhotoPath")]
+    partial class RemoveColumnPhotoPath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,50 +221,6 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TestsSet");
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestResultDbModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CustomTestId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("PersonalMark")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestResultsSet");
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.PickedAnswerDbModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CustomAnswerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomTestResultId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPicked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomTestResultId");
-
-                    b.ToTable("PickedAnswers");
                 });
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.RatingDbModel", b =>
@@ -588,15 +546,6 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.PickedAnswerDbModel", b =>
-                {
-                    b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestResultDbModel", "CustomTestResult")
-                        .WithMany("PickedAnswers")
-                        .HasForeignKey("CustomTestResultId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

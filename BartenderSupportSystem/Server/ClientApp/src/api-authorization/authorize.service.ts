@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, UserManager, WebStorageStateStore } from 'oidc-client';
+import { Profile, User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
@@ -65,6 +65,12 @@ export class AuthorizeService {
     return from(this.ensureUserManagerInitialized())
       .pipe(mergeMap(() => from(this.userManager.getUser())),
         map(user => user && user.profile["role"]));
+  }
+
+  public getUserName(): Observable<string> {
+    return from(this.ensureUserManagerInitialized())
+      .pipe(mergeMap(() => from(this.userManager.getUser())),
+        map(user => user && user.profile["name"]));
   }
 
   // We try to authenticate the user in three different ways:

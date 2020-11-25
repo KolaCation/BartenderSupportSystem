@@ -17,7 +17,7 @@ export class MealService {
   }
 
   createMeal(meal: IMeal): Observable<IMeal> {
-    return this._httpClient.post<IMeal>(this._url, meal).pipe(catchError(this.handlePostPutMealErrors));
+    return this._httpClient.post<IMeal>(this._url, meal).pipe(catchError(this.logError));
   }
 
   getMeals(): Observable<IMeal[]> {
@@ -29,7 +29,7 @@ export class MealService {
   }
 
   updateMeal(meal: IMeal): Observable<void> {
-    return this._httpClient.put<void>(`${this._url}/${meal.id}`, meal).pipe(catchError(this.handlePostPutMealErrors));
+    return this._httpClient.put<void>(`${this._url}/${meal.id}`, meal).pipe(catchError(this.logError));
   }
 
   deleteMeal(id: number): Observable<void> {
@@ -43,11 +43,5 @@ export class MealService {
       console.error("Server Side Error", errorResponse);
     }
     return throwError("There is a problem with the service. Please, try again later.");
-  }
-
-  private handlePostPutMealErrors(errorResponse: HttpErrorResponse) {
-    if(!(errorResponse.error instanceof ErrorEvent)) {
-      return throwError(errorResponse.error);
-    }
   }
 }

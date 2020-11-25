@@ -41,7 +41,7 @@ namespace BartenderSupportSystem.Server.Data
                         await userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Role, "Admin"));
                         try
                         {
-                            context.BartendersSet.Add(new BartenderDbModel("Husk", "Heidegger", null));
+                            context.BartendersSet.Add(new BartenderDbModel("Husk", "Heidegger"));
                             await context.SaveChangesAsync();
                             var storedData = context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                             user.BartenderId = storedData == null ? default : storedData.Id;
