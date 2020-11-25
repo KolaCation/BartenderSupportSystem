@@ -16,11 +16,11 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation
             CustomValidator.ValidateObject(item);
             if (item.Id == 0)
             {
-                return new BartenderDbModel(item.FirstName, item.LastName, item.PhotoPath);
+                return new BartenderDbModel(item.FirstName, item.LastName);
             }
             else
             {
-                return new BartenderDbModel(item.Id, item.FirstName, item.LastName, item.PhotoPath);
+                return new BartenderDbModel(item.Id, item.FirstName, item.LastName);
             }
         }
 
@@ -31,8 +31,7 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation
             {
                 Id = item.Id,
                 FirstName = item.FirstName,
-                LastName = item.LastName,
-                PhotoPath = item.PhotoPath
+                LastName = item.LastName
             };
         }
     }

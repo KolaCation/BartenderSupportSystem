@@ -100,7 +100,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTimeOffset.Now };
                 try
                 {
-                    var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName, PhotoPath = null };//pictureService
+                    var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName };
                     var userDetailsDb = _bartenderMapper.ToDbModel(userDetails);
                     await _context.BartendersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
