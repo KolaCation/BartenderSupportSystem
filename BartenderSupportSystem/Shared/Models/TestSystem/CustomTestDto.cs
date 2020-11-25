@@ -10,5 +10,6 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
         public string Topic { get; set; }
         public string Description { get; set; }
         public List<CustomQuestionDto> Questions { get; set; }
+        public string AuthorUsername { get; set; }
     }
 }

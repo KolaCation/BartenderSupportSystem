@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
 import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
 import Swal from 'sweetalert2';
@@ -18,6 +19,7 @@ export class CustomTestFormComponent implements OnInit {
 
   customTestForm: FormGroup;
   customTest: ICustomTest;
+  currentUserIsCreator: boolean = false;
 
   messages = {
     "name": {
@@ -50,7 +52,7 @@ export class CustomTestFormComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder, private _customTestService: CustomTestService,
     private _activatedRoute: ActivatedRoute, private _router: Router,
-    private _errService: ErrorHandlerService) { }
+    private _errService: ErrorHandlerService, private _authorizeService: AuthorizeService) { }
 
   ngOnInit(): void {
     this.customTest = {
@@ -58,7 +60,8 @@ export class CustomTestFormComponent implements OnInit {
       name: null,
       topic: null,
       description: null,
-      questions: null
+      questions: null,
+      authorUsername: null
     }
     this.customTestForm = this._formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
@@ -75,6 +78,8 @@ export class CustomTestFormComponent implements OnInit {
       const customTestId = +params.get('id');
       if (customTestId) {
         this.fillFormWithValuesToEdit(customTestId);
+      } else {
+        this.currentUserIsCreator = true;
       }
     },
       () => {
@@ -103,25 +108,6 @@ export class CustomTestFormComponent implements OnInit {
   }
 
   //#region Actions
-  addQuestionFormGroup(): FormGroup {
-    return this._formBuilder.group({
-      questionId: [0, [Validators.required]],
-      questionStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      answers: this._formBuilder.array([this.addAnswerFormGroup()], [CustomValidators.validateArrayMinLength(2),
-      CustomValidators.validateArrayMaxLength(6), CustomValidators.atLeastOneCorrectAnswerExists()])
-    });
-  }
-
-  addAnswerFormGroup(): FormGroup {
-    return this._formBuilder.group({
-      answerId: [0, [Validators.required]],
-      questionId: [0, [Validators.required]],
-      answerStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      answerIsCorrect: [false, []]
-    });
-  }
-
-
   handleCreateAction(): void {
     this.mapFormValuesToModel();
     console.log(this.customTest);
@@ -165,7 +151,6 @@ export class CustomTestFormComponent implements OnInit {
       error => {
         this.customTestForm.markAllAsTouched();
         this.validateFormValue();
-        console.log(error.errors);
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -193,19 +178,45 @@ export class CustomTestFormComponent implements OnInit {
   addAnswerClick(i: number): void {
     (<FormArray>(<FormGroup>(<FormArray>this.customTestForm.get('questions')).at(i)).get('answers')).push(this.addAnswerFormGroup());
   }
+
+  addQuestionFormGroup(): FormGroup {
+    return this._formBuilder.group({
+      questionId: [0, [Validators.required]],
+      questionStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+      answers: this._formBuilder.array([this.addAnswerFormGroup()], [CustomValidators.validateArrayMinLength(2),
+      CustomValidators.validateArrayMaxLength(6), CustomValidators.atLeastOneCorrectAnswerExists()])
+    });
+  }
+
+  addAnswerFormGroup(): FormGroup {
+    return this._formBuilder.group({
+      answerId: [0, [Validators.required]],
+      questionId: [0, [Validators.required]],
+      answerStatement: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+      answerIsCorrect: [false, []]
+    });
+  }
   //#endregion
 
   //#region Mappers
   fillFormWithValuesToEdit(id: number): void {
     this._customTestService.getCustomTest(id).subscribe(
       (customTest: ICustomTest) => {
-        Object.assign(this.customTest, customTest);
-        this.customTestForm.patchValue({
-          name: this.customTest.name,
-          topic: this.customTest.topic,
-          description: this.customTest.description
+        this._authorizeService.getUserName().subscribe(name => {
+          if (customTest.authorUsername.toLowerCase() === name.toLowerCase()) {
+            this.currentUserIsCreator = true;
+            Object.assign(this.customTest, customTest);
+            this.customTestForm.patchValue({
+              name: this.customTest.name,
+              topic: this.customTest.topic,
+              description: this.customTest.description
+            });
+            this.customTestForm.setControl('questions', this.fromModelToQuestionFormArray(this.customTest.questions));
+          } else {
+            this.currentUserIsCreator = false;
+            this._router.navigate(['/tests']);
+          }
         });
-        this.customTestForm.setControl('questions', this.fromModelToQuestionFormArray(this.customTest.questions));
       },
       () => {
         Swal.fire({
@@ -223,6 +234,7 @@ export class CustomTestFormComponent implements OnInit {
     this.customTest.topic = this.customTestForm.get('topic').value;
     this.customTest.description = this.customTestForm.get('description').value;
     this.customTest.questions = this.fromQuestionFormArrayToModel(this.customTestForm.get('questions'));
+    this._authorizeService.getUserName().subscribe(name => { this.customTest.authorUsername = name; this.currentUserIsCreator = true; });
   }
 
   fromQuestionFormArrayToModel(control: AbstractControl): ICustomQuestion[] {
@@ -243,7 +255,7 @@ export class CustomTestFormComponent implements OnInit {
   }
   fromModelToQuestionFormArray(questions: ICustomQuestion[]): FormArray {
     let formArr: FormArray = new FormArray([], [CustomValidators.validateArrayMinLength(4),
-       CustomValidators.validateArrayMaxLength(20)]);
+    CustomValidators.validateArrayMaxLength(20)]);
     questions.forEach(question => {
       formArr.push(this._formBuilder.group({
         questionId: question.id,

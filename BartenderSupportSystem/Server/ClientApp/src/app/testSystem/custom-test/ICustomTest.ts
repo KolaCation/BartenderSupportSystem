@@ -6,4 +6,5 @@ export interface ICustomTest {
     topic: string,
     description: string,
     questions?: ICustomQuestion[]
+    authorUsername: string
 }
