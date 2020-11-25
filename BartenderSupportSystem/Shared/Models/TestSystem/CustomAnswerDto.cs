@@ -8,6 +8,5 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
         public string Statement { get; set; }
         public bool IsCorrect { get; set; }
         public int QuestionId { get; set; }
-        public CustomQuestionDto Question { get; set; }
     }
 }
