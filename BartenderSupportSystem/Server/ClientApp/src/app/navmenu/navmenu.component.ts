@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-navmenu',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavmenuComponent implements OnInit {
 
-  constructor() { }
+  isAuthenticated: boolean = false;
+  isAdmin: boolean = false;
+
+  constructor(private _authorizeService: AuthorizeService, private _router: Router) { }
 
   ngOnInit(): void {
+    this._authorizeService.isAuthenticated().subscribe(isAuthenticated => {
+      if (!isAuthenticated) {
+        this._router.navigate(['/authentication/login']);
+      }
+      else {
+        this.isAuthenticated = true;
+        this._authorizeService.getUserRole().subscribe(role => role === "Admin" ? this.isAdmin = true : this.isAdmin = false);
+      }
+    });
   }
-
 }
