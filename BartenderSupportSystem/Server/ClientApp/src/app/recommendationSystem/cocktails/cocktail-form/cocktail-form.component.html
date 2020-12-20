@@ -1,144 +1,147 @@
 <div *ngIf="meals && drinks && componentList" class="mt-3">
-    <h4 class="text">Cocktail Form</h4>
-    <form [formGroup]="cocktailForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.name"
-                [class.is-valid]="cocktailForm.controls.name.valid" type="text" class="form-control col-sm-6" id="name"
-                formControlName="name" placeholder="Enter cocktail name">
-            <div class="invalid-feedback" *ngIf="formErrors.name">
-                {{formErrors.name}}
+    <h4 class="text-center">Cocktail Form</h4>
+    <div class="row justify-content-center">
+        <form [formGroup]="cocktailForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.name"
+                    [class.is-valid]="cocktailForm.controls.name.valid" type="text" class="form-control" id="name"
+                    formControlName="name" placeholder="Enter name">
+                <div class="invalid-feedback" *ngIf="formErrors.name">
+                    {{formErrors.name}}
+                </div>
+                <div class="valid-feedback" *ngIf="!formErrors.name">
+                    Looks good!
+                </div>
             </div>
-            <div class="valid-feedback" *ngIf="!formErrors.name">
-                Looks good!
+            <div class="form-group">
+                <label for="cocktailType">Cocktail Type</label>
+                <select (blur)="validateFormValue()" [class.is-invalid]="formErrors.cocktailType"
+                    [class.is-valid]="cocktailForm.controls.cocktailType.valid" class="form-control" id="cocktailType"
+                    formControlName="cocktailType" placeholder="Enter cocktail type">
+                    <option *ngFor="let ct of cocktailTypeArray" [value]="ct">{{ct}}</option>
+                    <option value="">Select Type</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="formErrors.cocktailType">
+                    {{formErrors.cocktailType}}
+                </div>
+                <div class="valid-feedback" *ngIf="!formErrors.cocktailType">
+                    Looks good!
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="cocktailType">Cocktail Type</label>
-            <select (blur)="validateFormValue()" [class.is-invalid]="formErrors.cocktailType"
-                [class.is-valid]="cocktailForm.controls.cocktailType.valid" class="form-control col-sm-6"
-                id="cocktailType" formControlName="cocktailType" placeholder="Enter cocktail type">
-                <option *ngFor="let ct of cocktailTypeArray" [value]="ct">{{ct}}</option>
-                <option value="">Select Cocktail Type</option>
-            </select>
-            <div class="invalid-feedback" *ngIf="formErrors.cocktailType">
-                {{formErrors.cocktailType}}
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.description"
+                    [class.is-valid]="cocktailForm.controls.description.valid" class="form-control" id="description"
+                    formControlName="description" placeholder="Enter description"></textarea>
+                <div class="invalid-feedback" *ngIf="formErrors.description">
+                    {{formErrors.description}}
+                </div>
+                <div class="valid-feedback" *ngIf="!formErrors.description">
+                    Looks good!
+                </div>
             </div>
-            <div class="valid-feedback" *ngIf="!formErrors.cocktailType">
-                Looks good!
+
+            <div class="mt-3">
+                <button type="button" (click)="addIngredientClick()"
+                    [disabled]="cocktailForm.get('ingredients').invalid" class="btn btn-primary">Add ingredient</button>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.description"
-                [class.is-valid]="cocktailForm.controls.description.valid" class="form-control col-sm-6"
-                id="description" formControlName="description" placeholder="Enter description"></textarea>
-            <div class="invalid-feedback" *ngIf="formErrors.description">
-                {{formErrors.description}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.description">
-                Looks good!
-            </div>
-        </div>
 
-        <div class="mt-3">
-            <button type="button" (click)="addIngredientClick()" [disabled]="cocktailForm.get('ingredients').invalid" class="btn btn-primary">Add ingredient</button>
-        </div>
 
-        <div formArrayName="ingredients"
-            *ngFor="let ingredient of cocktailForm.get('ingredients')['controls']; let i = index">
-            <div [formGroupName]="i">
 
-                <hr *ngIf="i>0">
+            <div formArrayName="ingredients"
+                *ngFor="let ingredient of cocktailForm.get('ingredients')['controls']; let i = index">
+                <div [formGroupName]="i" class="mt-3">
 
-                <div class="row justify-content-start">
+                    <hr *ngIf="i>0">
 
-                    <input type="hidden" [id]="'ingredientId'+i" formControlName="ingredientId" [value]="ingredient.get('ingredientId').value"/>
+                    <div class="row justify-content-start">
+                        <h6 class="text-left col-auto mt-2">Ingredient {{i+1}}</h6>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger" (click)="RemoveIngredient(i)">
+                                Delete Ingredient
+                            </button>
+                        </div>
+                    </div>
 
-                    <div class="form-group col-md-4">
-                        <label [attr.for]="'componentName'+i">Component</label>
-                        <input type="text" autocomplete="off" (blur)="validateFormValue()" [ngClass]="{
+                    <div class="row justify-content-start mt-3">
+                        <input type="hidden" [id]="'ingredientId'+i" formControlName="ingredientId"
+                            [value]="ingredient.get('ingredientId').value" />
+                        <div class="form-group col-md-4">
+                            <label [attr.for]="'componentName'+i">Component</label>
+                            <input type="text" autocomplete="off" (blur)="validateFormValue()" [ngClass]="{
                             'is-valid': ingredient.get('componentName').valid && ingredient.get('componentName').touched,
                             'is-invalid': ingredient.get('componentName').invalid && ingredient.get('componentName').touched
-                        }" class="form-control col-sm-6" [id]="'componentName'+i" formControlName="componentName"
-                            placeholder="Select component" list="components">
+                        }" class="form-control" [id]="'componentName'+i" formControlName="componentName"
+                                placeholder="Component" list="components">
 
-                        <datalist id="components">
-                            <option *ngFor="let c of componentList" [value]="c.name">{{c.name}}</option>
-                        </datalist>
+                            <datalist id="components">
+                                <option *ngFor="let c of componentList" [value]="c.name">{{c.name}}</option>
+                            </datalist>
 
-                        <div class="invalid-feedback" *ngIf="ingredient.get('componentName').errors?.required">
-                            Component is required.
+                            <div class="invalid-feedback" *ngIf="ingredient.get('componentName').errors?.required">
+                                Component is required.
+                            </div>
+                            <div class="invalid-feedback"
+                                *ngIf="ingredient.get('componentName').errors?.componentError">
+                                Component not found.
+                            </div>
+                            <div class="valid-feedback" *ngIf="!ingredient.get('componentName').errors">
+                                Looks good!
+                            </div>
                         </div>
-                        <div class="invalid-feedback" *ngIf="ingredient.get('componentName').errors?.componentError">
-                            Component not found.
-                        </div>
-                        <div class="valid-feedback" *ngIf="!ingredient.get('componentName').errors">
-                            Looks good!
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-4">
-                        <label [attr.for]="'proportionType'+i">Proportion Type</label>
-                        <select (blur)="validateFormValue()" [ngClass]="{
+                        <div class="form-group col-md-4">
+                            <label [attr.for]="'proportionType'+i">Proportion Type</label>
+                            <select (blur)="validateFormValue()" [ngClass]="{
                             'is-valid':ingredient.get('proportionType').valid && ingredient.get('proportionType').touched,
                             'is-invalid': ingredient.get('proportionType').invalid && ingredient.get('proportionType').touched
-                        }" class="form-control col-sm-6" [id]="'proportionType'+i" formControlName="proportionType"
-                            placeholder="Enter proportion type">
+                        }" class="form-control" [id]="'proportionType'+i" formControlName="proportionType"
+                                placeholder="Enter type">
 
-                            <option *ngFor="let pt of proportionTypeArray" [value]="pt">{{pt}}</option>
-                            <option value="" selected>Select Proportion Type</option>
-                        </select>
-                        <div class="invalid-feedback" *ngIf="ingredient.get('proportionType').errors?.required">
-                            Proportion type is required.
+                                <option *ngFor="let pt of proportionTypeArray" [value]="pt">{{pt}}</option>
+                                <option value="" selected>Select Type</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="ingredient.get('proportionType').errors?.required">
+                                Proportion type is required.
+                            </div>
+                            <div class="valid-feedback" *ngIf="!ingredient.get('proportionType').errors">
+                                Looks good!
+                            </div>
                         </div>
-                        <div class="valid-feedback" *ngIf="!ingredient.get('proportionType').errors">
-                            Looks good!
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-3">
-                        <label for="'proportionValue'+i">Proportion Value</label>
-                        <input (blur)="validateFormValue()" autocomplete="off" [ngClass]="{
+                        <div class="form-group col-md-4">
+                            <label for="'proportionValue'+i">Proportion Value</label>
+                            <input (blur)="validateFormValue()" autocomplete="off" [ngClass]="{
                         'is-valid':ingredient.get('proportionValue').valid && ingredient.get('proportionValue').touched,
                         'is-invalid': ingredient.get('proportionValue').invalid && ingredient.get('proportionValue').touched
-                    }" type="number" min="0" max="10000" class="form-control col-sm-6" [id]="'proportionValue'+i"
-                            formControlName="proportionValue" min="0" placeholder="Enter value">
-                        <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.required">
-                            Proportion value is required.
+                    }" type="number" min="0" max="10000" class="form-control" [id]="'proportionValue'+i"
+                                formControlName="proportionValue" min="0" placeholder="Enter value">
+                            <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.required">
+                                Proportion value is required.
+                            </div>
+                            <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.min">
+                                Min value: 0.
+                            </div>
+                            <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.max">
+                                Max value: 10000.
+                            </div>
+                            <div class="valid-feedback" *ngIf="!ingredient.get('proportionValue').errors">
+                                Looks good!
+                            </div>
                         </div>
-                        <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.min">
-                            Min value: 0.
-                        </div>
-                        <div class="invalid-feedback" *ngIf="ingredient.get('proportionValue').errors?.max">
-                            Max value: 10000.
-                        </div>
-                        <div class="valid-feedback" *ngIf="!ingredient.get('proportionValue').errors">
-                            Looks good!
-                        </div>
-                    </div>
-                    <div class="form-group col-md-1">
-                        <label for="'btn'+i">Del Ingr</label>
-                        <button type="button" class="btn btn-danger"
-                            (click)="RemoveIngredient(i)">
-                            <span>X</span>
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <image-input [pictureUrl]="cocktail.photoPath" (onFileSelected)="fillModelWithPictureUrl($event)"></image-input>
-
-
-
-        <div class="mt-3">
-            <button type="submit" [disabled]="cocktailForm.invalid" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
-    <div>
-        <p>{{cocktailForm.value | json}}</p>
-        <p>Form is NOT valid: {{cocktailForm.invalid}}</p>
+            <div class="mt-3">
+                <image-input [pictureUrl]="cocktail.photoPath" (onFileSelected)="fillModelWithPictureUrl($event)">
+                </image-input>
+            </div>
+            <div class="mt-3">
+                <button type="submit" [disabled]="cocktailForm.invalid" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
     </div>
 </div>

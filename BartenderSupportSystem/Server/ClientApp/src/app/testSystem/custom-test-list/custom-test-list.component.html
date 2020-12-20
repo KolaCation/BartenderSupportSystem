@@ -1,1 +1,19 @@
-<p>custom-test-list works!</p>
+<h4 class="text-center mt-3">Test List</h4>
+<div class="row justify-content-center">
+    <a class="btn btn-primary btn-lg m-2" routerLink="/tests/create">Create Test</a>
+    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+</div>
+<div *ngIf="tests" class="mt-3">
+    <div class="justify-content-start row">
+        <div class="card col-lg-3 col-md-4 col-sm-12 m-2" *ngFor="let test of tests">
+            <div class="card-body">
+                <h5 class="card-title">{{test.name}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{test.topic}}</h6>
+                <p class="card-text">{{test.description}}</p>
+                <a [routerLink]="['/tests/pass', test.id]" class="card-link">Pass</a>
+            </div>
+        </div>
+    </div>
+</div>
+<p *ngIf="tests && tests.length === 0" class="m-3 text-center">{{statusMessage}}</p>
+<p *ngIf="!tests" class="m-3 text-center">{{statusMessage}}</p>
