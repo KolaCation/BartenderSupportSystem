@@ -8,12 +8,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BartenderSupportSystem</title>
-    <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Identity/css/site.css" />
+    <link href="~/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light navbar-toggleable-sm bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom mb-3">
             <div class="container">
                 <a class="navbar-brand" href="~/">BartenderSupportSystem</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -40,12 +39,12 @@
     </header>
 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" style="padding-bottom: 70px;">
             @RenderBody()
         </main>
     </div>
-    <footer class="footer border-top text-muted">
-        <div class="container">
+    <footer class="fixed-bottom border-top text-muted pb-3">
+        <div class="container mt-3">
             &copy; 2020 - BartenderSupportSystem - <a asp-area="" asp-page="Privacy">Privacy</a>
         </div>
     </footer>
