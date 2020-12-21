@@ -7,27 +7,24 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-meal-list',
   templateUrl: './meal-list.component.html',
-  styleUrls: ['./meal-list.component.css']
+  styleUrls: ['./meal-list.component.css'],
 })
 export class MealListComponent implements OnInit {
-
-
   meals: IMeal[];
-  statusMessage: string = "Loading...";
+  statusMessage = 'Loading...';
 
-
-  constructor(private _mealService: MealService, private _router: Router) { }
+  constructor(private _mealService: MealService, private _router: Router) {}
 
   ngOnInit(): void {
     this._mealService.getMeals().subscribe(
-      data => {
+      (data) => {
         if (data.length === 0) {
-          this.statusMessage = "No meals to display.";
+          this.statusMessage = 'No meals to display.';
         } else {
-          this.meals = data; 
+          this.meals = data;
         }
       },
-      error => {
+      (error) => {
         this.statusMessage = error;
       }
     );
@@ -45,21 +42,17 @@ export class MealListComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result: { isConfirmed: boolean; }) => {
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
         this._mealService.deleteMeal(meal.id).subscribe(
           () => {
-            let mealIndex: number = this.meals.indexOf(meal, 0);
+            const mealIndex: number = this.meals.indexOf(meal, 0);
             this.meals.splice(mealIndex, 1);
           },
-          (error: any) => console.log(error)
+          (error) => console.log(error)
         );
-        Swal.fire(
-          'Deleted!',
-          'Your record has been deleted.',
-          'success'
-        );
+        Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
       }
     });
   }

@@ -13,10 +13,9 @@ import { IDrink } from '../drink/IDrink';
 @Component({
   selector: 'app-drink-form',
   templateUrl: './drink-form.component.html',
-  styleUrls: ['./drink-form.component.css']
+  styleUrls: ['./drink-form.component.css'],
 })
 export class DrinkFormComponent implements OnInit {
-
   drinkForm: FormGroup;
   brands: IBrand[];
   drink: IDrink;
@@ -24,68 +23,73 @@ export class DrinkFormComponent implements OnInit {
   private _photoPath: string;
 
   messages = {
-    "name": {
-      "minlength": "Name must be at least 2 chars long.",
-      "maxlength": "Name must not exceed 60 chars.",
-      "required": "Name is required."
+    name: {
+      minlength: 'Name must be at least 2 chars long.',
+      maxlength: 'Name must not exceed 60 chars.',
+      required: 'Name is required.',
     },
-    "alcoholType": {
-      "required": "Alcohol type is required.",
-      "alcoholTypeError": "Provide a type from the list."
+    alcoholType: {
+      required: 'Alcohol type is required.',
+      alcoholTypeError: 'Provide a type from the list.',
     },
-    "alcoholPercentage": {
-      "required": "Alcohol percentage is required.",
-      "min": "Min value: 0.",
-      "max": "Max value: 100."
+    alcoholPercentage: {
+      required: 'Alcohol percentage is required.',
+      min: 'Min value: 0.',
+      max: 'Max value: 100.',
     },
-    "flavor": {
-      "required": "Flavor is required.",
-      "minlength": "Flavor must be at least 2 chars long.",
-      "maxlength": "Flavor must not exceed 255 chars.",
+    flavor: {
+      required: 'Flavor is required.',
+      minlength: 'Flavor must be at least 2 chars long.',
+      maxlength: 'Flavor must not exceed 255 chars.',
     },
-    "pricePerMl": {
-      "required": "Price per ml is required.",
-      "min": "Min value: 0.",
-      "max": "Max value: 10000."
+    pricePerMl: {
+      required: 'Price per ml is required.',
+      min: 'Min value: 0.',
+      max: 'Max value: 10000.',
     },
-    "brandId": {
-      "brandError": "Select a brand from the list."
-    }
-  }
+    brandId: {
+      brandError: 'Select a brand from the list.',
+    },
+  };
 
   formErrors = {
-    "name": "",
-    "alcoholType": "",
-    "alcoholPercentage": "",
-    "flavor": "",
-    "pricePerMl": "",
-    "brandId": ""
-  }
+    name: '',
+    alcoholType: '',
+    alcoholPercentage: '',
+    flavor: '',
+    pricePerMl: '',
+    brandId: '',
+  };
 
-  constructor(private _formBuilder: FormBuilder, private _drinkService: DrinkService,
-    private _activatedRoute: ActivatedRoute, private _router: Router, private _brandService: BrandService,
-    private _errService: ErrorHandlerService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _drinkService: DrinkService,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _brandService: BrandService,
+    private _errService: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
     this._brandService.getBrands().subscribe(
-      data => {
+      (data) => {
         this.brands = data;
         this.brands.sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
           if (a.name > b.name) {
-            return 1
+            return 1;
           }
           return 0;
         });
       },
-      error => {
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -99,40 +103,67 @@ export class DrinkFormComponent implements OnInit {
       brand: null,
       pricePerMl: 0,
       photoPath: null,
-    }
+    };
     this.drinkForm = this._formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
-      alcoholType: ['', [Validators.required, CustomValidators.validateAlcoholType()]],
-      alcoholPercentage: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      flavor: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
-      pricePerMl: ['', [Validators.required, Validators.min(0), Validators.max(10000)]],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(60),
+        ],
+      ],
+      alcoholType: [
+        '',
+        [Validators.required, CustomValidators.validateAlcoholType()],
+      ],
+      alcoholPercentage: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      flavor: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(255),
+        ],
+      ],
+      pricePerMl: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(10000)],
+      ],
       photoPath: [''],
-      brandId: ['', CustomValidators.validateBrand()]
+      brandId: ['', CustomValidators.validateBrand()],
     });
 
     this.drinkForm.valueChanges.subscribe(() => {
       this.validateFormValue(this.drinkForm);
     });
 
-    this._activatedRoute.paramMap.subscribe(params => {
-      const drinkId = +params.get('id');
-      if (drinkId) {
-        this.fillFormWithValuesToEdit(drinkId);
-      }
-    },
-      error => {
+    this._activatedRoute.paramMap.subscribe(
+      (params) => {
+        const drinkId = +params.get('id');
+        if (drinkId) {
+          this.fillFormWithValuesToEdit(drinkId);
+        }
+      },
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
   }
 
-  validateFormValue(formGroup: FormGroup = this.drinkForm) {
-    this.formErrors = this._errService.handleClientErrors(formGroup, this.messages);
+  validateFormValue(formGroup: FormGroup = this.drinkForm): void {
+    this.formErrors = this._errService.handleClientErrors(
+      formGroup,
+      this.messages
+    );
   }
 
   fillFormWithValuesToEdit(id: number): void {
@@ -147,16 +178,16 @@ export class DrinkFormComponent implements OnInit {
           brandId: this.drink.brandId,
           brand: this.drink.brand,
           pricePerMl: this.drink.pricePerMl,
-          photoPath: this.drink.photoPath
+          photoPath: this.drink.photoPath,
         });
         this._photoPath = this.drink.photoPath;
       },
-      error => {
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -175,17 +206,17 @@ export class DrinkFormComponent implements OnInit {
           icon: 'success',
           title: 'Successfully edited!',
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 1500,
+        });
       },
-      error => {
+      () => {
         this.drinkForm.markAllAsTouched();
         this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -201,17 +232,17 @@ export class DrinkFormComponent implements OnInit {
           icon: 'success',
           title: 'Successfully created!',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       },
-      error => {
+      () => {
         this.drinkForm.markAllAsTouched();
         this.validateFormValue();
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -220,23 +251,22 @@ export class DrinkFormComponent implements OnInit {
   mapFormValuesToModel(): void {
     this.drink.name = this.drinkForm.get('name').value;
     this.drink.alcoholType = this.drinkForm.get('alcoholType').value;
-    this.drink.alcoholPercentage = +this.drinkForm.get('alcoholPercentage').value;
+    this.drink.alcoholPercentage = +this.drinkForm.get('alcoholPercentage')
+      .value;
     this.drink.flavor = this.drinkForm.get('flavor').value;
     this.drink.brandId = +this.drinkForm.get('brandId').value;
     this.drink.pricePerMl = +this.drinkForm.get('pricePerMl').value;
   }
 
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.drink.id != 0) {
       this.handleEditAction(this.drink);
-    }
-    else {
+    } else {
       this.handleCreateAction();
     }
   }
 
-  fillModelWithPictureUrl(result: string) {
+  fillModelWithPictureUrl(result: string): void {
     this.drinkForm.patchValue({ photoPath: result });
     this.drink.photoPath = result;
   }

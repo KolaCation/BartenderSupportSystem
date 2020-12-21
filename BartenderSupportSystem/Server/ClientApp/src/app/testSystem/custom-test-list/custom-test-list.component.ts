@@ -9,31 +9,33 @@ import { ICustomTest } from '../custom-test/ICustomTest';
 @Component({
   selector: 'app-custom-test-list',
   templateUrl: './custom-test-list.component.html',
-  styleUrls: ['./custom-test-list.component.css']
+  styleUrls: ['./custom-test-list.component.css'],
 })
 export class CustomTestListComponent implements OnInit {
-
   tests: ICustomTest[];
-  statusMessage: string = "Loading...";
+  statusMessage = 'Loading...';
 
-  constructor(private _formBuilder: FormBuilder, private _customTestService: CustomTestService,
-    private _activatedRoute: ActivatedRoute, private _router: Router,
-    private _errService: ErrorHandlerService, private _authorizeService: AuthorizeService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _customTestService: CustomTestService,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _errService: ErrorHandlerService,
+    private _authorizeService: AuthorizeService
+  ) {}
 
- 
-    ngOnInit(): void {
-      this._customTestService.getCustomTests().subscribe(
-        data => {
-          if (data.length === 0) {
-            this.statusMessage = "No tests to display.";
-          } else {
-            this.tests = data; 
-          }
-        },
-        error => {
-          this.statusMessage = error;
+  ngOnInit(): void {
+    this._customTestService.getCustomTests().subscribe(
+      (data) => {
+        if (data.length === 0) {
+          this.statusMessage = 'No tests to display.';
+        } else {
+          this.tests = data;
         }
-      );
-    }
-
+      },
+      (error) => {
+        this.statusMessage = error;
+      }
+    );
+  }
 }

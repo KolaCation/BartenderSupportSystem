@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -10,42 +10,46 @@ import { IDrinkFilter } from './IDrinkFilter';
 @Component({
   selector: 'drink-filter',
   templateUrl: './drink-filter.component.html',
-  styleUrls: ['./drink-filter.component.css']
+  styleUrls: ['./drink-filter.component.css'],
 })
 export class DrinkFilterComponent implements OnInit {
-
   drinkFilterForm: FormGroup;
   brands: IBrand[];
   drinkFilterModel: IDrinkFilter;
-  @Output() filterDrinks: EventEmitter<IDrinkFilter> = new EventEmitter<IDrinkFilter>();
+  @Output()
+  filterDrinks: EventEmitter<IDrinkFilter> = new EventEmitter<IDrinkFilter>();
   alcoholTypesArray: AlcoholType[] = Object.values(AlcoholType);
-  title: string = "Show";
-  isExpanded: boolean = false;
+  title = 'Show';
+  isExpanded = false;
 
-  constructor(private _formBuilder: FormBuilder,
-    private _activatedRoute: ActivatedRoute, private _router: Router, private _brandService: BrandService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _brandService: BrandService
+  ) {}
 
   ngOnInit(): void {
     this._brandService.getBrands().subscribe(
-      data => {
+      (data) => {
         this.brands = data;
         this.brands.sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
           if (a.name > b.name) {
-            return 1
+            return 1;
           }
           return 0;
         });
       },
-      error => {
+      (error) => {
         console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -58,8 +62,8 @@ export class DrinkFilterComponent implements OnInit {
       brandId: 0,
       brand: null,
       pricePerMl: null,
-      isNonAlcohol: false
-    }
+      isNonAlcohol: false,
+    };
     this.drinkFilterForm = this._formBuilder.group({
       name: [''],
       alcoholType: [''],
@@ -68,18 +72,18 @@ export class DrinkFilterComponent implements OnInit {
       flavor: [''],
       pricePerMl: [''],
       brandId: [''],
-      isNonAlcohol: ['']
+      isNonAlcohol: [''],
     });
 
     this.drinkFilterForm.valueChanges.subscribe(
       () => this.onSubmit(),
-      error => {
+      (error) => {
         console.log(error);
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
@@ -87,30 +91,40 @@ export class DrinkFilterComponent implements OnInit {
 
   mapFormValuesToModel(): void {
     this.drinkFilterModel.name = this.drinkFilterForm.get('name').value;
-    this.drinkFilterModel.alcoholType = this.drinkFilterForm.get('alcoholType').value;
-    this.drinkFilterModel.alcoholPercentageMinValue = +this.drinkFilterForm.get('alcoholPercentageMinValue').value;
-    this.drinkFilterModel.alcoholPercentageMaxValue = +this.drinkFilterForm.get('alcoholPercentageMaxValue').value;
+    this.drinkFilterModel.alcoholType = this.drinkFilterForm.get(
+      'alcoholType'
+    ).value;
+    this.drinkFilterModel.alcoholPercentageMinValue = +this.drinkFilterForm.get(
+      'alcoholPercentageMinValue'
+    ).value;
+    this.drinkFilterModel.alcoholPercentageMaxValue = +this.drinkFilterForm.get(
+      'alcoholPercentageMaxValue'
+    ).value;
     this.drinkFilterModel.flavor = this.drinkFilterForm.get('flavor').value;
     this.drinkFilterModel.brandId = +this.drinkFilterForm.get('brandId').value;
-    this.drinkFilterModel.pricePerMl = this.drinkFilterForm.get('pricePerMl').value;
-    this.drinkFilterModel.isNonAlcohol = this.drinkFilterForm.get('isNonAlcohol').value;
+    this.drinkFilterModel.pricePerMl = this.drinkFilterForm.get(
+      'pricePerMl'
+    ).value;
+    this.drinkFilterModel.isNonAlcohol = this.drinkFilterForm.get(
+      'isNonAlcohol'
+    ).value;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.mapFormValuesToModel();
     this.filterDrinks.emit(this.drinkFilterModel);
   }
 
-  clearForm() {
+  clearForm(): void {
     this.drinkFilterForm.setValue({
-      name: "",
-      alcoholType: "",
-      alcoholPercentageMinValue: "",
-      alcoholPercentageMaxValue: "",
-      flavor: "",
-      pricePerMl: "",
-      brandId: "",
-      isNonAlcohol: ""
+      name: '',
+      alcoholType: '',
+      alcoholPercentageMinValue: '',
+      alcoholPercentageMaxValue: '',
+      flavor: '',
+      pricePerMl: '',
+      brandId: '',
+      isNonAlcohol: '',
     });
     this.filterDrinks.emit(null);
   }
@@ -118,9 +132,9 @@ export class DrinkFilterComponent implements OnInit {
   toggleContent(): void {
     this.isExpanded = !this.isExpanded;
     if (this.isExpanded) {
-      this.title = "Hide";
+      this.title = 'Hide';
     } else {
-      this.title = "Show";
+      this.title = 'Show';
     }
   }
 }

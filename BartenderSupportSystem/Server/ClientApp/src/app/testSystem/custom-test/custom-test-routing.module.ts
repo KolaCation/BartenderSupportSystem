@@ -8,16 +8,12 @@ const routes: Routes = [
   { path: '', component: CustomTestListComponent },
   { path: 'create', component: CustomTestFormComponent },
   { path: 'edit/:id', component: CustomTestFormComponent },
-  { path: 'pass/:id', component: CustomTestPassFormComponent }
-]
+  { path: 'pass/:id', component: CustomTestPassFormComponent },
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class CustomTestRoutingModule { }
+export class CustomTestRoutingModule {}

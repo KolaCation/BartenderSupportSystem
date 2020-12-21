@@ -1,5 +1,5 @@
 export enum ProportionType {
-    Unit = 'Unit',
-    Gram = 'Gram',
-    Milliliter = 'Milliliter'
+  Unit = 'Unit',
+  Gram = 'Gram',
+  Milliliter = 'Milliliter',
 }

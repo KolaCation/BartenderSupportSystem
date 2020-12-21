@@ -8,16 +8,12 @@ const routes: Routes = [
   { path: '', component: CocktailListComponent },
   { path: 'create', component: CocktailFormComponent },
   { path: ':id', component: CocktailDetailsComponent },
-  { path: 'edit/:id', component: CocktailFormComponent }
-]
+  { path: 'edit/:id', component: CocktailFormComponent },
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class CocktailRoutingModule { }
+export class CocktailRoutingModule {}

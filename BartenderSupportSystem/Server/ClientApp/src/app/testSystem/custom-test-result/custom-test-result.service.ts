@@ -1,45 +1,47 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
-import { ICocktail } from './ICocktail';
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { ICustomTestResult } from './ICustomTestResult';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CocktailService {
+export class CustomTestResultService {
   private _url: string;
 
   constructor(private _httpClient: HttpClient) {
-    this._url = `${environment.apiUrl}/cocktails`;
+    this._url = `${environment.apiUrl}/customTests`;
   }
 
-  createCocktail(cocktail: ICocktail): Observable<ICocktail> {
+  createCustomTestResult(
+    customTest: ICustomTestResult
+  ): Observable<ICustomTestResult> {
     return this._httpClient
-      .post<ICocktail>(this._url, cocktail)
+      .post<ICustomTestResult>(this._url, customTest)
       .pipe(catchError(this.logError));
   }
 
-  getCocktails(): Observable<ICocktail[]> {
+  getCustomTestResults(): Observable<ICustomTestResult[]> {
     return this._httpClient
-      .get<ICocktail[]>(this._url)
+      .get<ICustomTestResult[]>(this._url)
       .pipe(catchError(this.logError));
   }
 
-  getCocktail(id: number): Observable<ICocktail> {
+  getCustomTestResult(id: number): Observable<ICustomTestResult> {
     return this._httpClient
-      .get<ICocktail>(`${this._url}/${id}`)
+      .get<ICustomTestResult>(`${this._url}/${id}`)
       .pipe(catchError(this.logError));
   }
 
-  updateCocktail(cocktail: ICocktail): Observable<void> {
+  updateCustomTestResult(customTest: ICustomTestResult): Observable<void> {
     return this._httpClient
-      .put<void>(`${this._url}/${cocktail.id}`, cocktail)
+      .put<void>(`${this._url}/${customTest.id}`, customTest)
       .pipe(catchError(this.logError));
   }
 
-  deleteCocktail(id: number): Observable<void> {
+  deleteCustomTestResult(id: number): Observable<void> {
     return this._httpClient
       .delete<void>(`${this._url}/${id}`)
       .pipe(catchError(this.logError));

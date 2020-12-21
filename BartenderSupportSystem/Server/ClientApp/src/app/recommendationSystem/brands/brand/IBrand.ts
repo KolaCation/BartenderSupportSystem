@@ -1,5 +1,5 @@
 export interface IBrand {
-    id: number,
-    name: string,
-    countryOfOrigin: string
+  id: number;
+  name: string;
+  countryOfOrigin: string;
 }

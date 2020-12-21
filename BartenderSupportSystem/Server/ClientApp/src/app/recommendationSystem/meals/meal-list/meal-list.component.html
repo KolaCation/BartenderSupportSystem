@@ -1,29 +1,35 @@
 <h4 class="text-center mt-3">Meal List</h4>
 <div class="row justify-content-center">
-    <a class="btn btn-primary btn-lg m-2" routerLink="/meals/create">Create Meal</a>
-    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+  <a class="btn btn-primary btn-lg m-2" routerLink="/meals/create"
+    >Create Meal</a
+  >
+  <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
 </div>
 <table class="table table-striped mt-3">
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Price Per Gram</th>
-        </tr>
-    </thead>
-    <tbody>
-        <ng-container *ngIf="meals">
-            <tr *ngFor="let meal of meals">
-                <td>{{meal.name}}</td>
-                <td>{{meal.pricePerGr}}</td>
-                <td><a class="btn btn-success" (click)="editMeal(meal.id)">Edit</a></td>
-                <td><button class="btn btn-danger" (click)="deleteMeal(meal)">Delete</button></td>
-            </tr>
-        </ng-container>
-        <tr *ngIf="meals && meals.length === 0">
-            <td>{{statusMessage}}</td>
-        </tr>
-        <tr *ngIf="!meals">
-            <td>{{statusMessage}}</td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Price Per Gram</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="meals">
+      <tr *ngFor="let meal of meals">
+        <td>{{ meal.name }}</td>
+        <td>{{ meal.pricePerGr }}</td>
+        <td><a class="btn btn-success" (click)="editMeal(meal.id)">Edit</a></td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteMeal(meal)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </ng-container>
+    <tr *ngIf="meals && meals.length === 0">
+      <td>{{ statusMessage }}</td>
+    </tr>
+    <tr *ngIf="!meals">
+      <td>{{ statusMessage }}</td>
+    </tr>
+  </tbody>
 </table>

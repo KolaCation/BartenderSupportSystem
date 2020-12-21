@@ -10,62 +10,65 @@ import { IBrand } from '../../brands/brand/IBrand';
 @Component({
   selector: 'app-drink-details',
   templateUrl: './drink-details.component.html',
-  styleUrls: ['./drink-details.component.css']
+  styleUrls: ['./drink-details.component.css'],
 })
 export class DrinkDetailsComponent implements OnInit {
-
   drink: IDrink;
   brand: IBrand;
 
-  constructor(private _brandService: BrandService, private _drinkService: DrinkService,
-    private _activatedRoute: ActivatedRoute, private _router: Router) { }
+  constructor(
+    private _brandService: BrandService,
+    private _drinkService: DrinkService,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router
+  ) {}
 
   ngOnInit(): void {
     this._activatedRoute.paramMap.subscribe(
-      params => {
+      (params) => {
         const id = +params.get('id');
         this._drinkService.getDrink(id).subscribe(
-          data => {
+          (data) => {
             this.drink = data;
             this._brandService.getBrand(data.brandId).subscribe(
-              data => {
+              (data) => {
                 this.brand = data;
                 this.drink.brand = this.brand;
-                this.drink.brand.countryOfOrigin = CountryConverter.fromCodeToName(this.brand.countryOfOrigin);
+                this.drink.brand.countryOfOrigin = CountryConverter.fromCodeToName(
+                  this.brand.countryOfOrigin
+                );
               },
-              err => {
+              (err) => {
                 console.log(err);
                 Swal.fire({
                   position: 'center',
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!'
+                  text: 'Something went wrong!',
                 });
               }
             );
           },
-          err => {
+          (err) => {
             console.log(err);
             Swal.fire({
               position: 'center',
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!'
+              text: 'Something went wrong!',
             });
           }
         );
       },
-      err => {
+      (err) => {
         console.log(err);
         Swal.fire({
           position: 'center',
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!'
+          text: 'Something went wrong!',
         });
       }
     );
   }
-
-
 }

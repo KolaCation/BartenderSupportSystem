@@ -3,28 +3,46 @@
   <form [formGroup]="mealForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Name</label>
-      <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.name"
-        [class.is-valid]="mealForm.controls.name.valid" type="text" class="form-control" id="name"
-        formControlName="name" placeholder="Enter meal name">
+      <input
+        (blur)="validateFormValue()"
+        autocomplete="off"
+        [class.is-invalid]="formErrors.name"
+        [class.is-valid]="mealForm.controls.name.valid"
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+        placeholder="Enter meal name"
+      />
       <div class="invalid-feedback" *ngIf="formErrors.name">
-        {{formErrors.name}}
+        {{ formErrors.name }}
       </div>
-      <div class="valid-feedback" *ngIf="!formErrors.name">
-        Looks good!
-      </div>
+      <div class="valid-feedback" *ngIf="!formErrors.name">Looks good!</div>
     </div>
     <div class="form-group">
       <label for="pricePerGr">Price Per Gram</label>
-      <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.pricePerGr"
-        [class.is-valid]="mealForm.controls.pricePerGr.valid" type="number" class="form-control" id="pricePerGr" min="0"
-        max="10000" formControlName="pricePerGr" placeholder="Enter price per gram">
+      <input
+        (blur)="validateFormValue()"
+        autocomplete="off"
+        [class.is-invalid]="formErrors.pricePerGr"
+        [class.is-valid]="mealForm.controls.pricePerGr.valid"
+        type="number"
+        class="form-control"
+        id="pricePerGr"
+        min="0"
+        max="10000"
+        formControlName="pricePerGr"
+        placeholder="Enter price per gram"
+      />
       <div class="invalid-feedback" *ngIf="formErrors.pricePerGr">
-        {{formErrors.pricePerGr}}
+        {{ formErrors.pricePerGr }}
       </div>
       <div class="valid-feedback" *ngIf="!formErrors.pricePerGr">
         Looks good!
       </div>
     </div>
-    <button type="submit" [disabled]="mealForm.invalid" class="btn btn-primary">Submit</button>
+    <button type="submit" [disabled]="mealForm.invalid" class="btn btn-primary">
+      Submit
+    </button>
   </form>
 </div>

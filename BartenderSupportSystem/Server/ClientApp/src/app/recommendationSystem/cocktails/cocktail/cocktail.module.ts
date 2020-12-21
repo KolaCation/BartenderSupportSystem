@@ -6,13 +6,13 @@ import { CocktailDetailsComponent } from '../cocktail-details/cocktail-details.c
 import { CocktailFormComponent } from '../cocktail-form/cocktail-form.component';
 import { CocktailFilterComponent } from '../cocktail-filter/cocktail-filter.component';
 
-
-
 @NgModule({
-  declarations: [CocktailListComponent, CocktailDetailsComponent, CocktailFormComponent, CocktailFilterComponent],
-  imports: [
-    SharedModule,
-    CocktailRoutingModule
-  ]
+  declarations: [
+    CocktailListComponent,
+    CocktailDetailsComponent,
+    CocktailFormComponent,
+    CocktailFilterComponent,
+  ],
+  imports: [SharedModule, CocktailRoutingModule],
 })
-export class CocktailModule { }
+export class CocktailModule {}

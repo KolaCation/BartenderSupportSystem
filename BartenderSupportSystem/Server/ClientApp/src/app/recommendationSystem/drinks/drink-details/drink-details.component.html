@@ -1,28 +1,50 @@
 <div *ngIf="drink && brand" class="mt-3">
-    <div class="row justify-content-center">
-        <a class="btn btn-primary btn-lg m-2" [routerLink]="['/drinks/edit', drink.id]">Edit Drink</a>
-        <a class="btn btn-primary btn-lg m-2" routerLink="/drinks">Back To List</a>
-        <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
-    </div>
-    <div class="jumbotron jumbotron-fluid mt-3">
-        <div class="container">
-            <h4 class="display-4 text-center">Drink</h4>
-            <div class="row justify-content-center">
-                <img *ngIf="drink.photoPath != null" [src]="drink.photoPath" alt="Loading image..." class="col-sm-12 col-md-4" />
-                <div class="col-sm-12 col-md-6">
-                    <p class="text-center mt-2"><strong>Details:</strong></p>
-                    <ul class="list-group">
-                        <li class="list-group-item"><strong>Name:</strong> {{drink.name}}</li>
-                        <li class="list-group-item"><strong>Type:</strong> {{drink.alcoholType}}</li>
-                        <li class="list-group-item"><strong>Alcohol %:</strong> {{drink.alcoholPercentage}}</li>
-                        <li class="list-group-item"><strong>Brand:</strong> {{drink.brand.name}}</li>
-                        <li class="list-group-item"><strong>Country Of Origin:</strong> {{drink.brand.countryOfOrigin}}</li>
-                        <li class="list-group-item"><strong>Price Per ML:</strong> {{drink.pricePerMl}} UAH</li>
-                    </ul>
-                </div>
-            </div>
-          <h4 class="text-center mt-3">Flavor:</h4>
-          <p class="lead m-3">{{drink.flavor}}</p>
+  <div class="row justify-content-center">
+    <a
+      class="btn btn-primary btn-lg m-2"
+      [routerLink]="['/drinks/edit', drink.id]"
+      >Edit Drink</a
+    >
+    <a class="btn btn-primary btn-lg m-2" routerLink="/drinks">Back To List</a>
+    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+  </div>
+  <div class="jumbotron jumbotron-fluid mt-3">
+    <div class="container">
+      <h4 class="display-4 text-center">Drink</h4>
+      <div class="row justify-content-center">
+        <img
+          *ngIf="drink.photoPath != null"
+          [src]="drink.photoPath"
+          alt="Loading image..."
+          class="col-sm-12 col-md-4"
+        />
+        <div class="col-sm-12 col-md-6">
+          <p class="text-center mt-2"><strong>Details:</strong></p>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <strong>Name:</strong> {{ drink.name }}
+            </li>
+            <li class="list-group-item">
+              <strong>Type:</strong> {{ drink.alcoholType }}
+            </li>
+            <li class="list-group-item">
+              <strong>Alcohol %:</strong> {{ drink.alcoholPercentage }}
+            </li>
+            <li class="list-group-item">
+              <strong>Brand:</strong> {{ drink.brand.name }}
+            </li>
+            <li class="list-group-item">
+              <strong>Country Of Origin:</strong>
+              {{ drink.brand.countryOfOrigin }}
+            </li>
+            <li class="list-group-item">
+              <strong>Price Per ML:</strong> {{ drink.pricePerMl }} UAH
+            </li>
+          </ul>
         </div>
       </div>
+      <h4 class="text-center mt-3">Flavor:</h4>
+      <p class="lead m-3">{{ drink.flavor }}</p>
+    </div>
+  </div>
 </div>

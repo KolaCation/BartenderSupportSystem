@@ -8,21 +8,19 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-brand-list',
   templateUrl: './brand-list.component.html',
-  styleUrls: ['./brand-list.component.css']
+  styleUrls: ['./brand-list.component.css'],
 })
 export class BrandListComponent implements OnInit {
-
   brands: IBrand[];
-  statusMessage: string = "Loading...";
+  statusMessage = 'Loading...';
 
-
-  constructor(private _brandService: BrandService, private _router: Router) { }
+  constructor(private _brandService: BrandService, private _router: Router) {}
 
   ngOnInit(): void {
     this._brandService.getBrands().subscribe(
-      data => {
+      (data) => {
         if (data.length === 0) {
-          this.statusMessage = "No brands to display.";
+          this.statusMessage = 'No brands to display.';
         } else {
           this.brands = data;
           this.brands.forEach((brand: IBrand) => {
@@ -34,10 +32,9 @@ export class BrandListComponent implements OnInit {
             });
             brand.countryOfOrigin = countryName;
           });
-          
         }
       },
-      error => {
+      (error) => {
         this.statusMessage = error;
       }
     );
@@ -55,21 +52,17 @@ export class BrandListComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result: { isConfirmed: boolean; }) => {
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
         this._brandService.deleteBrand(brand.id).subscribe(
           () => {
-            let brandIndex: number = this.brands.indexOf(brand, 0);
+            const brandIndex: number = this.brands.indexOf(brand, 0);
             this.brands.splice(brandIndex, 1);
           },
-          (error: any) => console.log(error)
+          (error) => console.log(error)
         );
-        Swal.fire(
-          'Deleted!',
-          'Your record has been deleted.',
-          'success'
-        );
+        Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
       }
     });
   }

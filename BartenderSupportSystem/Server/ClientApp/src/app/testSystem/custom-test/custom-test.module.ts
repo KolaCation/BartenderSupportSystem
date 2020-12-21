@@ -6,13 +6,13 @@ import { CustomTestFormComponent } from '../custom-test-form/custom-test-form.co
 import { CustomTestPassFormComponent } from '../custom-test-pass-form/custom-test-pass-form.component';
 import { CustomTestResultComponent } from '../custom-test-result/custom-test-result.component';
 
-
-
 @NgModule({
-  declarations: [CustomTestListComponent, CustomTestFormComponent, CustomTestPassFormComponent, CustomTestResultComponent],
-  imports: [
-    SharedModule,
-    CustomTestRoutingModule
-  ]
+  declarations: [
+    CustomTestListComponent,
+    CustomTestFormComponent,
+    CustomTestPassFormComponent,
+    CustomTestResultComponent,
+  ],
+  imports: [SharedModule, CustomTestRoutingModule],
 })
-export class CustomTestModule { }
+export class CustomTestModule {}

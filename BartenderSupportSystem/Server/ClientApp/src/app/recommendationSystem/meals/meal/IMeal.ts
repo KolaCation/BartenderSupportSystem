@@ -1,5 +1,5 @@
 export interface IMeal {
-    id: number,
-    name: string,
-    pricePerGr: number
+  id: number;
+  name: string;
+  pricePerGr: number;
 }

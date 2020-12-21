@@ -18,17 +18,8 @@ import { ErrorHandlerService } from './shared/ErrorHandlerService';
 import { CustomTestService } from './testSystem/custom-test/custom-test.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DataComponent,
-    HomeComponent,
-    NavmenuComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ApiAuthorizationModule
-  ],
+  declarations: [AppComponent, DataComponent, HomeComponent, NavmenuComponent],
+  imports: [BrowserModule, AppRoutingModule, ApiAuthorizationModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     BrandService,
@@ -37,8 +28,8 @@ import { CustomTestService } from './testSystem/custom-test/custom-test.service'
     CocktailService,
     AuthorizeService,
     ErrorHandlerService,
-    CustomTestService
+    CustomTestService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

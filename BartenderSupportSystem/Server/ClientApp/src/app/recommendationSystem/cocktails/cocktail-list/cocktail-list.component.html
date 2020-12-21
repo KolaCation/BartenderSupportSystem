@@ -1,27 +1,50 @@
 <h4 class="text-center mt-3">Cocktail List</h4>
 <div class="row justify-content-center">
-    <a class="btn btn-primary btn-lg m-2" routerLink="/cocktails/create">Create Cocktail</a>
-    <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
+  <a class="btn btn-primary btn-lg m-2" routerLink="/cocktails/create"
+    >Create Cocktail</a
+  >
+  <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
 </div>
 <div *ngIf="cocktails" class="mt-3">
-    <cocktail-filter (filterCocktails)="filterCocktails($event)"></cocktail-filter>
+  <cocktail-filter
+    (filterCocktails)="filterCocktails($event)"
+  ></cocktail-filter>
 </div>
 <div *ngIf="cocktails" class="row justify-content-start mt-3">
-    <div *ngFor="let cocktail of filteredCocktails" class="col-lg-3 col-md-5 col-sm-7 m-2">
-        <div class="card text-center">
-            <img *ngIf="cocktail.photoPath != null" class="card-img-top image-limiter" [src]="cocktail.photoPath"
-                alt="Loading picture...">
-            <img *ngIf="cocktail.photoPath == null" class="card-img-top image-limiter" src="assets/nodrinkimg.jpg"
-                alt="Loading picture...">
-            <h5 class="card-header"><a [routerLink]="['/cocktails', cocktail.id]">{{cocktail.name}}</a></h5>
-            <div class="card-body">
-                <div class="row justify-content-center">
-                    <a class="btn btn-success m-2" (click)="editCocktail(cocktail.id)">Edit</a>
-                    <button class="btn btn-danger m-2" (click)="deleteCocktail(cocktail)">Delete</button>
-                </div>
-            </div>
+  <div
+    *ngFor="let cocktail of filteredCocktails"
+    class="col-lg-3 col-md-5 col-sm-7 m-2"
+  >
+    <div class="card text-center">
+      <img
+        *ngIf="cocktail.photoPath != null"
+        class="card-img-top image-limiter"
+        [src]="cocktail.photoPath"
+        alt="Loading picture..."
+      />
+      <img
+        *ngIf="cocktail.photoPath == null"
+        class="card-img-top image-limiter"
+        src="assets/nodrinkimg.jpg"
+        alt="Loading picture..."
+      />
+      <h5 class="card-header">
+        <a [routerLink]="['/cocktails', cocktail.id]">{{ cocktail.name }}</a>
+      </h5>
+      <div class="card-body">
+        <div class="row justify-content-center">
+          <a class="btn btn-success m-2" (click)="editCocktail(cocktail.id)"
+            >Edit</a
+          >
+          <button class="btn btn-danger m-2" (click)="deleteCocktail(cocktail)">
+            Delete
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-<p *ngIf="cocktails && cocktails.length === 0" class="m-3 text-center">{{statusMessage}}</p>
-<p *ngIf="!cocktails" class="m-3 text-center">{{statusMessage}}</p>
+<p *ngIf="cocktails && cocktails.length === 0" class="m-3 text-center">
+  {{ statusMessage }}
+</p>
+<p *ngIf="!cocktails" class="m-3 text-center">{{ statusMessage }}</p>
