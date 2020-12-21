@@ -340,4 +340,4 @@ ASALocalRun/
 healthchecksdb
 
 BartenderSupportSystem/Server/wwwroot/*
-!BartenderSupportSystem/Server/wwwroot/boostrap.min.css
+!BartenderSupportSystem/Server/wwwroot/bootstrap.min.css
