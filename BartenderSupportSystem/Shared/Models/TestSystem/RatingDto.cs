@@ -8,7 +8,6 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
     {
         public int Id { get; set; }
         public int TestId { get; set; }
-        public CustomTestDto Test { get; set; }
         public double Mark => RatingList.Sum(e => e.Mark) / QuantityOfRaters;
         public int QuantityOfRaters => RatingList.Count;
         public List<UserRatingDto> RatingList { get; set; }

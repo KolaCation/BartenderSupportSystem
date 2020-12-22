@@ -5,6 +5,7 @@ import { CustomTestListComponent } from '../custom-test-list/custom-test-list.co
 import { CustomTestFormComponent } from '../custom-test-form/custom-test-form.component';
 import { CustomTestPassFormComponent } from '../custom-test-pass-form/custom-test-pass-form.component';
 import { CustomTestResultComponent } from '../custom-test-result/custom-test-result.component';
+import { RatingComponent } from '../rating/rating.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { CustomTestResultComponent } from '../custom-test-result/custom-test-res
     CustomTestFormComponent,
     CustomTestPassFormComponent,
     CustomTestResultComponent,
+    RatingComponent,
   ],
   imports: [SharedModule, CustomTestRoutingModule],
 })
