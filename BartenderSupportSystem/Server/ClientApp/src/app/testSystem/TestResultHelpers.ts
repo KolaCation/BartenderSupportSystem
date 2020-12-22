@@ -11,7 +11,7 @@ export class TestResultHelpers {
       id: 0,
       customTestId: passedTest.id,
       personalMark: 0,
-      username: null,
+      userName: null,
       pickedAnswers: null,
     };
     const pickedAnswers: IPickedAnswer[] = new Array<IPickedAnswer>();
@@ -55,7 +55,7 @@ export class TestResultHelpers {
     });
     result.personalMark =
       (correctAnsweredQuestionsCount / totalQuestionsCount) * 100;
-    result.username = username;
+    result.userName = username;
   }
 
   public static mapPickedAnswersToTestAnswers(

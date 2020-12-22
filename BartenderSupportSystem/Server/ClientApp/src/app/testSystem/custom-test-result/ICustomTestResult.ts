@@ -4,6 +4,6 @@ export interface ICustomTestResult {
   id: number;
   customTestId: number;
   pickedAnswers?: IPickedAnswer[];
-  username: string;
+  userName: string;
   personalMark: number;
 }

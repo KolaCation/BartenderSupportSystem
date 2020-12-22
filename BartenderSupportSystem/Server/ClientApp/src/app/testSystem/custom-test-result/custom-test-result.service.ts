@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -23,15 +27,23 @@ export class CustomTestResultService {
       .pipe(catchError(this.logError));
   }
 
-  getCustomTestResults(): Observable<ICustomTestResult[]> {
+  getUserCustomTestResults(
+    username: string,
+    testId?: number
+  ): Observable<ICustomTestResult[]> {
+    let params: HttpParams = new HttpParams({
+      fromObject: { username: username },
+    });
+    if (testId) {
+      params = new HttpParams({
+        fromObject: {
+          username: username,
+          testId: testId.toString(),
+        },
+      });
+    }
     return this._httpClient
-      .get<ICustomTestResult[]>(this._url)
-      .pipe(catchError(this.logError));
-  }
-
-  getCustomTestResult(id: number): Observable<ICustomTestResult> {
-    return this._httpClient
-      .get<ICustomTestResult>(`${this._url}/${id}`)
+      .get<ICustomTestResult[]>(this._url, { params: params })
       .pipe(catchError(this.logError));
   }
 

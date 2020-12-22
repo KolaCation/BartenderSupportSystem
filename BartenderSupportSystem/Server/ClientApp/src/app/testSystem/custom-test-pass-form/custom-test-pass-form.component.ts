@@ -8,7 +8,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
-import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
 import Swal from 'sweetalert2';
 import { ICustomTestResult } from '../custom-test-result/ICustomTestResult';
 import { ICustomAnswer } from '../custom-test/custom-questions/custom-answers/ICustomAnswer';
@@ -34,7 +33,6 @@ export class CustomTestPassFormComponent implements OnInit {
     private _customTestService: CustomTestService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _errService: ErrorHandlerService,
     private _authorizeService: AuthorizeService,
     private _customTestResultService: CustomTestResultService
   ) {}
