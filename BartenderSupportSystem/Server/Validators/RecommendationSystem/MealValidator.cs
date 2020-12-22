@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
-    public class MealValidator : AbstractValidator<MealDto>
+    public sealed class MealValidator : AbstractValidator<MealDto>
     {
         public MealValidator()
         {

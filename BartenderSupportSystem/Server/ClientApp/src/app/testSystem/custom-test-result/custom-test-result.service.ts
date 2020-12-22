@@ -12,7 +12,7 @@ export class CustomTestResultService {
   private _url: string;
 
   constructor(private _httpClient: HttpClient) {
-    this._url = `${environment.apiUrl}/customTests`;
+    this._url = `${environment.apiUrl}/customTestResults`;
   }
 
   createCustomTestResult(

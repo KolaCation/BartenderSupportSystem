@@ -101,15 +101,13 @@ export class CustomTestPassFormComponent implements OnInit {
 
   onSubmit(): void {
     this.mapFormValuesToModel();
-    console.log(this.testToPass);
-    console.log(this.origin);
     const result: ICustomTestResult = TestResultHelpers.createResultFromTest(
       this.testToPass
     );
-    TestResultHelpers.setMarkAndUsername(result, this.origin, this.username);
+    TestResultHelpers.setupMarkAndUsername(result, this.origin, this.username);
     this._customTestResultService.createCustomTestResult(result).subscribe(
       () => {
-        this._router.navigate(['/tests/results']);
+        this._router.navigate(['/tests']);
       },
       (err) => {
         console.log(err);

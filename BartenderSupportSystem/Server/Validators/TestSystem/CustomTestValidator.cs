@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.TestSystem
 {
-    public class CustomTestValidator : AbstractValidator<CustomTestDto>
+    public sealed class CustomTestValidator : AbstractValidator<CustomTestDto>
     {
         public CustomTestValidator()
         {

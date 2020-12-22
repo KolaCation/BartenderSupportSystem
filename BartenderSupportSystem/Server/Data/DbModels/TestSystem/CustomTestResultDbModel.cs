@@ -16,7 +16,7 @@ namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 
         public CustomTestResultDbModel(int customTestId, string userName, double personalMark)
         {
-            CustomValidator.ValidateNumber(personalMark, CustomValidatorDefaultValues.NonNegativeDouble, 10.0);
+            CustomValidator.ValidateNumber(personalMark, CustomValidatorDefaultValues.NonNegativeDouble, 100.0);
             CustomTestId = customTestId;
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
             PersonalMark = personalMark;

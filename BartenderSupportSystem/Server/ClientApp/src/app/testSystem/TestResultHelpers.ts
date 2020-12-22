@@ -12,7 +12,7 @@ export class TestResultHelpers {
       customTestId: passedTest.id,
       personalMark: 0,
       username: null,
-      answers: null,
+      pickedAnswers: null,
     };
     const pickedAnswers: IPickedAnswer[] = new Array<IPickedAnswer>();
     passedTest.questions.forEach((question: ICustomQuestion) => {
@@ -26,11 +26,11 @@ export class TestResultHelpers {
         pickedAnswers.push(pickedAnswer);
       });
     });
-    customTestResult.answers = pickedAnswers;
+    customTestResult.pickedAnswers = pickedAnswers;
     return customTestResult;
   }
 
-  public static setMarkAndUsername(
+  public static setupMarkAndUsername(
     result: ICustomTestResult,
     origin: ICustomTest,
     username: string
@@ -40,10 +40,12 @@ export class TestResultHelpers {
     origin.questions.forEach((question: ICustomQuestion) => {
       let incorrectAnswersCount = 0;
       question.answers.forEach((answer: ICustomAnswer) => {
-        const pickedAnswerIndex: number = result.answers.findIndex(
+        const pickedAnswerIndex: number = result.pickedAnswers.findIndex(
           (e) => e.customAnswerId === answer.id
         );
-        if (result.answers[pickedAnswerIndex].isPicked !== answer.isCorrect) {
+        if (
+          result.pickedAnswers[pickedAnswerIndex].isPicked !== answer.isCorrect
+        ) {
           incorrectAnswersCount++;
         }
       });
@@ -60,7 +62,7 @@ export class TestResultHelpers {
     origin: ICustomTestResult,
     dest: ICustomTest
   ): void {
-    origin.answers.forEach((pickedAnswer: IPickedAnswer) => {
+    origin.pickedAnswers.forEach((pickedAnswer: IPickedAnswer) => {
       dest.questions.forEach((question: ICustomQuestion) => {
         const answerToEditIndex: number = question.answers.findIndex(
           (e) => e.id === pickedAnswer.id

@@ -93,7 +93,7 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<CustomTestResultDto>> PostCustomTest(CustomTestResultDto customTestResult)
+        public async Task<ActionResult<CustomTestResultDto>> PostCustomTestResult(CustomTestResultDto customTestResult)
         {
             if (!ModelState.IsValid)
             {
