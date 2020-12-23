@@ -259,7 +259,7 @@ export class CustomTestFormComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(2),
+          Validators.minLength(1),
           Validators.maxLength(60),
         ],
       ],
@@ -345,8 +345,15 @@ export class CustomTestFormComponent implements OnInit {
     questions.forEach((question) => {
       formArr.push(
         this._formBuilder.group({
-          questionId: question.id,
-          questionStatement: question.statement,
+          questionId: [question.id, [Validators.required]],
+          questionStatement: [
+            question.statement,
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(60),
+            ],
+          ],
           answers: this.fromModelToAnswerFormArray(question.answers),
         })
       );
@@ -365,10 +372,17 @@ export class CustomTestFormComponent implements OnInit {
     answers.forEach((answer) => {
       formArr.push(
         this._formBuilder.group({
-          answerId: answer.id,
-          questionId: answer.questionId,
+          answerId: [answer.id, [Validators.required]],
+          questionId: [answer.questionId, [Validators.required]],
           answerIsCorrect: answer.isCorrect,
-          answerStatement: answer.statement,
+          answerStatement: [
+            answer.statement,
+            [
+              Validators.required,
+              Validators.minLength(1),
+              Validators.maxLength(60),
+            ],
+          ],
         })
       );
     });

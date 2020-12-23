@@ -9,7 +9,7 @@ namespace BartenderSupportSystem.Server.Validators.TestSystem
         {
             RuleFor(e => e.Statement)
                 .NotEmpty().WithMessage("Statement is required.")
-                .MinimumLength(2).WithMessage("Statement must be at least 2 chars long.")
+                .MinimumLength(1).WithMessage("Statement must be at least 1 char long.")
                 .MaximumLength(60).WithMessage("Statement must not exceed 60 chars.");
         }
     }

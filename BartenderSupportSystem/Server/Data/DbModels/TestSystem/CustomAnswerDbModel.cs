@@ -14,8 +14,7 @@ namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 
         public CustomAnswerDbModel(string statement, bool isCorrect, int questionId)
         {
-            CustomValidator.ValidateString(statement, CustomValidatorDefaultValues.StrDefaultMinLength,
-                CustomValidatorDefaultValues.StrDefaultMaxLength);
+            CustomValidator.ValidateString(statement, 1, CustomValidatorDefaultValues.StrDefaultMaxLength);
             Statement = statement;
             IsCorrect = isCorrect;
             QuestionId = questionId;
