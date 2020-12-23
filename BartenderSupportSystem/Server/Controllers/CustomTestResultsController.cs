@@ -38,11 +38,8 @@ namespace BartenderSupportSystem.Server.Controllers
                         e.CustomTestId.Equals(result) && e.UserName.ToLower().Equals(username.ToLower()))
                     .Include(e => e.PickedAnswers)
                     .FirstOrDefaultAsync();
-                if (customTestResultDbModel == null)
-                {
-                    return NotFound();
-                }
-                else
+
+                if (customTestResultDbModel != null)
                 {
                     var testResult = _customTestResultMapper.ToDto(customTestResultDbModel);
                     listToReturn.Add(testResult);

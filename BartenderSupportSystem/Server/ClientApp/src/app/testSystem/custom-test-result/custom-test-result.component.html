@@ -20,8 +20,15 @@
           </h6>
         </div>
         <div class="col">
-          <h5>
-            <a href="#" class="card-link">Rate</a>
+          <h5 *ngIf="currentUserIsCreator">
+            <a class="card-link col" [routerLink]="['/tests/edit', origin.id]"
+              >Edit</a>
+          </h5>
+            <button class="btn btn-link" (click)="deleteTest()" *ngIf="currentUserIsCreator">
+              <h5>Delete</h5>
+            </button>
+          <h5 *ngIf="!currentUserIsCreator">
+            <a class="card-link col">Rate</a>
           </h5>
         </div>
       </div>

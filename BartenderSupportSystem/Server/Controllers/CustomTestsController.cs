@@ -61,7 +61,7 @@ namespace BartenderSupportSystem.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomTest(int id, CustomTestDto customTest)
         {
-            if (User?.Identity.Name == null || User.Identity.Name.ToLower() != customTest.AuthorUsername.ToLower())
+            if (User?.Identity.Name == null || !string.Equals(User.Identity.Name, customTest.AuthorUsername, StringComparison.OrdinalIgnoreCase))
             {
                 return Unauthorized();
             }
@@ -82,6 +82,12 @@ namespace BartenderSupportSystem.Server.Controllers
                 return BadRequest();
             }
 
+            var removeSucceed = await TryRemoveCustomTestResults(customTest.Id);
+            if (!removeSucceed)
+            {
+                return BadRequest();
+            }
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -131,6 +137,17 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
+            if (User?.Identity.Name == null || !string.Equals(User.Identity.Name, customTestDbModel.AuthorUsername,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return Unauthorized();
+            }
+
+            var removeSucceed = await TryRemoveCustomTestResults(customTestDbModel.Id);
+            if (!removeSucceed)
+            {
+                return BadRequest();
+            }
             _context.TestsSet.Remove(customTestDbModel);
             await _context.SaveChangesAsync();
 
@@ -199,6 +216,21 @@ namespace BartenderSupportSystem.Server.Controllers
                 }
 
                 _context.Entry(customTestDbModel).State = EntityState.Modified;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> TryRemoveCustomTestResults(int customTestId)
+        {
+            try
+            {
+                var testResultsToRemove =
+                    await _context.TestResultsSet.Where(e => e.CustomTestId.Equals(customTestId)).ToListAsync();
+                _context.TestResultsSet.RemoveRange(testResultsToRemove);
                 return true;
             }
             catch (Exception)

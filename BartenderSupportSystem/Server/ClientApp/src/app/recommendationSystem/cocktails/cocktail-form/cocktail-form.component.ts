@@ -79,8 +79,7 @@ export class CocktailFormComponent implements OnInit {
           return 0;
         });
       },
-      (error) => {
-        console.log(error);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -103,8 +102,7 @@ export class CocktailFormComponent implements OnInit {
           return 0;
         });
       },
-      (error) => {
-        console.log(error);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',

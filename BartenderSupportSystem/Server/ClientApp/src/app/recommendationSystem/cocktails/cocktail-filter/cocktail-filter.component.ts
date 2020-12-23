@@ -32,8 +32,7 @@ export class CocktailFilterComponent implements OnInit {
 
     this.cocktailFilterForm.valueChanges.subscribe(
       () => this.onSubmit(),
-      (error) => {
-        console.log(error);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',

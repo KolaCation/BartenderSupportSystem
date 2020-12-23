@@ -69,11 +69,15 @@ export class CustomTestPassFormComponent implements OnInit {
             (name: string) => {
               this.username = name;
               this.origin = data;
-              if (this.isViewResultsMode) {
-                this._customTestResultService
-                  .getUserCustomTestResults(this.username, this.origin.id)
-                  .subscribe(
-                    (result: ICustomTestResult[]) => {
+              this._customTestResultService
+                .getUserCustomTestResults(this.username, this.origin.id)
+                .subscribe(
+                  (result: ICustomTestResult[]) => {
+                    if (result.length === 0 && this.isViewResultsMode) {
+                      this._router.navigate(['/tests/pass', this.origin.id]);
+                    } else if (result.length !== 0 && !this.isViewResultsMode) {
+                      this._router.navigate(['/tests', this.origin.id]);
+                    } else if (result.length !== 0 && this.isViewResultsMode) {
                       const testToView: ICustomTest = TestResultHelpers.mapPickedAnswersToTestAnswers(
                         result[0],
                         this.origin
@@ -87,29 +91,31 @@ export class CustomTestPassFormComponent implements OnInit {
                         'questions',
                         this.fromModelToQuestionFormArray(testToView.questions)
                       );
-                    },
-                    (err) => {
-                      console.log(err);
-                      Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                      });
+                    } else if (result.length === 0 && !this.isViewResultsMode) {
+                      this.testToPass = TestResultHelpers.prepareTestForPassing(
+                        this.origin
+                      );
+                      this.testToPassForm.setControl(
+                        'questions',
+                        this.fromModelToQuestionFormArray(
+                          this.testToPass.questions
+                        )
+                      );
+                    } else {
+                      this._router.navigate(['/tests']);
                     }
-                  );
-              } else {
-                this.testToPass = TestResultHelpers.prepareTestForPassing(
-                  this.origin
+                  },
+                  () => {
+                    Swal.fire({
+                      position: 'center',
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Something went wrong!',
+                    });
+                  }
                 );
-                this.testToPassForm.setControl(
-                  'questions',
-                  this.fromModelToQuestionFormArray(this.testToPass.questions)
-                );
-              }
             },
-            (err) => {
-              console.log(err);
+            () => {
               Swal.fire({
                 position: 'center',
                 icon: 'error',
@@ -119,8 +125,7 @@ export class CustomTestPassFormComponent implements OnInit {
             }
           );
         },
-        (err) => {
-          console.log(err);
+        () => {
           Swal.fire({
             position: 'center',
             icon: 'error',
@@ -142,8 +147,7 @@ export class CustomTestPassFormComponent implements OnInit {
       () => {
         this._router.navigate(['/tests', this.origin.id]);
       },
-      (err) => {
-        console.log(err);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',

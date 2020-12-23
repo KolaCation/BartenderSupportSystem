@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BrandService } from '../../brands/brand/brand.service';
 import { IBrand } from '../../brands/brand/IBrand';
@@ -24,8 +23,6 @@ export class DrinkFilterComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _activatedRoute: ActivatedRoute,
-    private _router: Router,
     private _brandService: BrandService
   ) {}
 
@@ -43,8 +40,7 @@ export class DrinkFilterComponent implements OnInit {
           return 0;
         });
       },
-      (error) => {
-        console.log(error);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -77,8 +73,7 @@ export class DrinkFilterComponent implements OnInit {
 
     this.drinkFilterForm.valueChanges.subscribe(
       () => this.onSubmit(),
-      (error) => {
-        console.log(error);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',

@@ -187,7 +187,7 @@
                         answer.get('answerStatement').touched
                     }"
                     class="form-control"
-                    [id]="'answerStatement' + j"
+                    [id]="'answerStatement' + i.toString() + j.toString()"
                     formControlName="answerStatement"
                     placeholder="Enter statement"
                   />
@@ -231,13 +231,13 @@
                           answer.get('answerIsCorrect').touched
                       }"
                       class="form-check-input"
-                      [id]="'answerStatement' + j"
+                      [id]="'answerStatement' + i.toString() + j.toString()"
                       formControlName="answerIsCorrect"
                       placeholder="Enter statement"
                     />
                   </div>
                   <label
-                    [attr.for]="'answerIsCorrect' + j"
+                    [attr.for]="'answerIsCorrect' + i.toString() + j.toString()"
                     class="form-check-label ml-3"
                     >Correct</label
                   >

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CocktailService } from '../cocktail/cocktail.service';
 import { ICocktail } from '../cocktail/ICocktail';
@@ -26,8 +26,7 @@ export class CocktailDetailsComponent implements OnInit {
           this.cocktail = data;
           this.cocktail.ingredients.forEach((e) => this.componentList.push(e));
         },
-        (err) => {
-          console.log(err);
+        () => {
           Swal.fire({
             position: 'center',
             icon: 'error',

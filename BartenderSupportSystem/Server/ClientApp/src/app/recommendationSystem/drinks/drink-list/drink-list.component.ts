@@ -54,7 +54,14 @@ export class DrinkListComponent implements OnInit {
             this.drinks.splice(drinkIndex, 1);
             this.filteredDrinks = this.drinks;
           },
-          (error) => console.log(error)
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
         );
         Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
       }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BrandService } from '../../brands/brand/brand.service';
 import { DrinkService } from '../drink/drink.service';
@@ -19,8 +19,7 @@ export class DrinkDetailsComponent implements OnInit {
   constructor(
     private _brandService: BrandService,
     private _drinkService: DrinkService,
-    private _activatedRoute: ActivatedRoute,
-    private _router: Router
+    private _activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +37,7 @@ export class DrinkDetailsComponent implements OnInit {
                   this.brand.countryOfOrigin
                 );
               },
-              (err) => {
-                console.log(err);
+              () => {
                 Swal.fire({
                   position: 'center',
                   icon: 'error',
@@ -49,8 +47,7 @@ export class DrinkDetailsComponent implements OnInit {
               }
             );
           },
-          (err) => {
-            console.log(err);
+          () => {
             Swal.fire({
               position: 'center',
               icon: 'error',
@@ -60,8 +57,7 @@ export class DrinkDetailsComponent implements OnInit {
           }
         );
       },
-      (err) => {
-        console.log(err);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',

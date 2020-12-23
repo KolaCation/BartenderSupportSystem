@@ -16,6 +16,7 @@ export class CustomTestResultComponent implements OnInit {
   origin: ICustomTest;
   result: ICustomTestResult;
   currentUserIsPasser = false;
+  currentUserIsCreator = false;
 
   constructor(
     private _customTestService: CustomTestService,
@@ -59,9 +60,16 @@ export class CustomTestResultComponent implements OnInit {
                     this._customTestService.getCustomTest(testId).subscribe(
                       (test: ICustomTest) => {
                         this.origin = test;
+                        if (
+                          test.authorUsername.toLowerCase() ===
+                          name.toLowerCase()
+                        ) {
+                          this.currentUserIsCreator = true;
+                        } else {
+                          this.currentUserIsCreator = false;
+                        }
                       },
-                      (err) => {
-                        console.log(err);
+                      () => {
                         Swal.fire({
                           position: 'center',
                           icon: 'error',
@@ -75,8 +83,7 @@ export class CustomTestResultComponent implements OnInit {
                     this._router.navigate(['/tests']);
                   }
                 },
-                (err) => {
-                  console.log(err);
+                () => {
                   Swal.fire({
                     position: 'center',
                     icon: 'error',
@@ -86,8 +93,7 @@ export class CustomTestResultComponent implements OnInit {
                 }
               );
           },
-          (err) => {
-            console.log(err);
+          () => {
             Swal.fire({
               position: 'center',
               icon: 'error',
@@ -97,8 +103,7 @@ export class CustomTestResultComponent implements OnInit {
           }
         );
       },
-      (err) => {
-        console.log(err);
+      () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
@@ -107,5 +112,32 @@ export class CustomTestResultComponent implements OnInit {
         });
       }
     );
+  }
+
+  deleteTest(): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result: { isConfirmed: boolean }) => {
+      if (result.isConfirmed) {
+        this._customTestService.deleteCustomTest(this.origin.id).subscribe(
+          () => this._router.navigate(['/tests']),
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        );
+        Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
+      }
+    });
   }
 }
