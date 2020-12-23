@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BartenderSupportSystem.Shared.Utils
+﻿namespace BartenderSupportSystem.Shared.Utils
 {
     public static class CustomValidatorDefaultValues
     {

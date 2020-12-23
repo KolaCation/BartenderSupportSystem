@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
 using BartenderSupportSystem.Shared.Models.TestSystem;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -51,7 +49,7 @@ namespace BartenderSupportSystem.Server.Controllers
                     .Where(e => e.UserName.ToLower().Equals(username.ToLower()))
                     .Include(e => e.PickedAnswers).ToListAsync();
                 var testResults = (from customTestResultDbModel in testResultDbModels
-                    select _customTestResultMapper.ToDto(customTestResultDbModel)).ToList();
+                                   select _customTestResultMapper.ToDto(customTestResultDbModel)).ToList();
                 listToReturn.AddRange(testResults);
             }
             else
@@ -117,7 +115,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdTestResult = _context.TestResultsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetCustomTestResult), new {id = createdTestResult.Id},
+            return CreatedAtAction(nameof(GetCustomTestResult), new { id = createdTestResult.Id },
                 createdTestResult);
         }
 

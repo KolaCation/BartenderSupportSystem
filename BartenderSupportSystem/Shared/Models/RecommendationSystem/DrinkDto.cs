@@ -1,7 +1,4 @@
-﻿using System;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-
-namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
+﻿namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
 {
     public sealed class DrinkDto
     {

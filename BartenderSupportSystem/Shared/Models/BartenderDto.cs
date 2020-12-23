@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BartenderSupportSystem.Shared.Models
+﻿namespace BartenderSupportSystem.Shared.Models
 {
     public sealed class BartenderDto
     {

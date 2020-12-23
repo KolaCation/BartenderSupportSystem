@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
+﻿namespace BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums
 {
     public enum ProportionType
     {

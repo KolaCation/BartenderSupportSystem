@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
+﻿using System.Collections.Generic;
 
 namespace BartenderSupportSystem.Shared.Models.RecommendationSystem
 {

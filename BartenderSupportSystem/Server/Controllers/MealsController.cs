@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Controllers
 {

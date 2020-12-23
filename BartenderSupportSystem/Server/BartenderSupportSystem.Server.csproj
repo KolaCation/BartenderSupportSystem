@@ -14,10 +14,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="9.0.0" />
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="9.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.10" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
 	</ItemGroup>
@@ -27,10 +25,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
-		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.10" />
+		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
 			<PrivateAssets>all</PrivateAssets>
@@ -39,13 +37,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.10" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<!-- Don't publish the SPA source files, but do show them in the project files list -->
+		<Compile Remove="ClientApp\**" />
 		<Content Remove="$(SpaRoot)**" />
+		<Content Remove="ClientApp\**" />
+		<EmbeddedResource Remove="ClientApp\**" />
 		<None Remove="$(SpaRoot)**" />
+		<None Remove="ClientApp\**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
 	</ItemGroup>
 
@@ -81,14 +83,10 @@
 	  <Content Remove="wwwroot\bootstrap.min.css" />
 	</ItemGroup>
 
-
-
 	<ItemGroup>
 		<Folder Include="wwwroot\cocktails\" />
 		<Folder Include="wwwroot\drinks\" />
 	</ItemGroup>
-
-
 
 	<ItemGroup>
 	  <None Include="wwwroot\bootstrap.min.css" />

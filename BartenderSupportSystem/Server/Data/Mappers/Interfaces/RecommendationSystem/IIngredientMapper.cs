@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using System.Collections.Generic;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem
 {

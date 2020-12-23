@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using FluentValidation;
+using System;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
@@ -36,7 +34,7 @@ namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
         {
             if (id != 0)
             {
-                return _context.CocktailsSet.Any(e=>e.Id.Equals(id));
+                return _context.CocktailsSet.Any(e => e.Id.Equals(id));
             }
             else
             {

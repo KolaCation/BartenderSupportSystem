@@ -1,8 +1,8 @@
-﻿using System;
-using BartenderSupportSystem.Server.Data;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using FluentValidation;
+using System;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {

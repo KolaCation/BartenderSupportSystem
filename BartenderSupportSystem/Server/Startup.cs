@@ -1,23 +1,22 @@
+using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Helpers;
+using BartenderSupportSystem.Server.Models;
+using BartenderSupportSystem.Server.Validators.RecommendationSystem;
+using BartenderSupportSystem.Server.Validators.TestSystem;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Shared.Models.TestSystem;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
-using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Server.Models;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using System;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Server.Validators.RecommendationSystem;
-using BartenderSupportSystem.Server.Validators.TestSystem;
-using BartenderSupportSystem.Shared.Models.TestSystem;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BartenderSupportSystem.Server
 {
@@ -41,8 +40,6 @@ namespace BartenderSupportSystem.Server
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddAutoMapper(typeof(AutoMapperProfile));
 
             services.AddScoped<IStorageService, InAppStorageService>();
             services.AddTransient<IValidator<BrandDto>, BrandValidator>();
@@ -101,7 +98,7 @@ namespace BartenderSupportSystem.Server
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-           
+
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {

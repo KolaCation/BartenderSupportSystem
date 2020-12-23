@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Shared.Models.TestSystem;
+﻿using BartenderSupportSystem.Shared.Models.TestSystem;
 using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.TestSystem
