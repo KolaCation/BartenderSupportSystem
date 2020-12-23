@@ -59,17 +59,43 @@ export class TestResultHelpers {
   }
 
   public static mapPickedAnswersToTestAnswers(
-    origin: ICustomTestResult,
-    dest: ICustomTest
-  ): void {
-    origin.pickedAnswers.forEach((pickedAnswer: IPickedAnswer) => {
-      dest.questions.forEach((question: ICustomQuestion) => {
+    result: ICustomTestResult,
+    origin: ICustomTest
+  ): ICustomTest {
+    const testToView: ICustomTest = this.deepCopyTest(origin);
+    result.pickedAnswers.forEach((pickedAnswer: IPickedAnswer) => {
+      testToView.questions.forEach((question: ICustomQuestion) => {
         const answerToEditIndex: number = question.answers.findIndex(
-          (e) => e.id === pickedAnswer.id
+          (e) => e.id === pickedAnswer.customAnswerId
         );
-        question.answers[answerToEditIndex].isCorrect = pickedAnswer.isPicked;
+        if (answerToEditIndex !== -1) {
+          question.answers[answerToEditIndex].isCorrect = pickedAnswer.isPicked;
+        }
       });
     });
+    return testToView;
+  }
+
+  public static getIncorrectAnsweredQuestionIds(
+    origin: ICustomTest,
+    passedTest: ICustomTest
+  ): number[] {
+    const incorrectAnsweredQuestionIds: number[] = [];
+    passedTest.questions.forEach((questionToCompare: ICustomQuestion) => {
+      const originQuestion: ICustomQuestion = origin.questions.find(
+        (e) => e.id === questionToCompare.id
+      );
+      for (const answerToCompare of questionToCompare.answers) {
+        const originAnswer: ICustomAnswer = originQuestion.answers.find(
+          (e) => e.id === answerToCompare.id
+        );
+        if (answerToCompare.isCorrect !== originAnswer.isCorrect) {
+          incorrectAnsweredQuestionIds.push(questionToCompare.id);
+          break;
+        }
+      }
+    });
+    return incorrectAnsweredQuestionIds;
   }
 
   public static prepareTestForPassing(origin: ICustomTest): ICustomTest {

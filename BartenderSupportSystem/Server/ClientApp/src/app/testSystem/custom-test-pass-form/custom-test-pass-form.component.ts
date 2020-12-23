@@ -18,7 +18,7 @@ import { TestResultHelpers } from '../TestResultHelpers';
 import { CustomTestResultService } from '../custom-test-result/custom-test-result.service';
 
 @Component({
-  selector: 'app-custom-test-pass-form',
+  selector: 'custom-test-pass-form',
   templateUrl: './custom-test-pass-form.component.html',
   styleUrls: ['./custom-test-pass-form.component.css'],
 })
@@ -27,6 +27,9 @@ export class CustomTestPassFormComponent implements OnInit {
   testToPass: ICustomTest;
   testToPassForm: FormGroup;
   username: string;
+  isViewResultsMode: boolean;
+  incorrectAnsweredQuestionIds: number[] = [];
+  title = 'Passing the Test';
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -38,6 +41,7 @@ export class CustomTestPassFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isViewResultsMode = !this._router.url.split('/').includes('pass');
     this.testToPassForm = this._formBuilder.group({
       questions: this._formBuilder.array([]),
     });
@@ -65,13 +69,44 @@ export class CustomTestPassFormComponent implements OnInit {
             (name: string) => {
               this.username = name;
               this.origin = data;
-              this.testToPass = TestResultHelpers.prepareTestForPassing(
-                this.origin
-              );
-              this.testToPassForm.setControl(
-                'questions',
-                this.fromModelToQuestionFormArray(this.testToPass.questions)
-              );
+              if (this.isViewResultsMode) {
+                this._customTestResultService
+                  .getUserCustomTestResults(this.username, this.origin.id)
+                  .subscribe(
+                    (result: ICustomTestResult[]) => {
+                      const testToView: ICustomTest = TestResultHelpers.mapPickedAnswersToTestAnswers(
+                        result[0],
+                        this.origin
+                      );
+                      this.incorrectAnsweredQuestionIds = TestResultHelpers.getIncorrectAnsweredQuestionIds(
+                        this.origin,
+                        testToView
+                      );
+                      this.title = 'Details';
+                      this.testToPassForm.setControl(
+                        'questions',
+                        this.fromModelToQuestionFormArray(testToView.questions)
+                      );
+                    },
+                    (err) => {
+                      console.log(err);
+                      Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                      });
+                    }
+                  );
+              } else {
+                this.testToPass = TestResultHelpers.prepareTestForPassing(
+                  this.origin
+                );
+                this.testToPassForm.setControl(
+                  'questions',
+                  this.fromModelToQuestionFormArray(this.testToPass.questions)
+                );
+              }
             },
             (err) => {
               console.log(err);
@@ -105,7 +140,7 @@ export class CustomTestPassFormComponent implements OnInit {
     TestResultHelpers.setupMarkAndUsername(result, this.origin, this.username);
     this._customTestResultService.createCustomTestResult(result).subscribe(
       () => {
-        this._router.navigate(['/tests']);
+        this._router.navigate(['/tests', this.origin.id]);
       },
       (err) => {
         console.log(err);
@@ -169,7 +204,10 @@ export class CustomTestPassFormComponent implements OnInit {
         this._formBuilder.group({
           answerId: answer.id,
           questionId: answer.questionId,
-          answerIsCorrect: answer.isCorrect,
+          answerIsCorrect: {
+            value: answer.isCorrect,
+            disabled: this.isViewResultsMode,
+          },
           answerStatement: answer.statement,
         })
       );
