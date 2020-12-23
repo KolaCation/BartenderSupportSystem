@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BartenderSupportSystem.Shared.Models.TestSystem
+﻿namespace BartenderSupportSystem.Shared.Models.TestSystem
 {
     public sealed class UserRatingDto
     {
@@ -11,6 +7,6 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
         public int TestId { get; set; }
         public string UserName { get; set; }
         public double Mark { get; set; }
-        
+
     }
 }

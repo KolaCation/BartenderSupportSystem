@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
 using BartenderSupportSystem.Shared.Models.TestSystem;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -87,7 +85,7 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
-            
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -123,7 +121,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdCustomTest = _context.TestsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetCustomTest), new {id = createdCustomTest.Id}, createdCustomTest);
+            return CreatedAtAction(nameof(GetCustomTest), new { id = createdCustomTest.Id }, createdCustomTest);
         }
 
         // DELETE: api/CustomTests/5

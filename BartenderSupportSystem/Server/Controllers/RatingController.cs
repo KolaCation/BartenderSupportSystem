@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
+﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
 using BartenderSupportSystem.Shared.Models.TestSystem;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -106,7 +104,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdRating = _context.RatingsSet.OrderByDescending(e => e.Id).Include(e => e.UserRatings).First();
 
-            return CreatedAtAction("GetRating", new {id = createdRating.Id}, _ratingMapper.ToDto(createdRating));
+            return CreatedAtAction("GetRating", new { id = createdRating.Id }, _ratingMapper.ToDto(createdRating));
         }
 
         // DELETE: api/Rating/5

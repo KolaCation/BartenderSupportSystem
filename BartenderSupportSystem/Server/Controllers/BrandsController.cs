@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
+﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
-using BartenderSupportSystem.Server.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -106,7 +106,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetBrand), new {id = createdBrand.Id}, _brandMapper.ToDto(createdBrand));
+            return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.Id }, _brandMapper.ToDto(createdBrand));
         }
 
         // DELETE: api/Brands/5
@@ -129,7 +129,7 @@ namespace BartenderSupportSystem.Server.Controllers
             _context.DrinksSet.RemoveRange(drinksToRemove);
 
             await _context.SaveChangesAsync();
-            
+
             return NoContent();
         }
 

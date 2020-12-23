@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BartenderSupportSystem.Shared.Models.TestSystem
+﻿namespace BartenderSupportSystem.Shared.Models.TestSystem
 {
     public sealed class CustomAnswerDto
     {

@@ -1,4 +1,18 @@
-﻿using System;
+﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces;
+using BartenderSupportSystem.Server.Models;
+using BartenderSupportSystem.Shared.Models;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,23 +20,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.DbModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using BartenderSupportSystem.Server.Models;
-using BartenderSupportSystem.Shared.Models;
-using IdentityModel;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Shared.Utils;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces;
-using BartenderSupportSystem.Server.Data.Mappers.Implementation;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -107,7 +104,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                     var storedData = _context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                     user.BartenderId = storedData == null ? default : storedData.Id;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     ModelState.AddModelError(string.Empty, "Error registering new user. Please, try again later.");
                     return Page();

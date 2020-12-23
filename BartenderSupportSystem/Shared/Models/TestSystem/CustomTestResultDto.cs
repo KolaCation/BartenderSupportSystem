@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BartenderSupportSystem.Shared.Models.TestSystem
 {
@@ -8,7 +6,7 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
     {
         public int Id { get; set; }
         public int CustomTestId { get; set; }
-        public string UserName  { get; set; }
+        public string UserName { get; set; }
         public List<PickedAnswerDto> PickedAnswers { get; set; }
         public double PersonalMark { get; set; }
     }

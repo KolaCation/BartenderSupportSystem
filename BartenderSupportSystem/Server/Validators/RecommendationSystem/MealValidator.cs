@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
+﻿using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem

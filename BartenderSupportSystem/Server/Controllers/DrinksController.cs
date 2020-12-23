@@ -1,16 +1,16 @@
-﻿using System;
+﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using BartenderSupportSystem.Server.Helpers;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using Microsoft.AspNetCore.Cors;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -122,7 +122,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetDrink), new {id = createdDrink.Id}, _drinkMapper.ToDto(createdDrink));
+            return CreatedAtAction(nameof(GetDrink), new { id = createdDrink.Id }, _drinkMapper.ToDto(createdDrink));
         }
 
         // DELETE: api/Drinks/5
