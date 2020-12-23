@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { CustomValidators } from 'src/app/shared/CustomValidators';
 import { ErrorHandlerService } from 'src/app/shared/ErrorHandlerService';
 import Swal from 'sweetalert2';
@@ -21,6 +22,7 @@ export class DrinkFormComponent implements OnInit {
   drink: IDrink;
   alcoholTypesArray: AlcoholType[] = Object.values(AlcoholType);
   private _photoPath: string;
+  isAdmin = false;
 
   messages = {
     name: {
@@ -67,86 +69,101 @@ export class DrinkFormComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _brandService: BrandService,
-    private _errService: ErrorHandlerService
+    private _errService: ErrorHandlerService,
+    private _authorizeService: AuthorizeService
   ) {}
 
   ngOnInit(): void {
-    this._brandService.getBrands().subscribe(
-      (data) => {
-        this.brands = data;
-        this.brands.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        if (!this.isAdmin) this._router.navigate(['/drinks']);
+        this._brandService.getBrands().subscribe(
+          (data) => {
+            this.brands = data;
+            this.brands.sort((a, b) => {
+              if (a.name < b.name) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
           }
-          if (a.name > b.name) {
-            return 1;
+        );
+        this.drink = {
+          id: 0,
+          name: null,
+          alcoholType: null,
+          alcoholPercentage: 0,
+          flavor: null,
+          brandId: 0,
+          brand: null,
+          pricePerMl: 0,
+          photoPath: null,
+        };
+        this.drinkForm = this._formBuilder.group({
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(60),
+            ],
+          ],
+          alcoholType: [
+            '',
+            [Validators.required, CustomValidators.validateAlcoholType()],
+          ],
+          alcoholPercentage: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          flavor: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(255),
+            ],
+          ],
+          pricePerMl: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(10000)],
+          ],
+          photoPath: [''],
+          brandId: ['', CustomValidators.validateBrand()],
+        });
+
+        this.drinkForm.valueChanges.subscribe(() => {
+          this.validateFormValue(this.drinkForm);
+        });
+
+        this._activatedRoute.paramMap.subscribe(
+          (params) => {
+            const drinkId = +params.get('id');
+            if (drinkId) {
+              this.fillFormWithValuesToEdit(drinkId);
+            }
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
           }
-          return 0;
-        });
-      },
-      () => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
-        });
-      }
-    );
-    this.drink = {
-      id: 0,
-      name: null,
-      alcoholType: null,
-      alcoholPercentage: 0,
-      flavor: null,
-      brandId: 0,
-      brand: null,
-      pricePerMl: 0,
-      photoPath: null,
-    };
-    this.drinkForm = this._formBuilder.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(60),
-        ],
-      ],
-      alcoholType: [
-        '',
-        [Validators.required, CustomValidators.validateAlcoholType()],
-      ],
-      alcoholPercentage: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
-      flavor: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(255),
-        ],
-      ],
-      pricePerMl: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(10000)],
-      ],
-      photoPath: [''],
-      brandId: ['', CustomValidators.validateBrand()],
-    });
-
-    this.drinkForm.valueChanges.subscribe(() => {
-      this.validateFormValue(this.drinkForm);
-    });
-
-    this._activatedRoute.paramMap.subscribe(
-      (params) => {
-        const drinkId = +params.get('id');
-        if (drinkId) {
-          this.fillFormWithValuesToEdit(drinkId);
-        }
+        );
       },
       () => {
         Swal.fire({

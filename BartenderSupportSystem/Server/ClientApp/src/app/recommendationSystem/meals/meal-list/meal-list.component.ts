@@ -3,6 +3,7 @@ import { MealService } from '../meal/meal.service';
 import { Router } from '@angular/router';
 import { IMeal } from '../meal/IMeal';
 import Swal from 'sweetalert2';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-meal-list',
@@ -12,20 +13,38 @@ import Swal from 'sweetalert2';
 export class MealListComponent implements OnInit {
   meals: IMeal[];
   statusMessage = 'Loading...';
+  isAdmin = false;
 
-  constructor(private _mealService: MealService, private _router: Router) {}
+  constructor(
+    private _mealService: MealService,
+    private _router: Router,
+    private _authorizeService: AuthorizeService
+  ) {}
 
   ngOnInit(): void {
-    this._mealService.getMeals().subscribe(
-      (data) => {
-        if (data.length === 0) {
-          this.statusMessage = 'No meals to display.';
-        } else {
-          this.meals = data;
-        }
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        this._mealService.getMeals().subscribe(
+          (data) => {
+            if (data.length === 0) {
+              this.statusMessage = 'No meals to display.';
+            } else {
+              this.meals = data;
+            }
+          },
+          (error) => {
+            this.statusMessage = error;
+          }
+        );
       },
-      (error) => {
-        this.statusMessage = error;
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     );
   }

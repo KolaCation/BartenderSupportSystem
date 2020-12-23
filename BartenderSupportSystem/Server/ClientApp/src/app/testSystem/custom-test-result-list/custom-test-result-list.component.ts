@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import Swal from 'sweetalert2';
+import { ICurrentUserIsCreator } from '../custom-test-list/ICurrentUserIsCreator';
 import { CustomTestResultService } from '../custom-test-result/custom-test-result.service';
 import { ICustomTestResult } from '../custom-test-result/ICustomTestResult';
 import { CustomTestService } from '../custom-test/custom-test.service';
 import { ICustomTest } from '../custom-test/ICustomTest';
-import { ICurrentUserIsCreator } from './ICurrentUserIsCreator';
 
 @Component({
-  selector: 'app-custom-test-list',
-  templateUrl: './custom-test-list.component.html',
-  styleUrls: ['./custom-test-list.component.css'],
+  selector: 'app-custom-test-result-list',
+  templateUrl: './custom-test-result-list.component.html',
+  styleUrls: ['./custom-test-result-list.component.css'],
 })
-export class CustomTestListComponent implements OnInit {
+export class CustomTestResultListComponent implements OnInit {
   tests: ICustomTest[] = [];
   statusMessage = 'Loading...';
   currentUserIsCreatorList: ICurrentUserIsCreator[] = [];
@@ -36,7 +36,7 @@ export class CustomTestListComponent implements OnInit {
                 (results: ICustomTestResult[]) => {
                   tests.forEach((test: ICustomTest) => {
                     if (
-                      results.find((e) => e.customTestId === test.id) == null
+                      results.find((e) => e.customTestId === test.id) != null
                     ) {
                       this.tests.push(test);
                     }
@@ -53,6 +53,8 @@ export class CustomTestListComponent implements OnInit {
                         isCreator: false,
                       });
                     }
+                    if (this.tests.length === 0)
+                      this.statusMessage = 'No tests to display';
                   });
                 },
                 () => {
@@ -101,7 +103,10 @@ export class CustomTestListComponent implements OnInit {
     }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
         this._customTestService.deleteCustomTest(test.id).subscribe(
-          () => this._router.navigate(['/tests']),
+          () => {
+            const testIndex: number = this.tests.indexOf(test, 0);
+            this.tests.splice(testIndex, 1);
+          },
           () => {
             Swal.fire({
               position: 'center',

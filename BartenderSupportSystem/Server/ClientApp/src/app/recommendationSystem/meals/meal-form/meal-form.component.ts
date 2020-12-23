@@ -5,6 +5,7 @@ import { MealService } from '../meal/meal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-meal-form',
@@ -14,6 +15,7 @@ import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
 export class MealFormComponent implements OnInit {
   mealForm: FormGroup;
   meal: IMeal;
+  isAdmin = false;
 
   messages = {
     name: {
@@ -39,39 +41,54 @@ export class MealFormComponent implements OnInit {
     private _mealService: MealService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _errService: ErrorHandlerService
+    private _errService: ErrorHandlerService,
+    private _authorizeService: AuthorizeService
   ) {}
 
   ngOnInit(): void {
-    this.meal = {
-      id: 0,
-      name: null,
-      pricePerGr: 0,
-    };
-    this.mealForm = this._formBuilder.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(60),
-        ],
-      ],
-      pricePerGr: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(10000)],
-      ],
-    });
-    this.mealForm.valueChanges.subscribe(() =>
-      this.validateFormValue(this.mealForm)
-    );
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        if (!this.isAdmin) this._router.navigate(['/meals']);
+        this.meal = {
+          id: 0,
+          name: null,
+          pricePerGr: 0,
+        };
+        this.mealForm = this._formBuilder.group({
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(60),
+            ],
+          ],
+          pricePerGr: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(10000)],
+          ],
+        });
+        this.mealForm.valueChanges.subscribe(() =>
+          this.validateFormValue(this.mealForm)
+        );
 
-    this._activatedRoute.paramMap.subscribe(
-      (params) => {
-        const mealId = +params.get('id');
-        if (mealId) {
-          this.fillFormWithValuesToEdit(mealId);
-        }
+        this._activatedRoute.paramMap.subscribe(
+          (params) => {
+            const mealId = +params.get('id');
+            if (mealId) {
+              this.fillFormWithValuesToEdit(mealId);
+            }
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        );
       },
       () => {
         Swal.fire({

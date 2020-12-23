@@ -10,6 +10,7 @@ using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -134,6 +135,10 @@ namespace BartenderSupportSystem.Server.Controllers
                 return NotFound();
             }
 
+            var ingredientsToRemove = await _context.IngredientsSet
+                .Where(e => e.ComponentId.Equals(drinkDbModel.Id) && e.ProportionType == ProportionType.Milliliter)
+                .ToListAsync();
+            _context.IngredientsSet.RemoveRange(ingredientsToRemove);
             _context.DrinksSet.Remove(drinkDbModel);
             await _context.SaveChangesAsync();
 

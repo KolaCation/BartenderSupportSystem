@@ -1,4 +1,4 @@
-<div *ngIf="meals && drinks && componentList" class="mt-3">
+<div *ngIf="meals && drinks && componentList && isAdmin" class="mt-3">
   <h4 class="text-center">Cocktail Form</h4>
   <div class="row justify-content-center">
     <form [formGroup]="cocktailForm" (ngSubmit)="onSubmit()">

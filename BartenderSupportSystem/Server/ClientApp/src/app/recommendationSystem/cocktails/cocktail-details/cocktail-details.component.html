@@ -3,6 +3,7 @@
     <a
       class="btn btn-primary btn-lg m-2"
       [routerLink]="['/cocktails/edit', cocktail.id]"
+      *ngIf="isAdmin"
       >Edit Cocktail</a
     >
     <a class="btn btn-primary btn-lg m-2" routerLink="/cocktails"

@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandlerService } from '../../../shared/ErrorHandlerService';
 import { CountryConverter } from '../brand/CountryConverter';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-brand-form',
@@ -18,6 +19,7 @@ export class BrandFormComponent implements OnInit {
   brandForm: FormGroup;
   countryArray: Countries[] = Object.values(Countries);
   brand: IBrand;
+  isAdmin = false;
 
   messages = {
     name: {
@@ -41,39 +43,54 @@ export class BrandFormComponent implements OnInit {
     private _brandService: BrandService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _errService: ErrorHandlerService
+    private _errService: ErrorHandlerService,
+    private _authorizeService: AuthorizeService
   ) {}
 
   ngOnInit(): void {
-    this.brand = {
-      id: 0,
-      name: null,
-      countryOfOrigin: null,
-    };
-    this.brandForm = this._formBuilder.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(60),
-        ],
-      ],
-      countryOfOrigin: [
-        '',
-        [Validators.required, CustomValidators.validateCountry()],
-      ],
-    });
-    this.brandForm.valueChanges.subscribe(() =>
-      this.validateFormValue(this.brandForm)
-    );
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        if (!this.isAdmin) this._router.navigate(['/brands']);
+        this.brand = {
+          id: 0,
+          name: null,
+          countryOfOrigin: null,
+        };
+        this.brandForm = this._formBuilder.group({
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(60),
+            ],
+          ],
+          countryOfOrigin: [
+            '',
+            [Validators.required, CustomValidators.validateCountry()],
+          ],
+        });
+        this.brandForm.valueChanges.subscribe(() =>
+          this.validateFormValue(this.brandForm)
+        );
 
-    this._activatedRoute.paramMap.subscribe(
-      (params) => {
-        const brandId = +params.get('id');
-        if (brandId) {
-          this.fillFormWithValuesToEdit(brandId);
-        }
+        this._activatedRoute.paramMap.subscribe(
+          (params) => {
+            const brandId = +params.get('id');
+            if (brandId) {
+              this.fillFormWithValuesToEdit(brandId);
+            }
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        );
       },
       () => {
         Swal.fire({

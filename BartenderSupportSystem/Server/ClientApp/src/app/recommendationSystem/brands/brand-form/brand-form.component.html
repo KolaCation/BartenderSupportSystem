@@ -1,5 +1,5 @@
-<h4 class="text-center mt-3">Brand Form</h4>
-<div class="row justify-content-center">
+<h4 class="text-center mt-3" *ngIf="isAdmin">Brand Form</h4>
+<div class="row justify-content-center" *ngIf="isAdmin">
   <form [formGroup]="brandForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Name</label>

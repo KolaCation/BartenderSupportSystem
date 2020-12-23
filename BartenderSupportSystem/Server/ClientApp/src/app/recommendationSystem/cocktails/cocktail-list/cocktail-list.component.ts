@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import Swal from 'sweetalert2';
 import { ICocktailFilter } from '../cocktail-filter/ICocktailFilter';
 import { CocktailService } from '../cocktail/cocktail.service';
@@ -14,25 +15,39 @@ export class CocktailListComponent implements OnInit {
   cocktails: ICocktail[];
   filteredCocktails: ICocktail[];
   statusMessage = 'Loading...';
+  isAdmin = false;
 
   constructor(
     private _cocktailService: CocktailService,
-    private activatedRoute: ActivatedRoute,
-    private _router: Router
+    private _router: Router,
+    private _authorizeService: AuthorizeService
   ) {}
 
   ngOnInit(): void {
-    this._cocktailService.getCocktails().subscribe(
-      (data) => {
-        if (data.length === 0) {
-          this.statusMessage = 'No cocktails to display.';
-        } else {
-          this.cocktails = data;
-          this.filteredCocktails = this.cocktails;
-        }
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        this._cocktailService.getCocktails().subscribe(
+          (data) => {
+            if (data.length === 0) {
+              this.statusMessage = 'No cocktails to display.';
+            } else {
+              this.cocktails = data;
+              this.filteredCocktails = this.cocktails;
+            }
+          },
+          (error) => {
+            this.statusMessage = error;
+          }
+        );
       },
-      (error) => {
-        this.statusMessage = error;
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     );
   }

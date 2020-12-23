@@ -4,7 +4,6 @@ import { ApiAuthorizationModule } from '../api-authorization/api-authorization.m
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DataComponent } from './data/data.component';
 import { HomeComponent } from './home/home.component';
 import { NavmenuComponent } from './navmenu/navmenu.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -16,9 +15,10 @@ import { CocktailService } from './recommendationSystem/cocktails/cocktail/cockt
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { ErrorHandlerService } from './shared/ErrorHandlerService';
 import { CustomTestService } from './testSystem/custom-test/custom-test.service';
+import { CustomTestResultService } from './testSystem/custom-test-result/custom-test-result.service';
 
 @NgModule({
-  declarations: [AppComponent, DataComponent, HomeComponent, NavmenuComponent],
+  declarations: [AppComponent, HomeComponent, NavmenuComponent],
   imports: [BrowserModule, AppRoutingModule, ApiAuthorizationModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
@@ -29,6 +29,7 @@ import { CustomTestService } from './testSystem/custom-test/custom-test.service'
     AuthorizeService,
     ErrorHandlerService,
     CustomTestService,
+    CustomTestResultService,
   ],
   bootstrap: [AppComponent],
 })

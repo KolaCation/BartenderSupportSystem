@@ -1,6 +1,9 @@
 <h4 class="text-center mt-3">Drink List</h4>
 <div class="row justify-content-center">
-  <a class="btn btn-primary btn-lg m-2" routerLink="/drinks/create"
+  <a
+    class="btn btn-primary btn-lg m-2"
+    routerLink="/drinks/create"
+    *ngIf="isAdmin"
     >Create Drink</a
   >
   <a class="btn btn-primary btn-lg m-2" routerLink="/">Back To Home</a>
@@ -30,7 +33,7 @@
         <h5 class="card-header">
           <a [routerLink]="['/drinks', drink.id]">{{ drink.name }}</a>
         </h5>
-        <div class="card-body">
+        <div class="card-body" *ngIf="isAdmin">
           <div class="row justify-content-center">
             <a class="btn btn-success m-2" (click)="editDrink(drink.id)"
               >Edit</a

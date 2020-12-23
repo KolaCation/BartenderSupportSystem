@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IBrand } from '../brand/IBrand';
 import { Countries } from '../brand/Countries';
 import Swal from 'sweetalert2';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-brand-list',
@@ -13,29 +14,47 @@ import Swal from 'sweetalert2';
 export class BrandListComponent implements OnInit {
   brands: IBrand[];
   statusMessage = 'Loading...';
+  isAdmin = false;
 
-  constructor(private _brandService: BrandService, private _router: Router) {}
+  constructor(
+    private _brandService: BrandService,
+    private _router: Router,
+    private _authorizeService: AuthorizeService
+  ) {}
 
   ngOnInit(): void {
-    this._brandService.getBrands().subscribe(
-      (data) => {
-        if (data.length === 0) {
-          this.statusMessage = 'No brands to display.';
-        } else {
-          this.brands = data;
-          this.brands.forEach((brand: IBrand) => {
-            let countryName: string;
-            Object.keys(Countries).forEach((country: Countries) => {
-              if (brand.countryOfOrigin == country) {
-                countryName = Countries[country];
-              }
-            });
-            brand.countryOfOrigin = countryName;
-          });
-        }
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        this._brandService.getBrands().subscribe(
+          (data) => {
+            if (data.length === 0) {
+              this.statusMessage = 'No brands to display.';
+            } else {
+              this.brands = data;
+              this.brands.forEach((brand: IBrand) => {
+                let countryName: string;
+                Object.keys(Countries).forEach((country: Countries) => {
+                  if (brand.countryOfOrigin == country) {
+                    countryName = Countries[country];
+                  }
+                });
+                brand.countryOfOrigin = countryName;
+              });
+            }
+          },
+          (error) => {
+            this.statusMessage = error;
+          }
+        );
       },
-      (error) => {
-        this.statusMessage = error;
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     );
   }
@@ -60,7 +79,14 @@ export class BrandListComponent implements OnInit {
             const brandIndex: number = this.brands.indexOf(brand, 0);
             this.brands.splice(brandIndex, 1);
           },
-          (error) => console.log(error)
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
         );
         Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
       }

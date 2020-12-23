@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import Swal from 'sweetalert2';
 import { IDrinkFilter } from '../drink-filter/IDrinkFilter';
 import { DrinkService } from '../drink/drink.service';
@@ -14,21 +15,39 @@ export class DrinkListComponent implements OnInit {
   drinks: IDrink[];
   filteredDrinks: IDrink[];
   statusMessage = 'Loading...';
+  isAdmin = false;
 
-  constructor(private _drinkService: DrinkService, private _router: Router) {}
+  constructor(
+    private _drinkService: DrinkService,
+    private _router: Router,
+    private _authorizeService: AuthorizeService
+  ) {}
 
   ngOnInit(): void {
-    this._drinkService.getDrinks().subscribe(
-      (data) => {
-        if (data.length === 0) {
-          this.statusMessage = 'No drinks to display.';
-        } else {
-          this.drinks = data;
-          this.filteredDrinks = this.drinks;
-        }
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        this._drinkService.getDrinks().subscribe(
+          (data) => {
+            if (data.length === 0) {
+              this.statusMessage = 'No drinks to display.';
+            } else {
+              this.drinks = data;
+              this.filteredDrinks = this.drinks;
+            }
+          },
+          (error) => {
+            this.statusMessage = error;
+          }
+        );
       },
-      (error) => {
-        this.statusMessage = error;
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     );
   }

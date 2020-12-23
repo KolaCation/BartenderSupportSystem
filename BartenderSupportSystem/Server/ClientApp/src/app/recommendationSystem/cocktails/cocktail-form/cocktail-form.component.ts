@@ -14,6 +14,7 @@ import { ICocktail } from '../cocktail/ICocktail';
 import { ProportionType } from '../cocktail/ingredients/ProportionType';
 import { IngredientMapper } from '../cocktail/ingredients/IngredientMapper';
 import { IIngredient } from '../cocktail/ingredients/IIngredient';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-cocktail-form',
@@ -30,6 +31,7 @@ export class CocktailFormComponent implements OnInit {
   cocktailTypeArray = Object.values(CocktailType);
   componentList: any[] = [];
   formArrayServerErrors = {};
+  isAdmin = false;
 
   messages = {
     name: {
@@ -61,98 +63,113 @@ export class CocktailFormComponent implements OnInit {
     private _router: Router,
     private _errService: ErrorHandlerService,
     private _drinkService: DrinkService,
-    private _mealService: MealService
+    private _mealService: MealService,
+    private _authorizeService: AuthorizeService
   ) {}
 
   ngOnInit(): void {
-    this._drinkService.getDrinks().subscribe(
-      (data) => {
-        this.drinks = data;
-        this.drinks.forEach((el) => this.componentList.push(el));
-        this.drinks.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        if (!this.isAdmin) this._router.navigate(['/cocktails']);
+        this._drinkService.getDrinks().subscribe(
+          (data) => {
+            this.drinks = data;
+            this.drinks.forEach((el) => this.componentList.push(el));
+            this.drinks.sort((a, b) => {
+              if (a.name < b.name) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
           }
-          if (a.name > b.name) {
-            return 1;
+        );
+        this._mealService.getMeals().subscribe(
+          (data) => {
+            this.meals = data;
+            this.meals.forEach((el) => this.componentList.push(el));
+            this.meals.sort((a, b) => {
+              if (a.name < b.name) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
           }
-          return 0;
+        );
+        this.cocktail = {
+          id: 0,
+          name: null,
+          cocktailType: null,
+          photoPath: null,
+          ingredients: null,
+          description: null,
+        };
+        this.cocktailForm = this._formBuilder.group({
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(60),
+            ],
+          ],
+          cocktailType: [
+            '',
+            [Validators.required, CustomValidators.validateCocktailType()],
+          ],
+          description: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(255),
+            ],
+          ],
+          ingredients: this._formBuilder.array([]),
         });
-      },
-      () => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
-        });
-      }
-    );
-    this._mealService.getMeals().subscribe(
-      (data) => {
-        this.meals = data;
-        this.meals.forEach((el) => this.componentList.push(el));
-        this.meals.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        });
-      },
-      () => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
-        });
-      }
-    );
-    this.cocktail = {
-      id: 0,
-      name: null,
-      cocktailType: null,
-      photoPath: null,
-      ingredients: null,
-      description: null,
-    };
-    this.cocktailForm = this._formBuilder.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(60),
-        ],
-      ],
-      cocktailType: [
-        '',
-        [Validators.required, CustomValidators.validateCocktailType()],
-      ],
-      description: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(255),
-        ],
-      ],
-      ingredients: this._formBuilder.array([]),
-    });
 
-    this.cocktailForm.valueChanges.subscribe(() => {
-      this.validateFormValue(this.cocktailForm);
-    });
+        this.cocktailForm.valueChanges.subscribe(() => {
+          this.validateFormValue(this.cocktailForm);
+        });
 
-    this._activatedRoute.paramMap.subscribe(
-      (params) => {
-        const cocktailId = +params.get('id');
-        if (cocktailId) {
-          this.fillFormWithValuesToEdit(cocktailId);
-        }
+        this._activatedRoute.paramMap.subscribe(
+          (params) => {
+            const cocktailId = +params.get('id');
+            if (cocktailId) {
+              this.fillFormWithValuesToEdit(cocktailId);
+            }
+          },
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        );
       },
       () => {
         Swal.fire({
@@ -163,7 +180,6 @@ export class CocktailFormComponent implements OnInit {
         });
       }
     );
-    //ngOnInit end
   }
 
   validateFormValue(formGroup: FormGroup = this.cocktailForm): void {

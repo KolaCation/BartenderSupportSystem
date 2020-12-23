@@ -8,6 +8,7 @@ using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
+using BartenderSupportSystem.Server.Helpers;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -17,11 +18,13 @@ namespace BartenderSupportSystem.Server.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStorageService _storageService;
         private readonly IBrandMapper _brandMapper;
 
-        public BrandsController(ApplicationDbContext context)
+        public BrandsController(ApplicationDbContext context, IStorageService storageService)
         {
             _context = context;
+            _storageService = storageService;
             _brandMapper = new BrandMapper();
         }
 
@@ -59,6 +62,7 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -96,12 +100,13 @@ namespace BartenderSupportSystem.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var brandDbModel = _brandMapper.ToDbModel(brand);
             await _context.BrandsSet.AddAsync(brandDbModel);
             await _context.SaveChangesAsync();
             var createdBrand = _context.BrandsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.Id }, _brandMapper.ToDto(createdBrand));
+            return CreatedAtAction(nameof(GetBrand), new {id = createdBrand.Id}, _brandMapper.ToDto(createdBrand));
         }
 
         // DELETE: api/Brands/5
@@ -115,8 +120,16 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             _context.BrandsSet.Remove(brandDbModel);
-            await _context.SaveChangesAsync();
+            var drinksToRemove = await _context.DrinksSet.Where(e => e.BrandId.Equals(brandDbModel.Id)).ToListAsync();
+            foreach (var drinkDbModel in drinksToRemove)
+            {
+                await _storageService.DeleteFile(drinkDbModel.PhotoPath, "drinks");
+            }
 
+            _context.DrinksSet.RemoveRange(drinksToRemove);
+
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 
