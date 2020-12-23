@@ -1,0 +1,38 @@
+<div
+  *ngIf="origin && result && currentUserIsPasser"
+  class="row justify-content-center mt-3"
+>
+  <div class="col">
+    <div class="card">
+      <div class="card-body row justify-content-center align-items-center">
+        <div class="col">
+          <h5 class="card-title">Name:</h5>
+          <h6 class="card-subtitle text-muted">{{ origin.name }}</h6>
+        </div>
+        <div class="col">
+          <h5 class="card-title">Topic:</h5>
+          <h6 class="card-subtitle text-muted">{{ origin.topic }}</h6>
+        </div>
+        <div class="col">
+          <h5 class="card-title">Your mark:</h5>
+          <h6 class="card-subtitle text-muted">
+            {{ result.personalMark }}/100
+          </h6>
+        </div>
+        <div class="col">
+          <h5 *ngIf="currentUserIsCreator">
+            <a class="card-link col" [routerLink]="['/tests/edit', origin.id]"
+              >Edit</a>
+          </h5>
+            <button class="btn btn-link" (click)="deleteTest()" *ngIf="currentUserIsCreator">
+              <h5>Delete</h5>
+            </button>
+          <h5 *ngIf="!currentUserIsCreator">
+            <a class="card-link col">Rate</a>
+          </h5>
+        </div>
+      </div>
+    </div>
+    <custom-test-pass-form></custom-test-pass-form>
+  </div>
+</div>

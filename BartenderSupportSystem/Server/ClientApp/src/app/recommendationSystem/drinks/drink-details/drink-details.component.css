@@ -1,5 +1,5 @@
 .image-limiter {
-    max-width: 400px;
-    max-height: auto;
-    object-fit: cover;
+  max-width: 400px;
+  max-height: auto;
+  object-fit: cover;
 }

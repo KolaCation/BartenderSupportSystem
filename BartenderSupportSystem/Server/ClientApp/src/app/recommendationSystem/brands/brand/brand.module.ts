@@ -4,13 +4,8 @@ import { BrandListComponent } from '../brand-list/brand-list.component';
 import { BrandRoutingModule } from './brand-routing.module';
 import { SharedModule } from '../../../shared/shared.module';
 
-
-
 @NgModule({
   declarations: [BrandFormComponent, BrandListComponent],
-  imports: [
-    SharedModule,
-    BrandRoutingModule
-  ]
+  imports: [SharedModule, BrandRoutingModule],
 })
-export class BrandModule { }
+export class BrandModule {}

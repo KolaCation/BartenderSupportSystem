@@ -15,7 +15,7 @@ namespace BartenderSupportSystem.Server.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -272,18 +272,38 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Mark")
-                        .HasColumnType("float");
-
-                    b.Property<int>("QuantityOfRaters")
-                        .HasColumnType("int");
-
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("RatingsSet");
+                });
+
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.UserRatingDbModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Mark")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RatingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RatingId");
+
+                    b.ToTable("UserRatingsSet");
                 });
 
             modelBuilder.Entity("BartenderSupportSystem.Server.Models.ApplicationUser", b =>
@@ -597,6 +617,15 @@ namespace BartenderSupportSystem.Server.Data.Migrations
                     b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestResultDbModel", "CustomTestResult")
                         .WithMany("PickedAnswers")
                         .HasForeignKey("CustomTestResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BartenderSupportSystem.Server.Data.DbModels.TestSystem.UserRatingDbModel", b =>
+                {
+                    b.HasOne("BartenderSupportSystem.Server.Data.DbModels.TestSystem.RatingDbModel", "Rating")
+                        .WithMany("UserRatings")
+                        .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

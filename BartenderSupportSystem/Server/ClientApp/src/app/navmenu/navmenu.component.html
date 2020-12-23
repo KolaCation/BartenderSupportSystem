@@ -1,6 +1,19 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isAuthenticated">
-  <a class="navbar-brand" routerLink="/" routerLinkActive="active">BartenderSupportSystem</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-dark"
+  *ngIf="isAuthenticated"
+>
+  <a class="navbar-brand" routerLink="/" routerLinkActive="active"
+    >BartenderSupportSystem</a
+  >
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -9,49 +22,98 @@
         <a class="nav-link" routerLink="/">Home</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           Brands
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/brands">Brands List</a>
-          <a class="dropdown-item" routerLink="/brands/create" *ngIf="isAdmin">Create Brand</a>
+          <a class="dropdown-item" routerLink="/brands/create" *ngIf="isAdmin"
+            >Create Brand</a
+          >
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Drinks
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" routerLink="/drinks">Drinks List</a>
-          <a class="dropdown-item" routerLink="/drinks/create" *ngIf="isAdmin">Create Drink</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           Meals
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/meals">Meals List</a>
-          <a class="dropdown-item" routerLink="/meals/create" *ngIf="isAdmin">Create Meal</a>
+          <a class="dropdown-item" routerLink="/meals/create" *ngIf="isAdmin"
+            >Create Meal</a
+          >
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Drinks
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" routerLink="/drinks">Drinks List</a>
+          <a class="dropdown-item" routerLink="/drinks/create" *ngIf="isAdmin"
+            >Create Drink</a
+          >
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           Cocktails
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/cocktails">Cocktails List</a>
-          <a class="dropdown-item" routerLink="/cocktails/create" *ngIf="isAdmin">Create Cocktail</a>
+          <a
+            class="dropdown-item"
+            routerLink="/cocktails/create"
+            *ngIf="isAdmin"
+            >Create Cocktail</a
+          >
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           Tests
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/tests">Tests List</a>
           <a class="dropdown-item" routerLink="/tests/create">Create Test</a>
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/tests/results">Passed Tests</a>
       </li>
     </ul>
     <app-login-menu></app-login-menu>

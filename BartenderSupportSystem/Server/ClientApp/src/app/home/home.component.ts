@@ -4,15 +4,16 @@ import { AuthorizeService } from 'src/api-authorization/authorize.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  isAuthenticated = false;
 
-  isAuthenticated: boolean = false;
-
-  constructor(private _authorizeService: AuthorizeService) { }
+  constructor(private _authorizeService: AuthorizeService) {}
 
   ngOnInit(): void {
-    this._authorizeService.isAuthenticated().subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
+    this._authorizeService
+      .isAuthenticated()
+      .subscribe((isAuthenticated) => (this.isAuthenticated = isAuthenticated));
   }
 }

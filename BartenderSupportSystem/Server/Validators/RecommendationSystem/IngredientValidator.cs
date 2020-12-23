@@ -9,7 +9,7 @@ using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
-    public class IngredientValidator : AbstractValidator<IngredientDto>
+    public sealed class IngredientValidator : AbstractValidator<IngredientDto>
     {
         private readonly ApplicationDbContext _context;
 

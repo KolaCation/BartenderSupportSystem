@@ -1,172 +1,330 @@
 <div class="mt-3" *ngIf="currentUserIsCreator">
-    <p class="text text-center text-info">RULESET FOR CREATING TESTS:</p>
+  <h4 class="text-center">Test Form</h4>
+  <p class="text-center text-info">RULESET FOR CREATING TESTS:</p>
+  <div class="row justify-content-center">
     <ul class="list-group mb-2">
-        <li class="list-group-item">Test must have at least 4 questions and must not exceed 20 questions.</li>
-        <li class="list-group-item">Question must have at least 2 answers at must not exceed 6 answers.</li>
-        <li class="list-group-item">In every question there must be at least 1 correct answer.</li>
+      <li class="list-group-item">
+        Test must have at least 4 questions and must not exceed 20 questions.
+      </li>
+      <li class="list-group-item">
+        Question must have at least 2 answers and must not exceed 6 answers.
+      </li>
+      <li class="list-group-item">
+        In every question there must be at least 1 correct answer.
+      </li>
     </ul>
-    <h4 class="text">Test Form</h4>
+  </div>
+  <div class="row justify-content-center">
     <form [formGroup]="customTestForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.name"
-                [class.is-valid]="customTestForm.controls.name.valid" type="text" class="form-control col-sm-6"
-                id="name" formControlName="name" placeholder="Enter test name">
-            <div class="invalid-feedback" *ngIf="formErrors.name">
-                {{formErrors.name}}
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.name"
+          [class.is-valid]="customTestForm.controls.name.valid"
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+          placeholder="Enter test name"
+        />
+        <div class="invalid-feedback" *ngIf="formErrors.name">
+          {{ formErrors.name }}
+        </div>
+        <div class="valid-feedback" *ngIf="!formErrors.name">Looks good!</div>
+      </div>
+      <div class="form-group">
+        <label for="topic">Topic</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.topic"
+          [class.is-valid]="customTestForm.controls.topic.valid"
+          type="text"
+          class="form-control"
+          id="topic"
+          formControlName="topic"
+          placeholder="Enter test topic"
+        />
+        <div class="invalid-feedback" *ngIf="formErrors.topic">
+          {{ formErrors.topic }}
+        </div>
+        <div class="valid-feedback" *ngIf="!formErrors.topic">Looks good!</div>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.description"
+          [class.is-valid]="customTestForm.controls.description.valid"
+          class="form-control"
+          id="description"
+          formControlName="description"
+          placeholder="Enter description"
+        ></textarea>
+        <div class="invalid-feedback" *ngIf="formErrors.description">
+          {{ formErrors.description }}
+        </div>
+        <div class="valid-feedback" *ngIf="!formErrors.description">
+          Looks good!
+        </div>
+      </div>
+
+      <div
+        formArrayName="questions"
+        *ngFor="
+          let question of customTestForm.get('questions')['controls'];
+          let i = index
+        "
+      >
+        <div [formGroupName]="i">
+          <hr *ngIf="i > 0" />
+
+          <div class="row justify-content-start">
+            <h4 class="text-left col-auto">Question {{ i + 1 }}</h4>
+            <div class="col-auto">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="removeQuestion(i)"
+              >
+                Delete Question
+              </button>
             </div>
-            <div class="valid-feedback" *ngIf="!formErrors.name">
+          </div>
+
+          <div class="row justify-content-start mt-3">
+            <input
+              type="hidden"
+              [id]="'questionId' + i"
+              formControlName="questionId"
+              [value]="question.get('questionId').value"
+            />
+
+            <div class="form-group col-md-12">
+              <input
+                type="text"
+                autocomplete="off"
+                (blur)="validateFormValue()"
+                [ngClass]="{
+                  'is-valid':
+                    question.get('questionStatement').valid &&
+                    question.get('questionStatement').touched,
+                  'is-invalid':
+                    question.get('questionStatement').invalid &&
+                    question.get('questionStatement').touched
+                }"
+                class="form-control"
+                [id]="'questionStatement' + i"
+                formControlName="questionStatement"
+                placeholder="Enter statement"
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="question.get('questionStatement').errors?.required"
+              >
+                Statement is required.
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="question.get('questionStatement').errors?.minlength"
+              >
+                Statement must be at least 2 chars long.
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="question.get('questionStatement').errors?.maxlength"
+              >
+                Statement must not exceed 60 chars.
+              </div>
+              <div
+                class="valid-feedback"
+                *ngIf="!question.get('questionStatement').errors"
+              >
                 Looks good!
+              </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="topic">Topic</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.topic"
-                [class.is-valid]="customTestForm.controls.topic.valid" type="text" class="form-control col-sm-6"
-                id="topic" formControlName="topic" placeholder="Enter test topic">
-            <div class="invalid-feedback" *ngIf="formErrors.topic">
-                {{formErrors.topic}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.topic">
-                Looks good!
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.description"
-                [class.is-valid]="customTestForm.controls.description.valid" class="form-control col-sm-6"
-                id="description" formControlName="description" placeholder="Enter description"></textarea>
-            <div class="invalid-feedback" *ngIf="formErrors.description">
-                {{formErrors.description}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.description">
-                Looks good!
-            </div>
-        </div>
-
-        <div formArrayName="questions"
-            *ngFor="let question of customTestForm.get('questions')['controls']; let i = index">
-            <div [formGroupName]="i">
-
-                <hr *ngIf="i>0">
-
-                <h4 class="text-left">Question {{i+1}}</h4>
-                <div class="row justify-content-start">
-                    <input type="hidden" [id]="'questionId'+i" formControlName="questionId"
-                        [value]="question.get('questionId').value" />
-
-                    <div class="form-group col-md-8">
-                        <label [attr.for]="'questionStatement'+i">Statement</label>
-                        <input type="text" autocomplete="off" (blur)="validateFormValue()" [ngClass]="{
-                            'is-valid': question.get('questionStatement').valid && question.get('questionStatement').touched,
-                            'is-invalid': question.get('questionStatement').invalid && question.get('questionStatement').touched
-                        }" class="form-control col-sm-6" [id]="'questionStatement'+i"
-                            formControlName="questionStatement" placeholder="Enter statement">
-
-                        <div class="invalid-feedback" *ngIf="question.get('questionStatement').errors?.required">
-                            Statement is required.
-                        </div>
-                        <div class="invalid-feedback" *ngIf="question.get('questionStatement').errors?.minlength">
-                            Statement must be at least 2 chars long.
-                        </div>
-                        <div class="invalid-feedback" *ngIf="question.get('questionStatement').errors?.maxlength">
-                            Statement must not exceed 60 chars.
-                        </div>
-                        <div class="valid-feedback" *ngIf="!question.get('questionStatement').errors">
-                            Looks good!
-                        </div>
-                    </div>
-                    <div class="form-group col-md-1">
-                        <label for="'btn'+i">Del Bttn</label>
-                        <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">
-                            <span>X</span>
-                        </button>
-                    </div>
+          </div>
+          <div
+            formArrayName="answers"
+            *ngFor="
+              let answer of customTestForm
+                .get('questions')
+                .at(i)
+                .get('answers')['controls'];
+              let j = index
+            "
+          >
+            <div [formGroupName]="j" class="mt-3">
+              <div class="row justify-content-start">
+                <h6 class="text-left col-auto mt-2">Answer {{ j + 1 }}</h6>
+                <div class="col-auto">
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="removeAnswer(i, j)"
+                  >
+                    Delete Answer
+                  </button>
                 </div>
-                <div formArrayName="answers"
-                    *ngFor="let answer of customTestForm.get('questions').at(i).get('answers')['controls']; let j = index">
-                    <div [formGroupName]="j">
-                        <hr *ngIf="j>0">
-                        <h6 class="text-left">Answer {{j+1}}</h6>
-                        <div class="row justify-content-start">
-                            <div class="form-group col-md-6">
-                                <label [attr.for]="'answerStatement'+j">Statement</label>
-                                <input type="text" autocomplete="off" (blur)="validateFormValue()" [ngClass]="{
-                                'is-valid': answer.get('answerStatement').valid && answer.get('answerStatement').touched,
-                                'is-invalid': answer.get('answerStatement').invalid && answer.get('answerStatement').touched
-                            }" class="form-control col-sm-6" [id]="'answerStatement'+j"
-                                    formControlName="answerStatement" placeholder="Enter statement">
+              </div>
 
-                                <div class="invalid-feedback" *ngIf="answer.get('answerStatement').errors?.required">
-                                    Statement is required.
-                                </div>
-                                <div class="invalid-feedback" *ngIf="answer.get('answerStatement').errors?.minlength">
-                                    Statement must be at least 2 chars long.
-                                </div>
-                                <div class="invalid-feedback" *ngIf="answer.get('answerStatement').errors?.maxlength">
-                                    Statement must not exceed 60 chars.
-                                </div>
-                                <div class="valid-feedback" *ngIf="!answer.get('answerStatement').errors">
-                                    Looks good!
-                                </div>
-                            </div>
+              <div class="form-row align-items-start mt-3">
+                <div class="form-group col-auto">
+                  <input
+                    type="text"
+                    autocomplete="off"
+                    (blur)="validateFormValue()"
+                    [ngClass]="{
+                      'is-valid':
+                        answer.get('answerStatement').valid &&
+                        answer.get('answerStatement').touched,
+                      'is-invalid':
+                        answer.get('answerStatement').invalid &&
+                        answer.get('answerStatement').touched
+                    }"
+                    class="form-control"
+                    [id]="'answerStatement' + i.toString() + j.toString()"
+                    formControlName="answerStatement"
+                    placeholder="Enter statement"
+                  />
 
-                            <div class="form-group col-md-4">
-                                <label [attr.for]="'answerIsCorrect'+j">Is Correct</label>
-                                <input type="checkbox" [ngClass]="{
-                                'is-valid': answer.get('answerIsCorrect').valid && answer.get('answerIsCorrect').touched,
-                                'is-invalid': answer.get('answerIsCorrect').invalid && answer.get('answerIsCorrect').touched
-                            }" class="form-control col-sm-2" [id]="'answerStatement'+j"
-                                    formControlName="answerIsCorrect" placeholder="Enter statement">
-                            </div>
-
-                            <div class="form-group col-md-1">
-                                <label for="'btn'+j">Del Bttn</label>
-                                <button type="button" class="btn btn-danger" (click)="removeAnswer(i, j)">
-                                    <span>X</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text text-center text-danger"
-                        *ngIf="question.get('answers').errors?.correctAnswersCount && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
-                        Question must have at least 1 correct answer.
-                    </p>
-                    <p class="text text-center text-danger"
-                        *ngIf="question.get('answers').errors?.arrayminlength && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
-                        Question must have at least 2 answers.
-                    </p>
-                    <p class="text text-center text-danger"
-                        *ngIf="question.get('answers').errors?.arraymaxlength && (answer.get('answerIsCorrect').touched || answer.get('answerStatement').touched)">
-                        Question must not exceed 6 answers.
-                    </p>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="answer.get('answerStatement').errors?.required"
+                  >
+                    Statement is required.
+                  </div>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="answer.get('answerStatement').errors?.minlength"
+                  >
+                    Statement must be at least 2 chars long.
+                  </div>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="answer.get('answerStatement').errors?.maxlength"
+                  >
+                    Statement must not exceed 60 chars.
+                  </div>
+                  <div
+                    class="valid-feedback"
+                    *ngIf="!answer.get('answerStatement').errors"
+                  >
+                    Looks good!
+                  </div>
                 </div>
-                <div class="mt-3">
-                    <button type="button" class="btn btn-primary" [disabled]="question.get('answers').invalid && !question.get('answers').errors?.arrayminlength || 
-                        question.get('answers').value.length>=6" (click)="addAnswerClick(i)">
-                        Add Answer
-                    </button>
+
+                <div class="col-auto">
+                  <div class="form-check mt-2">
+                    <input
+                      type="checkbox"
+                      [ngClass]="{
+                        'is-valid':
+                          answer.get('answerIsCorrect').valid &&
+                          answer.get('answerIsCorrect').touched,
+                        'is-invalid':
+                          answer.get('answerIsCorrect').invalid &&
+                          answer.get('answerIsCorrect').touched
+                      }"
+                      class="form-check-input"
+                      [id]="'answerStatement' + i.toString() + j.toString()"
+                      formControlName="answerIsCorrect"
+                      placeholder="Enter statement"
+                    />
+                  </div>
+                  <label
+                    [attr.for]="'answerIsCorrect' + i.toString() + j.toString()"
+                    class="form-check-label ml-3"
+                    >Correct</label
+                  >
                 </div>
+              </div>
             </div>
+            <p
+              class="text-center text-danger"
+              *ngIf="
+                question.get('answers').errors?.correctAnswersCount &&
+                (answer.get('answerIsCorrect').touched ||
+                  answer.get('answerStatement').touched)
+              "
+            >
+              Question must have at least 1 correct answer.
+            </p>
+            <p
+              class="text-center text-danger"
+              *ngIf="
+                question.get('answers').errors?.arrayminlength &&
+                (answer.get('answerIsCorrect').touched ||
+                  answer.get('answerStatement').touched)
+              "
+            >
+              Question must have at least 2 answers.
+            </p>
+            <p
+              class="text-center text-danger"
+              *ngIf="
+                question.get('answers').errors?.arraymaxlength &&
+                (answer.get('answerIsCorrect').touched ||
+                  answer.get('answerStatement').touched)
+              "
+            >
+              Question must not exceed 6 answers.
+            </p>
+          </div>
+          <div class="mt-3">
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="
+                (question.get('answers').invalid &&
+                  !question.get('answers').errors?.arrayminlength) ||
+                question.get('answers').value.length >= 6
+              "
+              (click)="addAnswerClick(i)"
+            >
+              Add Answer
+            </button>
+          </div>
         </div>
-        <hr>
-        <p class="text text-center text-danger"
-            *ngIf="customTestForm.get('questions').errors?.arrayminlength || customTestForm.get('questions').errors?.arraymaxlength">
-            {{formErrors.questions}}
-        </p>
-        <div class="mt-3">
-            <button type="button" (click)="addQuestionClick()"
-                [disabled]="customTestForm.get('questions').invalid 
-            && !customTestForm.get('questions').errors?.arrayminlength || customTestForm.get('questions').value.length>=20" class="btn btn-primary">Add
-                Question</button>
-        </div>
-        <hr>
-        <div class="mt-3">
-            <button type="submit" [disabled]="customTestForm.invalid" class="btn btn-primary">Submit</button>
-        </div>
+      </div>
+      <hr />
+      <p
+        class="text text-center text-danger"
+        *ngIf="
+          customTestForm.get('questions').errors?.arrayminlength ||
+          customTestForm.get('questions').errors?.arraymaxlength
+        "
+      >
+        {{ formErrors.questions }}
+      </p>
+      <div class="mt-3">
+        <button
+          type="button"
+          (click)="addQuestionClick()"
+          [disabled]="
+            (customTestForm.get('questions').invalid &&
+              !customTestForm.get('questions').errors?.arrayminlength) ||
+            customTestForm.get('questions').value.length >= 20
+          "
+          class="btn btn-primary"
+        >
+          Add Question
+        </button>
+      </div>
+      <hr />
+      <div class="mt-3">
+        <button
+          type="submit"
+          [disabled]="customTestForm.invalid"
+          class="btn btn-primary"
+        >
+          Submit
+        </button>
+      </div>
     </form>
-    <div>
-        <p>{{customTestForm.value | json}}</p>
-        <p>Form is NOT valid: {{customTestForm.invalid}}</p>
-    </div>
+  </div>
 </div>

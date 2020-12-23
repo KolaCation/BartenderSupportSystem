@@ -1,91 +1,152 @@
-<div *ngIf="brands" class="mt-3">
-    <h4 class="text">Drink Form</h4>
+<div *ngIf="brands && isAdmin" class="mt-3">
+  <h4 class="text-center">Drink Form</h4>
+  <div class="row justify-content-center">
     <form [formGroup]="drinkForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.name"
-                [class.is-valid]="drinkForm.controls.name.valid" type="text" class="form-control col-sm-6" id="name"
-                formControlName="name" placeholder="Enter drink name">
-            <div class="invalid-feedback" *ngIf="formErrors.name">
-                {{formErrors.name}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.name">
-                Looks good!
-            </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.name"
+          [class.is-valid]="drinkForm.controls.name.valid"
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+          placeholder="Enter drink name"
+        />
+        <div class="invalid-feedback" *ngIf="formErrors.name">
+          {{ formErrors.name }}
         </div>
-        <div class="form-group">
-            <label for="alcoholType">Alcohol Type</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.alcoholType"
-                [class.is-valid]="drinkForm.controls.alcoholType.valid" type="text" class="form-control col-sm-6"
-                id="alcoholType" list="alcoholTypes" formControlName="alcoholType" placeholder="Enter alcohol type">
-            <datalist id="alcoholTypes">
-                <option *ngFor="let alcoholType of alcoholTypesArray" [value]="alcoholType"></option>
-            </datalist>
-            <div class="invalid-feedback" *ngIf="formErrors.alcoholType">
-                {{formErrors.alcoholType}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.alcoholType">
-                Looks good!
-            </div>
+        <div class="valid-feedback" *ngIf="!formErrors.name">Looks good!</div>
+      </div>
+      <div class="form-group">
+        <label for="alcoholType">Alcohol Type</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.alcoholType"
+          [class.is-valid]="drinkForm.controls.alcoholType.valid"
+          type="text"
+          class="form-control"
+          id="alcoholType"
+          list="alcoholTypes"
+          formControlName="alcoholType"
+          placeholder="Enter alcohol type"
+        />
+        <datalist id="alcoholTypes">
+          <option
+            *ngFor="let alcoholType of alcoholTypesArray"
+            [value]="alcoholType"
+          ></option>
+        </datalist>
+        <div class="invalid-feedback" *ngIf="formErrors.alcoholType">
+          {{ formErrors.alcoholType }}
         </div>
-        <div class="form-group">
-            <label for="alcoholPercentage">Alcohol Percentage</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.alcoholPercentage"
-                [class.is-valid]="drinkForm.controls.alcoholPercentage.valid" type="number" min="0" max="100"
-                class="form-control col-sm-6" id="alcoholPercentage" formControlName="alcoholPercentage"
-                placeholder="Enter alcohol percentage">
-            <div class="invalid-feedback" *ngIf="formErrors.alcoholPercentage">
-                {{formErrors.alcoholPercentage}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.alcoholPercentage">
-                Looks good!
-            </div>
+        <div class="valid-feedback" *ngIf="!formErrors.alcoholType">
+          Looks good!
         </div>
-        <div class="form-group">
-            <label for="flavor">Flavor</label>
-            <textarea (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.flavor"
-                [class.is-valid]="drinkForm.controls.flavor.valid" class="form-control col-sm-6" id="flavor"
-                formControlName="flavor" placeholder="Enter drink flavor"></textarea>
-            <div class="invalid-feedback" *ngIf="formErrors.flavor">
-                {{formErrors.flavor}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.flavor">
-                Looks good!
-            </div>
+      </div>
+      <div class="form-group">
+        <label for="alcoholPercentage">Alcohol Percentage</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.alcoholPercentage"
+          [class.is-valid]="drinkForm.controls.alcoholPercentage.valid"
+          type="number"
+          min="0"
+          max="100"
+          class="form-control"
+          id="alcoholPercentage"
+          formControlName="alcoholPercentage"
+          placeholder="Enter alcohol percentage"
+        />
+        <div class="invalid-feedback" *ngIf="formErrors.alcoholPercentage">
+          {{ formErrors.alcoholPercentage }}
         </div>
-        <div class="form-group">
-            <label for="brandId">Brand</label>
-            <select (blur)="validateFormValue()" [class.is-invalid]="formErrors.brandId"
-                [class.is-valid]="drinkForm.controls.brandId.valid" class="form-control col-sm-6" id="brandId"
-                formControlName="brandId" placeholder="Enter brand">
-                <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
-                <option value="">Select A Brand</option>
-            </select>
+        <div class="valid-feedback" *ngIf="!formErrors.alcoholPercentage">
+          Looks good!
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="flavor">Flavor</label>
+        <textarea
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.flavor"
+          [class.is-valid]="drinkForm.controls.flavor.valid"
+          class="form-control"
+          id="flavor"
+          formControlName="flavor"
+          placeholder="Enter drink flavor"
+        ></textarea>
+        <div class="invalid-feedback" *ngIf="formErrors.flavor">
+          {{ formErrors.flavor }}
+        </div>
+        <div class="valid-feedback" *ngIf="!formErrors.flavor">Looks good!</div>
+      </div>
+      <div class="form-group">
+        <label for="brandId">Brand</label>
+        <select
+          (blur)="validateFormValue()"
+          [class.is-invalid]="formErrors.brandId"
+          [class.is-valid]="drinkForm.controls.brandId.valid"
+          class="form-control"
+          id="brandId"
+          formControlName="brandId"
+          placeholder="Enter brand"
+        >
+          <option *ngFor="let brand of brands" [value]="brand.id">
+            {{ brand.name }}
+          </option>
+          <option value="">Select A Brand</option>
+        </select>
 
-            <div class="invalid-feedback" *ngIf="formErrors.brandId">
-                {{formErrors.brandId}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.brandId">
-                Looks good!
-            </div>
+        <div class="invalid-feedback" *ngIf="formErrors.brandId">
+          {{ formErrors.brandId }}
         </div>
+        <div class="valid-feedback" *ngIf="!formErrors.brandId">
+          Looks good!
+        </div>
+      </div>
 
-        <div class="form-group">
-            <label for="pricePerMl">Price Per Ml</label>
-            <input (blur)="validateFormValue()" autocomplete="off" [class.is-invalid]="formErrors.pricePerMl"
-                [class.is-valid]="drinkForm.controls.pricePerMl.valid" type="number" class="form-control col-sm-6" min="0" max="10000"
-                id="pricePerMl" formControlName="pricePerMl" placeholder="Enter price per Ml">
-            <div class="invalid-feedback" *ngIf="formErrors.pricePerMl">
-                {{formErrors.pricePerMl}}
-            </div>
-            <div class="valid-feedback" *ngIf="!formErrors.pricePerMl">
-                Looks good!
-            </div>
+      <div class="form-group">
+        <label for="pricePerMl">Price Per Ml</label>
+        <input
+          (blur)="validateFormValue()"
+          autocomplete="off"
+          [class.is-invalid]="formErrors.pricePerMl"
+          [class.is-valid]="drinkForm.controls.pricePerMl.valid"
+          type="number"
+          class="form-control"
+          min="0"
+          max="10000"
+          id="pricePerMl"
+          formControlName="pricePerMl"
+          placeholder="Enter price per Ml"
+        />
+        <div class="invalid-feedback" *ngIf="formErrors.pricePerMl">
+          {{ formErrors.pricePerMl }}
         </div>
+        <div class="valid-feedback" *ngIf="!formErrors.pricePerMl">
+          Looks good!
+        </div>
+      </div>
 
-        <image-input [pictureUrl]="drink.photoPath" (onFileSelected)="fillModelWithPictureUrl($event)"></image-input>
-        <div class="mt-3">
-            <button type="submit" [disabled]="drinkForm.invalid" class="btn btn-primary">Submit</button>
-        </div>
+      <image-input
+        [pictureUrl]="drink.photoPath"
+        (onFileSelected)="fillModelWithPictureUrl($event)"
+      ></image-input>
+      <div class="mt-3">
+        <button
+          type="submit"
+          [disabled]="drinkForm.invalid"
+          class="btn btn-primary"
+        >
+          Submit
+        </button>
+      </div>
     </form>
+  </div>
 </div>

@@ -53,6 +53,8 @@ namespace BartenderSupportSystem.Server
             services.AddTransient<IValidator<CustomAnswerDto>, CustomAnswerValidator>();
             services.AddTransient<IValidator<CustomQuestionDto>, CustomQuestionValidator>();
             services.AddTransient<IValidator<CustomTestDto>, CustomTestValidator>();
+            services.AddScoped<IValidator<CustomTestResultDto>, CustomTestResultValidator>();
+            services.AddScoped<IValidator<PickedAnswerDto>, PickedAnswerValidator>();
 
             services.AddIdentityServer(options =>
             {

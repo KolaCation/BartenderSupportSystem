@@ -3,32 +3,48 @@ import { MealService } from '../meal/meal.service';
 import { Router } from '@angular/router';
 import { IMeal } from '../meal/IMeal';
 import Swal from 'sweetalert2';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
 
 @Component({
   selector: 'app-meal-list',
   templateUrl: './meal-list.component.html',
-  styleUrls: ['./meal-list.component.css']
+  styleUrls: ['./meal-list.component.css'],
 })
 export class MealListComponent implements OnInit {
-
-
   meals: IMeal[];
-  statusMessage: string = "Loading...";
+  statusMessage = 'Loading...';
+  isAdmin = false;
 
-
-  constructor(private _mealService: MealService, private _router: Router) { }
+  constructor(
+    private _mealService: MealService,
+    private _router: Router,
+    private _authorizeService: AuthorizeService
+  ) {}
 
   ngOnInit(): void {
-    this._mealService.getMeals().subscribe(
-      data => {
-        if (data.length === 0) {
-          this.statusMessage = "No meals to display.";
-        } else {
-          this.meals = data; 
-        }
+    this._authorizeService.getUserRole().subscribe(
+      (role) => {
+        this.isAdmin = role.toLowerCase() === 'admin';
+        this._mealService.getMeals().subscribe(
+          (data) => {
+            if (data.length === 0) {
+              this.statusMessage = 'No meals to display.';
+            } else {
+              this.meals = data;
+            }
+          },
+          (error) => {
+            this.statusMessage = error;
+          }
+        );
       },
-      error => {
-        this.statusMessage = error;
+      () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     );
   }
@@ -45,21 +61,24 @@ export class MealListComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result: { isConfirmed: boolean; }) => {
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
         this._mealService.deleteMeal(meal.id).subscribe(
           () => {
-            let mealIndex: number = this.meals.indexOf(meal, 0);
+            const mealIndex: number = this.meals.indexOf(meal, 0);
             this.meals.splice(mealIndex, 1);
           },
-          (error: any) => console.log(error)
+          () => {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
         );
-        Swal.fire(
-          'Deleted!',
-          'Your record has been deleted.',
-          'success'
-        );
+        Swal.fire('Deleted!', 'Your record has been deleted.', 'success');
       }
     });
   }

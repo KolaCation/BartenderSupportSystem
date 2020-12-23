@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
-    public class DrinkValidator : AbstractValidator<DrinkDto>
+    public sealed class DrinkValidator : AbstractValidator<DrinkDto>
     {
         public DrinkValidator()
         {

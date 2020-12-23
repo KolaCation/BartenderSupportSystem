@@ -28,28 +28,38 @@ namespace BartenderSupportSystem.Server.Controllers
 
         // GET: api/CustomTestResults
         [HttpGet]
-        public async Task<ActionResult<List<CustomTestResultDto>>> GetCustomTestResult()
+        public async Task<ActionResult<List<CustomTestResultDto>>> GetCustomTestResult([FromQuery] string username,
+            [FromQuery] string testId)
         {
-            var testResultDbModels = await _context.TestResultsSet.Include(e => e.PickedAnswers).ToListAsync();
-            var testResults = (from customTestResultDbModel in testResultDbModels
-                select _customTestResultMapper.ToDto(customTestResultDbModel)).ToList();
-            return testResults;
-        }
-
-        // GET: api/CustomTestResults/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CustomTestResultDto>> GetCustomTestResult(int id)
-        {
-            var customTestResultDbModel = await _context.TestResultsSet.Where(e => e.Id.Equals(id)).Include(e => e.PickedAnswers)
-                .FirstOrDefaultAsync();
-
-            if (customTestResultDbModel == null)
+            var listToReturn = new List<CustomTestResultDto>();
+            if (int.TryParse(testId, out var result) && username != null)
             {
-                return NotFound();
+                var customTestResultDbModel = await _context.TestResultsSet.Where(e =>
+                        e.CustomTestId.Equals(result) && e.UserName.ToLower().Equals(username.ToLower()))
+                    .Include(e => e.PickedAnswers)
+                    .FirstOrDefaultAsync();
+
+                if (customTestResultDbModel != null)
+                {
+                    var testResult = _customTestResultMapper.ToDto(customTestResultDbModel);
+                    listToReturn.Add(testResult);
+                }
+            }
+            else if (testId == null && username != null)
+            {
+                var testResultDbModels = await _context.TestResultsSet
+                    .Where(e => e.UserName.ToLower().Equals(username.ToLower()))
+                    .Include(e => e.PickedAnswers).ToListAsync();
+                var testResults = (from customTestResultDbModel in testResultDbModels
+                    select _customTestResultMapper.ToDto(customTestResultDbModel)).ToList();
+                listToReturn.AddRange(testResults);
+            }
+            else
+            {
+                return BadRequest();
             }
 
-            var testResult = _customTestResultMapper.ToDto(customTestResultDbModel);
-            return testResult;
+            return listToReturn;
         }
 
         // PUT: api/CustomTestResults/5
@@ -59,10 +69,12 @@ namespace BartenderSupportSystem.Server.Controllers
         public async Task<IActionResult> PutCustomTestResult(int id,
             CustomTestResultDto customTestResult)
         {
-            if (User?.Identity.Name == null || User.Identity.Name.ToLower() != customTestResult.UserName.ToLower())
+            if (User?.Identity.Name == null || !string.Equals(User.Identity.Name, customTestResult.UserName,
+                StringComparison.OrdinalIgnoreCase))
             {
                 return Unauthorized();
             }
+
             if (id != customTestResult.Id)
             {
                 return BadRequest();
@@ -93,7 +105,7 @@ namespace BartenderSupportSystem.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<CustomTestResultDto>> PostCustomTest(CustomTestResultDto customTestResult)
+        public async Task<ActionResult<CustomTestResultDto>> PostCustomTestResult(CustomTestResultDto customTestResult)
         {
             if (!ModelState.IsValid)
             {

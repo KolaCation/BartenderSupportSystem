@@ -6,16 +6,12 @@ import { MealFormComponent } from '../meal-form/meal-form.component';
 const routes: Routes = [
   { path: '', component: MealListComponent },
   { path: 'create', component: MealFormComponent },
-  { path: 'edit/:id', component: MealFormComponent }
-]
+  { path: 'edit/:id', component: MealFormComponent },
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class MealRoutingModule { }
+export class MealRoutingModule {}

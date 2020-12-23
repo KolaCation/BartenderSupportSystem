@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {
-    public class CocktailValidator : AbstractValidator<CocktailDto>
+    public sealed class CocktailValidator : AbstractValidator<CocktailDto>
     {
         public CocktailValidator(ApplicationDbContext context)
         {

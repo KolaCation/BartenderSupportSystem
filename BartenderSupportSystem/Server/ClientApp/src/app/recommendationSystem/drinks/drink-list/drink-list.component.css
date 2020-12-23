@@ -1,5 +1,4 @@
 .image-limiter {
-    width: auto;
-    height: 250px;
-    object-fit: fill;
+  object-fit: fill;
+  height: 30vh;
 }

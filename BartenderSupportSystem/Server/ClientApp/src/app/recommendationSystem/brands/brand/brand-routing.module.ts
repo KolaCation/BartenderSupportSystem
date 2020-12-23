@@ -6,16 +6,12 @@ import { BrandListComponent } from '../brand-list/brand-list.component';
 const routes: Routes = [
   { path: '', component: BrandListComponent },
   { path: 'create', component: BrandFormComponent },
-  { path: 'edit/:id', component: BrandFormComponent }
-]
+  { path: 'edit/:id', component: BrandFormComponent },
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class BrandRoutingModule { }
+export class BrandRoutingModule {}

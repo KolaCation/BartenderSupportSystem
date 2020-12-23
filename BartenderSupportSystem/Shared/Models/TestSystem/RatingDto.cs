@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BartenderSupportSystem.Shared.Models.TestSystem
 {
@@ -6,8 +8,8 @@ namespace BartenderSupportSystem.Shared.Models.TestSystem
     {
         public int Id { get; set; }
         public int TestId { get; set; }
-        public CustomTestDto Test { get; set; }
-        public double Mark { get; set; }
-        public int QuantityOfRaters { get; set; }
+        public double Mark => RatingList.Sum(e => e.Mark) / QuantityOfRaters;
+        public int QuantityOfRaters => RatingList.Count;
+        public List<UserRatingDto> RatingList { get; set; }
     }
 }
