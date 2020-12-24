@@ -7,7 +7,6 @@
         public MealDto Meal { get; set; }
         public DrinkDto Drink { get; set; }
         public int CocktailId { get; set; }
-        public CocktailDto Cocktail { get; set; }
         public string ProportionType { get; set; }
         public double ProportionValue { get; set; }
     }
