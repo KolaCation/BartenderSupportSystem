@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.BrandDbModel">
+    <Position X="8.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Data\DbModels\RecommendationSystem\BrandDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.CocktailDbModel">
+    <Position X="14.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAQAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Data\DbModels\RecommendationSystem\CocktailDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.DrinkDbModel">
+    <Position X="10.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAKAAAAAIAAAAQAAAAAAAQAIAAAAAAAAQAAAAAQAAA=</HashCode>
+      <FileName>Data\DbModels\RecommendationSystem\DrinkDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.IngredientDbModel">
+    <Position X="12.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAQAAAAAAIAAAAAAAAAAAAgAAAAACAAAAAA=</HashCode>
+      <FileName>Data\DbModels\RecommendationSystem\IngredientDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem.MealDbModel">
+    <Position X="10.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DbModels\RecommendationSystem\MealDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomAnswerDbModel">
+    <Position X="18.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAACAAAAAAAEAAIAAAQAAAA=</HashCode>
+      <FileName>Data\DbModels\TestSystem\CustomAnswerDbModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Question" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomQuestionDbModel">
+    <Position X="15.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAEAAACAAAAAAAAQAAACAAAAAA=</HashCode>
+      <FileName>Data\DbModels\TestSystem\CustomQuestionDbModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Test" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Answers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel">
+    <Position X="12.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAgAAAAAAAAAAQAAAAAAAAEAAAAACIAAAA=</HashCode>
+      <FileName>Data\DbModels\TestSystem\CustomTestDbModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Questions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestResultDbModel">
+    <Position X="6.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAQACACAAAAA=</HashCode>
+      <FileName>Data\DbModels\TestSystem\CustomTestResultDbModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PickedAnswers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.PickedAnswerDbModel">
+    <Position X="10.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAACAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAA=</HashCode>
+      <FileName>Data\DbModels\TestSystem\PickedAnswerDbModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CustomTestResult" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.BartenderDbModel">
+    <Position X="18.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Data\DbModels\BartenderDbModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

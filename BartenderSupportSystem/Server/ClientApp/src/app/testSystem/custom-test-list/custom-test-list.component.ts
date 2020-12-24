@@ -101,7 +101,10 @@ export class CustomTestListComponent implements OnInit {
     }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
         this._customTestService.deleteCustomTest(test.id).subscribe(
-          () => this._router.navigate(['/tests']),
+          () => {
+            const testIndex: number = this.tests.indexOf(test, 0);
+            this.tests.splice(testIndex, 1);
+          },
           () => {
             Swal.fire({
               position: 'center',

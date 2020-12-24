@@ -15,6 +15,7 @@
         Vodka,
         Absinthe,
         Everclear,
-        Cognac
+        Cognac,
+        NonAlcohol
     }
 }
