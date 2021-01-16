@@ -1,4 +1,4 @@
-﻿using BartenderSupportSystem.Shared.Models.TestSystem;
+﻿using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.TestSystem

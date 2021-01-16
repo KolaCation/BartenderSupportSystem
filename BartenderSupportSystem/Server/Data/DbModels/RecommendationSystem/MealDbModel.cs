@@ -1,30 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using BartenderSupportSystem.Shared.Utils;
+﻿using System.ComponentModel.DataAnnotations;
+using BartenderSupportSystem.Server.Helpers;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class MealDbModel
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public double PricePerGr { get; private set; }
+        [Range(0, int.MaxValue)] public int Id { get; set; }
 
-        public MealDbModel(string name, double pricePerGr)
-        {
-            CustomValidator.ValidateString(name, CustomValidatorDefaultValues.StrDefaultMinLength,
-                CustomValidatorDefaultValues.StrDefaultMaxLength);
-            CustomValidator.ValidateNumber(pricePerGr, CustomValidatorDefaultValues.NonNegativeDouble, 100);
-            Name = name;
-            PricePerGr = pricePerGr;
-        }
+        [Required]
+        [StringLength(DefaultConstants.StringMaxLength,
+            MinimumLength = DefaultConstants.StringMinLength)]
+        public string Name { get; set; }
 
-        public MealDbModel(int id, string name, double pricePerGr) : this(name, pricePerGr)
-        {
-            Id = id;
-        }
+        [Range(0, 100)] public double PricePerGr { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using FluentValidation;
+﻿using FluentValidation;
 using System;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {

@@ -1,10 +1,10 @@
-﻿using BartenderSupportSystem.Server.Models;
-using IdentityServer4.Extensions;
+﻿using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
 
 namespace BartenderSupportSystem.Server.Helpers
 {
@@ -26,8 +26,8 @@ namespace BartenderSupportSystem.Server.Helpers
             var user = await _userManager.FindByIdAsync(userId);
             var claimsPrincipal = await _claimsFactory.CreateAsync(user);
             var claims = claimsPrincipal.Claims.ToList();
-            var claimsDB = await _userManager.GetClaimsAsync(user);
-            claims.AddRange(claimsDB);
+            var claimsDb = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(claimsDb);
             context.IssuedClaims = claims;
         }
 

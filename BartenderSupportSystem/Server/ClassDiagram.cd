@@ -61,7 +61,7 @@
   <Class Name="BartenderSupportSystem.Server.Data.DbModels.TestSystem.CustomTestDbModel">
     <Position X="12.75" Y="11.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACCAAAAAAAgAAAAAAAAAAQAAAAAAAAEAAAAACIAAAA=</HashCode>
+      <HashCode>AACCAAAAAAAgAAAAAAAAAAQAAAAAAAAEAAAAACAAAAA=</HashCode>
       <FileName>Data\DbModels\TestSystem\CustomTestDbModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -88,11 +88,11 @@
       <Property Name="CustomTestResult" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="BartenderSupportSystem.Server.Data.DbModels.BartenderDbModel">
-    <Position X="18.5" Y="6.5" Width="1.5" />
+  <Class Name="BartenderSupportSystem.Server.Data.DbModels.Users.CustomerDbModel">
+    <Position X="18" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
-      <FileName>Data\DbModels\BartenderDbModel.cs</FileName>
+      <FileName>Data\DbModels\Users\CustomerDbModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -1,6 +1,6 @@
-﻿using BartenderSupportSystem.Shared.Models.TestSystem;
-using FluentValidation;
+﻿using FluentValidation;
 using System.Linq;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 
 namespace BartenderSupportSystem.Server.Validators.TestSystem
 {

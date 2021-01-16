@@ -1,7 +1,6 @@
 ﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
-using BartenderSupportSystem.Shared.Models.TestSystem;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -26,22 +26,19 @@ namespace BartenderSupportSystem.Server.Controllers
             _customTestMapper = new CustomTestMapper();
         }
 
-        // GET: api/CustomTests
         [HttpGet]
         public async Task<ActionResult<List<CustomTestDto>>> GetCustomTest()
         {
             var testDbModels =
                 await _context.TestsSet.Include(e => e.Questions).ThenInclude(e => e.Answers).ToListAsync();
-            var tests = (from testDbModel in testDbModels select _customTestMapper.ToDto(testDbModel))
-                .ToList();
+            var tests = testDbModels.Select(_customTestMapper.ToDto).ToList();
             return tests;
         }
 
-        // GET: api/CustomTests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomTestDto>> GetCustomTest(int id)
         {
-            var customTestDbModel = await _context.TestsSet.Where(e => e.Id.Equals(id)).Include(e => e.Questions)
+            var customTestDbModel = await _context.TestsSet.Where(e => e.Id == id).Include(e => e.Questions)
                 .ThenInclude(e => e.Answers).FirstOrDefaultAsync();
 
             if (customTestDbModel == null)
@@ -53,9 +50,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return test;
         }
 
-        // PUT: api/CustomTests/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomTest(int id, CustomTestDto customTest)
         {
@@ -64,7 +58,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 return Unauthorized();
             }
 
-            if (!id.Equals(customTest.Id))
+            if (id != customTest.Id)
             {
                 return BadRequest();
             }
@@ -105,9 +99,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/CustomTests
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<CustomTestDto>> PostCustomTest(CustomTestDto customTest)
         {
@@ -121,14 +112,13 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdCustomTest = _context.TestsSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetCustomTest), new { id = createdCustomTest.Id }, createdCustomTest);
+            return CreatedAtAction(nameof(GetCustomTest), new { id = createdCustomTest.Id }, _customTestMapper.ToDto(createdCustomTest));
         }
-
-        // DELETE: api/CustomTests/5
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomTest(int id)
         {
-            var customTestDbModel = await _context.TestsSet.Where(e => e.Id.Equals(id)).Include(e => e.Questions)
+            var customTestDbModel = await _context.TestsSet.Where(e => e.Id == id).Include(e => e.Questions)
                 .ThenInclude(e => e.Answers).FirstOrDefaultAsync();
             if (customTestDbModel == null)
             {
@@ -154,7 +144,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
         private bool CustomTestExists(int id)
         {
-            return _context.TestsSet.Any(e => e.Id.Equals(id));
+            return _context.TestsSet.Any(e => e.Id == id);
         }
 
         private async Task<bool> TryUpdateCustomTest(CustomTestDto customTest)
@@ -169,14 +159,14 @@ namespace BartenderSupportSystem.Server.Controllers
                     await _context.QuestionsSet.AddRangeAsync(questionDbModelsToAdd);
                 }
 
-                var questionIdsList = await _context.QuestionsSet.Where(e => e.TestId.Equals(customTestDbModel.Id))
+                var questionIdsList = await _context.QuestionsSet.Where(e => e.TestId == customTestDbModel.Id)
                     .Select(e => e.Id).ToListAsync();
                 foreach (var questionId in questionIdsList)
                 {
-                    if (customTestDbModel.Questions.Any(e => e.Id.Equals(questionId)))
+                    if (customTestDbModel.Questions.Any(e => e.Id == questionId))
                     {
                         var questionDbModelToUpdate =
-                            customTestDbModel.Questions.First(e => e.Id.Equals(questionId));
+                            customTestDbModel.Questions.First(e => e.Id == questionId);
                         var answerDbModelsToAdd = questionDbModelToUpdate.Answers
                             .Where(e => e.Id == 0 && e.QuestionId != 0)
                             .ToList();
@@ -186,14 +176,14 @@ namespace BartenderSupportSystem.Server.Controllers
                         }
 
                         var answerIdsList = await _context.AnswersSet
-                            .Where(e => e.QuestionId.Equals(questionDbModelToUpdate.Id)).Select(e => e.Id)
+                            .Where(e => e.QuestionId == questionDbModelToUpdate.Id).Select(e => e.Id)
                             .ToListAsync();
                         foreach (var answerId in answerIdsList)
                         {
-                            if (questionDbModelToUpdate.Answers.Any(e => e.Id.Equals(answerId)))
+                            if (questionDbModelToUpdate.Answers.Any(e => e.Id == answerId))
                             {
                                 var answerDbModelToUpdate =
-                                    questionDbModelToUpdate.Answers.First(e => e.Id.Equals(answerId));
+                                    questionDbModelToUpdate.Answers.First(e => e.Id == answerId);
                                 _context.Entry(answerDbModelToUpdate).State = EntityState.Modified;
                             }
                             else
@@ -207,7 +197,7 @@ namespace BartenderSupportSystem.Server.Controllers
                     }
                     else
                     {
-                        var questionDbModelToRemove = await _context.QuestionsSet.Where(e => e.Id.Equals(questionId))
+                        var questionDbModelToRemove = await _context.QuestionsSet.Where(e => e.Id == questionId)
                             .Include(e => e.Answers).FirstOrDefaultAsync();
                         _context.QuestionsSet.Remove(questionDbModelToRemove);
                     }
@@ -227,7 +217,7 @@ namespace BartenderSupportSystem.Server.Controllers
             try
             {
                 var testResultsToRemove =
-                    await _context.TestResultsSet.Where(e => e.CustomTestId.Equals(customTestId)).ToListAsync();
+                    await _context.TestResultsSet.Where(e => e.CustomTestId == customTestId).ToListAsync();
                 _context.TestResultsSet.RemoveRange(testResultsToRemove);
                 return true;
             }

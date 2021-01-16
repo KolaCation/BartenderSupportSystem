@@ -1,7 +1,6 @@
-﻿using BartenderSupportSystem.Server.Data.DbModels;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
-using BartenderSupportSystem.Server.Models;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +25,7 @@ namespace BartenderSupportSystem.Server.Data
         internal DbSet<CustomTestDbModel> TestsSet { get; set; }
         internal DbSet<RatingDbModel> RatingsSet { get; set; }
         internal DbSet<UserRatingDbModel> UserRatingsSet { get; set; }
-        internal DbSet<BartenderDbModel> BartendersSet { get; set; }
+        internal DbSet<CustomerDbModel> CustomersSet { get; set; }
         internal DbSet<MealDbModel> MealsSet { get; set; }
         internal DbSet<CustomTestResultDbModel> TestResultsSet { get; set; }
         internal DbSet<PickedAnswerDbModel> PickedAnswers { get; set; }

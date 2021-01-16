@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
-using BartenderSupportSystem.Shared.Models.TestSystem;
-using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
 {
@@ -18,40 +17,43 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
 
         public CustomQuestionDbModel ToDbModel(CustomQuestionDto item)
         {
-            CustomValidator.ValidateObject(item);
             if (item.Id == 0)
             {
-                return new CustomQuestionDbModel(_customAnswerMapper.ToDbModelList(item.Answers), item.Statement, item.TestId);
+                return new CustomQuestionDbModel
+                {
+                    Answers = _customAnswerMapper.ToDbModelList(item.Answers), Statement = item.Statement,
+                    TestId = item.TestId
+                };
             }
             else
             {
-                return new CustomQuestionDbModel(_customAnswerMapper.ToDbModelList(item.Answers), item.Id, item.Statement, item.TestId);
+                return new CustomQuestionDbModel
+                {
+                    Answers = _customAnswerMapper.ToDbModelList(item.Answers), Id = item.Id, Statement = item.Statement,
+                    TestId = item.TestId
+                };
             }
         }
 
         public CustomQuestionDto ToDto(CustomQuestionDbModel item)
         {
-            CustomValidator.ValidateObject(item);
             return new CustomQuestionDto
             {
                 Answers = _customAnswerMapper.ToDtoList(item.Answers),
                 Id = item.Id,
                 Statement = item.Statement,
                 TestId = item.TestId
-
             };
         }
 
         public List<CustomQuestionDbModel> ToDbModelList(List<CustomQuestionDto> items)
         {
-            CustomValidator.ValidateObject(items);
-            return (from item in items select ToDbModel(item)).ToList();
+            return items.Select(ToDbModel).ToList();
         }
 
         public List<CustomQuestionDto> ToDtoList(List<CustomQuestionDbModel> items)
         {
-            CustomValidator.ValidateObject(items);
-            return (from item in items select ToDto(item)).ToList();
+            return items.Select(ToDto).ToList();
         }
     }
 }

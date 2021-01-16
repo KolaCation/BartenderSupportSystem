@@ -2,8 +2,6 @@
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -30,16 +30,14 @@ namespace BartenderSupportSystem.Server.Controllers
             _drinkMapper = new DrinkMapper();
         }
 
-        // GET: api/Drinks
         [HttpGet]
         public async Task<ActionResult<List<DrinkDto>>> GetDrink()
         {
             var drinkDbModels = await _context.DrinksSet.ToListAsync();
-            var drinks = (from drinkDbModel in drinkDbModels select _drinkMapper.ToDto(drinkDbModel)).ToList();
+            var drinks = drinkDbModels.Select(_drinkMapper.ToDto).ToList();
             return drinks;
         }
 
-        // GET: api/Drinks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DrinkDto>> GetDrink(int id)
         {
@@ -54,13 +52,10 @@ namespace BartenderSupportSystem.Server.Controllers
             return drink;
         }
 
-        // PUT: api/Drinks/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDrink(int id, DrinkDto drink)
         {
-            if (!id.Equals(drink.Id))
+            if (id != drink.Id)
             {
                 return BadRequest();
             }
@@ -100,9 +95,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Drinks
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<DrinkDto>> PostDrink(DrinkDto drink)
         {
@@ -122,10 +114,9 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetDrink), new { id = createdDrink.Id }, _drinkMapper.ToDto(createdDrink));
+            return CreatedAtAction(nameof(GetDrink), new {id = createdDrink.Id}, _drinkMapper.ToDto(createdDrink));
         }
 
-        // DELETE: api/Drinks/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDrink(int id)
         {
@@ -147,7 +138,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
         private bool DrinkExists(int id)
         {
-            return _context.DrinksSet.Any(e => e.Id.Equals(id));
+            return _context.DrinksSet.Any(e => e.Id == id);
         }
 
         private async Task<bool> TryUpdateDrink(DrinkDto drink)
@@ -160,13 +151,13 @@ namespace BartenderSupportSystem.Server.Controllers
                 drinkDbModelToUpdate = _drinkMapper.ToDbModel(drink);
                 if (!string.IsNullOrEmpty(drink.PhotoPath))
                 {
-                    drinkDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
+                    drinkDbModelToUpdate.PhotoPath = (await _storageService.EditFile(
                         Convert.FromBase64String(PhotoPathHelper.GetBase64String(drink.PhotoPath)), "jpg", "drinks",
                         fileRoute));
                 }
                 else
                 {
-                    drinkDbModelToUpdate.UpdatePhotoPath(fileRoute);
+                    drinkDbModelToUpdate.PhotoPath = fileRoute;
                 }
 
                 _context.Entry(drinkDbModelToUpdate).State = EntityState.Modified;

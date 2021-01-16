@@ -2,7 +2,6 @@
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -31,17 +31,14 @@ namespace BartenderSupportSystem.Server.Controllers
             _storageService = storageService;
         }
 
-        // GET: api/Cocktails
         [HttpGet]
         public async Task<ActionResult<List<CocktailDto>>> GetCocktail()
         {
             var cocktailDbModels = await _context.CocktailsSet.ToListAsync();
-            var cocktails = (from cocktailDbModel in cocktailDbModels select _cocktailMapper.ToDto(cocktailDbModel))
-                .ToList();
+            var cocktails = cocktailDbModels.Select(_cocktailMapper.ToDto).ToList();
             return cocktails;
         }
 
-        // GET: api/Cocktails/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CocktailDto>> GetCocktail(int id)
         {
@@ -56,13 +53,10 @@ namespace BartenderSupportSystem.Server.Controllers
             return cocktail;
         }
 
-        // PUT: api/Cocktails/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCocktail(int id, CocktailDto cocktail)
         {
-            if (!id.Equals(cocktail.Id))
+            if (id != cocktail.Id)
             {
                 return BadRequest();
             }
@@ -104,9 +98,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Cocktails
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<CocktailDto>> PostCocktail(CocktailDto cocktail)
         {
@@ -141,7 +132,6 @@ namespace BartenderSupportSystem.Server.Controllers
                 _cocktailMapper.ToDto(createdCocktail));
         }
 
-        // DELETE: api/Cocktails/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCocktail(int id)
         {
@@ -166,7 +156,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
         private bool CocktailExists(int id)
         {
-            return _context.CocktailsSet.Any(e => e.Id.Equals(id));
+            return _context.CocktailsSet.Any(e => e.Id == id);
         }
 
         private async Task<bool> TryUpdateCocktail(CocktailDto cocktail)
@@ -179,14 +169,14 @@ namespace BartenderSupportSystem.Server.Controllers
                 cocktailDbModelToUpdate = _cocktailMapper.ToDbModel(cocktail);
                 if (!string.IsNullOrEmpty(cocktail.PhotoPath))
                 {
-                    cocktailDbModelToUpdate.UpdatePhotoPath(await _storageService.EditFile(
+                    cocktailDbModelToUpdate.PhotoPath = await _storageService.EditFile(
                         Convert.FromBase64String(PhotoPathHelper.GetBase64String(cocktail.PhotoPath)), "jpg",
                         "cocktails",
-                        fileRoute));
+                        fileRoute);
                 }
                 else
                 {
-                    cocktailDbModelToUpdate.UpdatePhotoPath(fileRoute);
+                    cocktailDbModelToUpdate.PhotoPath = (fileRoute);
                 }
 
                 _context.Entry(cocktailDbModelToUpdate).State = EntityState.Modified;
@@ -210,14 +200,14 @@ namespace BartenderSupportSystem.Server.Controllers
                         await _context.AddRangeAsync(_ingredientMapper.ToDbModelList(ingredientsToAdd));
                     }
 
-                    var ingredientIdsList = await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id))
+                    var ingredientIdsList = await _context.IngredientsSet.Where(e => e.CocktailId == cocktail.Id)
                         .Select(e => e.Id).ToListAsync();
 
                     foreach (var ingredientId in ingredientIdsList)
                     {
-                        if (cocktail.Ingredients.Any(e => e.Id.Equals(ingredientId)))
+                        if (cocktail.Ingredients.Any(e => e.Id == ingredientId))
                         {
-                            var ingredientToUpdate = cocktail.Ingredients.First(e => e.Id.Equals(ingredientId));
+                            var ingredientToUpdate = cocktail.Ingredients.First(e => e.Id == ingredientId);
                             _context.Entry(_ingredientMapper.ToDbModel(ingredientToUpdate)).State =
                                 EntityState.Modified;
                         }
@@ -230,7 +220,7 @@ namespace BartenderSupportSystem.Server.Controllers
                 }
                 else
                 {
-                    var ingredientsToRemove = await _context.IngredientsSet.Where(e => e.CocktailId.Equals(cocktail.Id))
+                    var ingredientsToRemove = await _context.IngredientsSet.Where(e => e.CocktailId == cocktail.Id)
                         .ToListAsync();
                     _context.IngredientsSet.RemoveRange(ingredientsToRemove);
                 }
