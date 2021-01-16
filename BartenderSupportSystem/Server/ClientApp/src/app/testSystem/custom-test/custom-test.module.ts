@@ -5,7 +5,6 @@ import { CustomTestListComponent } from '../custom-test-list/custom-test-list.co
 import { CustomTestFormComponent } from '../custom-test-form/custom-test-form.component';
 import { CustomTestPassFormComponent } from '../custom-test-pass-form/custom-test-pass-form.component';
 import { CustomTestResultComponent } from '../custom-test-result/custom-test-result.component';
-import { RatingComponent } from '../rating/rating.component';
 import { CustomTestResultListComponent } from '../custom-test-result-list/custom-test-result-list.component';
 
 @NgModule({
@@ -14,7 +13,6 @@ import { CustomTestResultListComponent } from '../custom-test-result-list/custom
     CustomTestFormComponent,
     CustomTestPassFormComponent,
     CustomTestResultComponent,
-    RatingComponent,
     CustomTestResultListComponent,
   ],
   imports: [SharedModule, CustomTestRoutingModule],
