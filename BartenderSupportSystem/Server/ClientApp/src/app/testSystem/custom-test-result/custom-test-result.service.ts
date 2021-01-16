@@ -47,18 +47,6 @@ export class CustomTestResultService {
       .pipe(catchError(this.logError));
   }
 
-  updateCustomTestResult(customTest: ICustomTestResult): Observable<void> {
-    return this._httpClient
-      .put<void>(`${this._url}/${customTest.id}`, customTest)
-      .pipe(catchError(this.logError));
-  }
-
-  deleteCustomTestResult(id: number): Observable<void> {
-    return this._httpClient
-      .delete<void>(`${this._url}/${id}`)
-      .pipe(catchError(this.logError));
-  }
-
   private logError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {
       console.error('Client Side Error', errorResponse);
