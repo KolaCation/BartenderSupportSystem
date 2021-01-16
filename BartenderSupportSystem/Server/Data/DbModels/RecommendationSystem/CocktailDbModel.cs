@@ -1,35 +1,24 @@
-﻿using System;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using BartenderSupportSystem.Shared.Utils;
+﻿using System.ComponentModel.DataAnnotations;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
+using BartenderSupportSystem.Server.Helpers;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class CocktailDbModel
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public CocktailType Type { get; private set; }
-        public string PhotoPath { get; private set; }
-        public string Description { get; private set; }
+        [Range(0, int.MaxValue)] public int Id { get; set; }
 
-        public CocktailDbModel(string name, CocktailType type, string description, string photoPath)
-        {
-            CustomValidator.ValidateString(name, CustomValidatorDefaultValues.StrDefaultMinLength, CustomValidatorDefaultValues.StrDefaultMaxLength);
-            CustomValidator.ValidateString(description, CustomValidatorDefaultValues.StrDefaultMinLength, 255);
-            Name = name;
-            Type = type;
-            PhotoPath = photoPath;
-            Description = description;
-        }
+        [Required]
+        [StringLength(DefaultConstants.StringMaxLength,
+            MinimumLength = DefaultConstants.StringMinLength)]
+        public string Name { get; set; }
 
-        public CocktailDbModel(int id, string name, CocktailType type, string description, string photoPath) : this(name, type, description, photoPath)
-        {
-            Id = id;
-        }
+        public CocktailType Type { get; set; }
+        public string PhotoPath { get; set; }
 
-        public void UpdatePhotoPath(string newPhotoPath)
-        {
-            PhotoPath = newPhotoPath;
-        }
+        [Required]
+        [StringLength(255,
+            MinimumLength = DefaultConstants.StringMinLength)]
+        public string Description { get; set; }
     }
 }

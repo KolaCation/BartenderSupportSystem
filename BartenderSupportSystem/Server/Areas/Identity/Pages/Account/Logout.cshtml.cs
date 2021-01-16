@@ -1,10 +1,10 @@
-﻿using BartenderSupportSystem.Server.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {

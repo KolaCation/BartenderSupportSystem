@@ -1,10 +1,7 @@
 using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Server.Models;
 using BartenderSupportSystem.Server.Validators.RecommendationSystem;
 using BartenderSupportSystem.Server.Validators.TestSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.TestSystem;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -17,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 
 namespace BartenderSupportSystem.Server
 {
@@ -130,7 +130,7 @@ namespace BartenderSupportSystem.Server
                 }
             });
 
-            ApplicationDbContextSeedData.Initialize(app.ApplicationServices, Configuration).Wait();
+            ApplicationDbContextAdminInit.Initialize(app.ApplicationServices, Configuration).Wait();
         }
     }
 }

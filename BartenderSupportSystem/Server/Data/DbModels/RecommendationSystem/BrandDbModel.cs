@@ -1,26 +1,18 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using BartenderSupportSystem.Shared.Utils;
+﻿using System.ComponentModel.DataAnnotations;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
+using BartenderSupportSystem.Server.Helpers;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {
     internal sealed class BrandDbModel
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public Countries CountryOfOrigin { get; private set; }
+        [Range(0, int.MaxValue)] public int Id { get; set; }
 
-        public BrandDbModel(string name, Countries countryOfOrigin)
-        {
-            CustomValidator.ValidateString(name, CustomValidatorDefaultValues.StrDefaultMinLength, CustomValidatorDefaultValues.StrDefaultMaxLength);
-            Name = name;
-            CountryOfOrigin = countryOfOrigin;
-        }
+        [Required]
+        [StringLength(DefaultConstants.StringMaxLength,
+            MinimumLength = DefaultConstants.StringMinLength)]
+        public string Name { get; set; }
 
-        public BrandDbModel(int id, string name, Countries countryOfOrigin) : this(name, countryOfOrigin)
-        {
-            Id = id;
-        }
+        public Countries CountryOfOrigin { get; set; }
     }
 }

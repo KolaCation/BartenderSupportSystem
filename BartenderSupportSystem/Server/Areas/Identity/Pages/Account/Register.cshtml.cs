@@ -1,8 +1,6 @@
 ﻿using BartenderSupportSystem.Server.Data;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces;
-using BartenderSupportSystem.Server.Models;
-using BartenderSupportSystem.Shared.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +18,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
+using BartenderSupportSystem.Server.Data.DTO.Users;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.Users;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.Users;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -31,7 +33,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
-        private readonly IBartenderMapper _bartenderMapper;
+        private readonly ICustomerMapper _bartenderMapper;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -45,7 +47,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
-            _bartenderMapper = new BartenderMapper();
+            _bartenderMapper = new CustomerMapper();
         }
 
         [BindProperty]
@@ -90,19 +92,19 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTimeOffset.Now };
                 try
                 {
-                    var userDetails = new BartenderDto { FirstName = Input.FirstName, LastName = Input.LastName };
+                    var userDetails = new CustomerDto { FirstName = Input.FirstName, LastName = Input.LastName };
                     var userDetailsDb = _bartenderMapper.ToDbModel(userDetails);
-                    await _context.BartendersSet.AddAsync(userDetailsDb);
+                    await _context.CustomersSet.AddAsync(userDetailsDb);
                     await _context.SaveChangesAsync();
-                    var storedData = _context.BartendersSet.OrderByDescending(e => e.Id).FirstOrDefault();
-                    user.BartenderId = storedData == null ? default : storedData.Id;
+                    var storedData = _context.CustomersSet.OrderByDescending(e => e.Id).FirstOrDefault();
+                    user.CustomerId = storedData == null ? default : storedData.Id;
                 }
                 catch (Exception)
                 {
@@ -120,7 +122,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = user.Id, code, returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -128,7 +130,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                     }
                     else
                     {

@@ -1,7 +1,6 @@
 ﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -9,21 +8,18 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
     {
         public MealDbModel ToDbModel(MealDto item)
         {
-            CustomValidator.ValidateObject(item);
-
             if (item.Id == 0)
             {
-                return new MealDbModel(item.Name, item.PricePerGr);
+                return new MealDbModel {Name = item.Name, PricePerGr = item.PricePerGr};
             }
             else
             {
-                return new MealDbModel(item.Id, item.Name, item.PricePerGr);
+                return new MealDbModel {Id = item.Id, Name = item.Name, PricePerGr = item.PricePerGr};
             }
         }
 
         public MealDto ToDto(MealDbModel item)
         {
-            CustomValidator.ValidateObject(item);
             return new MealDto
             {
                 Id = item.Id,

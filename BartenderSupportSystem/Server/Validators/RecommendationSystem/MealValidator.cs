@@ -1,4 +1,4 @@
-﻿using BartenderSupportSystem.Shared.Models.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using FluentValidation;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem

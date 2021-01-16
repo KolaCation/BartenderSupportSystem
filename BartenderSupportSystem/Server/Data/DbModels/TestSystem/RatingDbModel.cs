@@ -1,39 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using BartenderSupportSystem.Shared.Utils;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
     internal sealed class RatingDbModel
     {
-        public int Id { get; private set; }
-        public int TestId { get; private set; }
-        public List<UserRatingDbModel> UserRatings { get; private set; }
-        
-        public RatingDbModel(int testId)
-        {
-            TestId = testId;
-            UserRatings = new List<UserRatingDbModel>();
-        }
+        [Range(0, int.MaxValue)] public int Id { get; set; }
+        [Range(0, int.MaxValue)] public int TestId { get; set; }
 
-        public RatingDbModel(List<UserRatingDbModel> userRatings, int testId) : this(testId)
-        {
-            CustomValidator.ValidateObject(userRatings);
-            UserRatings = userRatings;
-        }
-
-        public RatingDbModel(int id, int testId)
-        {
-            Id = id;
-            TestId = testId;
-            UserRatings = new List<UserRatingDbModel>();
-        }
-
-        public RatingDbModel(List<UserRatingDbModel> userRatings, int id, int testId) : this(id, testId)
-        {
-            CustomValidator.ValidateObject(userRatings);
-            UserRatings = userRatings;
-        }
+        [Required] public List<UserRatingDbModel> UserRatings { get; set; } = new List<UserRatingDbModel>();
     }
 }

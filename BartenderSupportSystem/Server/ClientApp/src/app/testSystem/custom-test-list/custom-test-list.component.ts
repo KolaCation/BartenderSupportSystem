@@ -28,32 +28,37 @@ export class CustomTestListComponent implements OnInit {
   ngOnInit(): void {
     this._customTestService.getCustomTests().subscribe(
       (tests: ICustomTest[]) => {
+        if (tests.length === 0) {
+          this.statusMessage = 'No tests to display.';
+        }
         this._authorizeService.getUserName().subscribe(
           (name) => {
             this._customTestResultService
               .getUserCustomTestResults(name)
               .subscribe(
                 (results: ICustomTestResult[]) => {
-                  tests.forEach((test: ICustomTest) => {
-                    if (
-                      results.find((e) => e.customTestId === test.id) == null
-                    ) {
-                      this.tests.push(test);
-                    }
-                    if (
-                      test.authorUsername.toLowerCase() === name.toLowerCase()
-                    ) {
-                      this.currentUserIsCreatorList.push({
-                        testId: test.id,
-                        isCreator: true,
-                      });
-                    } else {
-                      this.currentUserIsCreatorList.push({
-                        testId: test.id,
-                        isCreator: false,
-                      });
-                    }
-                  });
+                  if (tests.length !== 0) {
+                    tests.forEach((test: ICustomTest) => {
+                      if (
+                        results.find((e) => e.customTestId === test.id) == null
+                      ) {
+                        this.tests.push(test);
+                      }
+                      if (
+                        test.authorUsername.toLowerCase() === name.toLowerCase()
+                      ) {
+                        this.currentUserIsCreatorList.push({
+                          testId: test.id,
+                          isCreator: true,
+                        });
+                      } else {
+                        this.currentUserIsCreatorList.push({
+                          testId: test.id,
+                          isCreator: false,
+                        });
+                      }
+                    });
+                  }
                 },
                 () => {
                   Swal.fire({

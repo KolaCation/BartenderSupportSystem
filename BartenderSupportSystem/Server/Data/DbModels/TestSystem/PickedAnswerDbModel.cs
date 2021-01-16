@@ -1,26 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {
     internal sealed class PickedAnswerDbModel
     {
-        public int Id { get; private set; }
-        public int CustomTestResultId { get; private set; }
-        [ForeignKey("CustomTestResultId")] public CustomTestResultDbModel CustomTestResult { get; private set; }
-        public int CustomAnswerId { get; private set; }
-        public bool IsPicked { get; private set; }
+        [Range(0, int.MaxValue)] public int Id { get; set; }
+        [Range(0, int.MaxValue)] public int CustomTestResultId { get; set; }
 
-        public PickedAnswerDbModel(int customTestResultId, int customAnswerId, bool isPicked)
-        {
-            CustomTestResultId = customTestResultId;
-            CustomAnswerId = customAnswerId;
-            IsPicked = isPicked;
-        }
+        [ForeignKey(nameof(CustomTestResultId))]
+        public CustomTestResultDbModel CustomTestResult { get; set; }
 
-        public PickedAnswerDbModel(int id, int customTestResultId, int customAnswerId, bool isPicked) : this(
-            customTestResultId, customAnswerId, isPicked)
-        {
-            Id = id;
-        }
+        [Range(0, int.MaxValue)] public int CustomAnswerId { get; set; }
+        public bool IsPicked { get; set; }
     }
 }

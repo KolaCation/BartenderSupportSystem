@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using BartenderSupportSystem.Shared.Utils;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -24,19 +23,26 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
 
         public IngredientDbModel ToDbModel(IngredientDto item)
         {
-            CustomValidator.ValidateObject(item);
             var proportionType = Enum.TryParse(typeof(ProportionType), item.ProportionType, out var result);
             if (proportionType)
             {
                 if (item.Id == 0)
                 {
-                    return new IngredientDbModel(item.ComponentId, item.CocktailId, (ProportionType) result,
-                        item.ProportionValue);
+                    return new IngredientDbModel
+                    {
+                        ComponentId = item.ComponentId, CocktailId = item.CocktailId,
+                        ProportionType = (ProportionType) result,
+                        ProportionValue = item.ProportionValue
+                    };
                 }
                 else
                 {
-                    return new IngredientDbModel(item.Id, item.ComponentId, item.CocktailId, (ProportionType) result,
-                        item.ProportionValue);
+                    return new IngredientDbModel
+                    {
+                        Id = item.Id, ComponentId = item.ComponentId, CocktailId = item.CocktailId,
+                        ProportionType = (ProportionType) result,
+                        ProportionValue = item.ProportionValue
+                    };
                 }
             }
             else
@@ -47,7 +53,6 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
 
         public IngredientDto ToDto(IngredientDbModel item)
         {
-            CustomValidator.ValidateObject(item);
             var ingredientDtoToReturn = new IngredientDto
             {
                 Id = item.Id,
@@ -74,14 +79,12 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
 
         public List<IngredientDbModel> ToDbModelList(List<IngredientDto> items)
         {
-            CustomValidator.ValidateObject(items);
-            return (from item in items select ToDbModel(item)).ToList();
+            return items.Select(ToDbModel).ToList();
         }
 
         public List<IngredientDto> ToDtoList(List<IngredientDbModel> items)
         {
-            CustomValidator.ValidateObject(items);
-            return (from item in items select ToDto(item)).ToList();
+            return items.Select(ToDto).ToList();
         }
     }
 }

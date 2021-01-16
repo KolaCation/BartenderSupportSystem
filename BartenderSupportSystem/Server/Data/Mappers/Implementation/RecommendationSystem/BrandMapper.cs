@@ -1,9 +1,8 @@
-﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using System;
+using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem.Enums;
-using BartenderSupportSystem.Shared.Utils;
-using System;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -11,17 +10,16 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
     {
         public BrandDbModel ToDbModel(BrandDto item)
         {
-            CustomValidator.ValidateObject(item);
             var brandCountry = Enum.TryParse(typeof(Countries), item.CountryOfOrigin, out var result);
             if (brandCountry)
             {
                 if (item.Id == 0)
                 {
-                    return new BrandDbModel(item.Name, (Countries) result);
+                    return new BrandDbModel {Name = item.Name, CountryOfOrigin = (Countries) result};
                 }
                 else
                 {
-                    return new BrandDbModel(item.Id, item.Name, (Countries) result);
+                    return new BrandDbModel {Id = item.Id, Name = item.Name, CountryOfOrigin = (Countries) result};
                 }
             }
             else
@@ -32,7 +30,6 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
 
         public BrandDto ToDto(BrandDbModel item)
         {
-            CustomValidator.ValidateObject(item);
             return new BrandDto
             {
                 Id = item.Id,

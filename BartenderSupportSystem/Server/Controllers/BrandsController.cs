@@ -2,13 +2,13 @@
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
-using BartenderSupportSystem.Shared.Models.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -28,16 +28,14 @@ namespace BartenderSupportSystem.Server.Controllers
             _brandMapper = new BrandMapper();
         }
 
-        //GET: api/Brands
         [HttpGet]
         public async Task<ActionResult<List<BrandDto>>> GetBrand()
         {
             var brandDbModels = await _context.BrandsSet.ToListAsync();
-            var brands = (from brandDbModel in brandDbModels select _brandMapper.ToDto(brandDbModel)).ToList();
+            var brands = brandDbModels.Select(_brandMapper.ToDto).ToList();
             return brands;
         }
 
-        // GET: api/Brands/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BrandDto>> GetBrand(int id)
         {
@@ -52,13 +50,10 @@ namespace BartenderSupportSystem.Server.Controllers
             return brand;
         }
 
-        // PUT: api/Brands/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
-            if (!id.Equals(brand.Id))
+            if (id != brand.Id)
             {
                 return BadRequest();
             }
@@ -90,9 +85,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Brands
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brand)
         {
@@ -109,7 +101,6 @@ namespace BartenderSupportSystem.Server.Controllers
             return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.Id }, _brandMapper.ToDto(createdBrand));
         }
 
-        // DELETE: api/Brands/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrand(int id)
         {
@@ -120,7 +111,7 @@ namespace BartenderSupportSystem.Server.Controllers
             }
 
             _context.BrandsSet.Remove(brandDbModel);
-            var drinksToRemove = await _context.DrinksSet.Where(e => e.BrandId.Equals(brandDbModel.Id)).ToListAsync();
+            var drinksToRemove = await _context.DrinksSet.Where(e => e.BrandId == brandDbModel.Id).ToListAsync();
             foreach (var drinkDbModel in drinksToRemove)
             {
                 await _storageService.DeleteFile(drinkDbModel.PhotoPath, "drinks");
@@ -135,7 +126,7 @@ namespace BartenderSupportSystem.Server.Controllers
 
         private bool BrandExists(int id)
         {
-            return _context.BrandsSet.Any(e => e.Id.Equals(id));
+            return _context.BrandsSet.Any(e => e.Id == id);
         }
     }
 }
