@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
 using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
 {
@@ -14,14 +14,19 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             {
                 return new CustomAnswerDbModel
                 {
-                    Statement = item.Statement, IsCorrect = item.IsCorrect, QuestionId = item.QuestionId
+                    Statement = item.Statement,
+                    IsCorrect = item.IsCorrect,
+                    QuestionId = item.QuestionId
                 };
             }
             else
             {
                 return new CustomAnswerDbModel
                 {
-                    Id = item.Id, Statement = item.Statement, IsCorrect = item.IsCorrect, QuestionId = item.QuestionId
+                    Id = item.Id,
+                    Statement = item.Statement,
+                    IsCorrect = item.IsCorrect,
+                    QuestionId = item.QuestionId
                 };
             }
         }

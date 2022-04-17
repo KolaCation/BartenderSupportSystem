@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
 using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
 {
@@ -14,7 +14,8 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             {
                 return new PickedAnswerDbModel
                 {
-                    CustomTestResultId = item.CustomTestResultId, CustomAnswerId = item.CustomAnswerId,
+                    CustomTestResultId = item.CustomTestResultId,
+                    CustomAnswerId = item.CustomAnswerId,
                     IsPicked = item.IsPicked
                 };
             }
@@ -22,7 +23,9 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             {
                 return new PickedAnswerDbModel
                 {
-                    Id = item.Id, CustomTestResultId = item.CustomTestResultId, CustomAnswerId = item.CustomAnswerId,
+                    Id = item.Id,
+                    CustomTestResultId = item.CustomTestResultId,
+                    CustomAnswerId = item.CustomAnswerId,
                     IsPicked = item.IsPicked
                 };
             }

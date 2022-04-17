@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BartenderSupportSystem.Server.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BartenderSupportSystem.Server.Helpers;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.TestSystem
 {

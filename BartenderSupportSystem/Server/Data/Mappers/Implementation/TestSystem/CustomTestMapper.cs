@@ -19,17 +19,23 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             {
                 return new CustomTestDbModel
                 {
-                    Questions = _customQuestionMapper.ToDbModelList(item.Questions), Name = item.Name,
+                    Questions = _customQuestionMapper.ToDbModelList(item.Questions),
+                    Name = item.Name,
                     Topic = item.Topic,
-                    Description = item.Description, AuthorUsername = item.AuthorUsername
+                    Description = item.Description,
+                    AuthorUsername = item.AuthorUsername
                 };
             }
             else
             {
                 return new CustomTestDbModel
                 {
-                    Questions = _customQuestionMapper.ToDbModelList(item.Questions), Id = item.Id, Name = item.Name,
-                    Topic = item.Topic, Description = item.Description, AuthorUsername = item.AuthorUsername
+                    Questions = _customQuestionMapper.ToDbModelList(item.Questions),
+                    Id = item.Id,
+                    Name = item.Name,
+                    Topic = item.Topic,
+                    Description = item.Description,
+                    AuthorUsername = item.AuthorUsername
                 };
             }
         }

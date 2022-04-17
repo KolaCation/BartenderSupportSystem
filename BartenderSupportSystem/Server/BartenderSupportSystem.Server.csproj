@@ -11,12 +11,19 @@
 
 		<!-- Set this to true if you enable server-side prerendering -->
 		<BuildServerSideRenderer>false</BuildServerSideRenderer>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.3" />
 	</ItemGroup>
 
@@ -30,6 +37,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
+		<PackageReference Include="SqlKata" Version="2.3.7" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -76,7 +85,7 @@
 	</Target>
 
 	<ItemGroup>
-	  <Content Remove="wwwroot\bootstrap.min.css" />
+		<Content Remove="wwwroot\bootstrap.min.css" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,7 +94,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="wwwroot\bootstrap.min.css" />
+		<None Include="wwwroot\bootstrap.min.css" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
 ﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using Microsoft.AspNetCore.Cors;
@@ -7,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Controllers
 {

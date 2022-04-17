@@ -1,8 +1,8 @@
-﻿using System;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using System;
 
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
@@ -18,8 +18,12 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new DrinkDbModel
                     {
-                        Name = item.Name, Type = (AlcoholType) result, AlcoholPercentage = item.AlcoholPercentage,
-                        Flavor = item.Flavor, BrandId = item.BrandId, PricePerMl = item.PricePerMl,
+                        Name = item.Name,
+                        Type = (AlcoholType)result,
+                        AlcoholPercentage = item.AlcoholPercentage,
+                        Flavor = item.Flavor,
+                        BrandId = item.BrandId,
+                        PricePerMl = item.PricePerMl,
                         PhotoPath = item.PhotoPath
                     };
                 }
@@ -27,9 +31,14 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new DrinkDbModel
                     {
-                        Id = item.Id, Name = item.Name, Type = (AlcoholType) result,
-                        AlcoholPercentage = item.AlcoholPercentage, Flavor = item.Flavor, BrandId = item.BrandId,
-                        PricePerMl = item.PricePerMl, PhotoPath = item.PhotoPath
+                        Id = item.Id,
+                        Name = item.Name,
+                        Type = (AlcoholType)result,
+                        AlcoholPercentage = item.AlcoholPercentage,
+                        Flavor = item.Flavor,
+                        BrandId = item.BrandId,
+                        PricePerMl = item.PricePerMl,
+                        PhotoPath = item.PhotoPath
                     };
                 }
             }

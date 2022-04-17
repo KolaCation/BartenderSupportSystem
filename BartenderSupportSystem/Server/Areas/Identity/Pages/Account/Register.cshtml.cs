@@ -1,6 +1,8 @@
 ﻿using BartenderSupportSystem.Server.Data;
-using BartenderSupportSystem.Server.Data.Mappers.Implementation;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
+using BartenderSupportSystem.Server.Data.DTO.Users;
+using BartenderSupportSystem.Server.Data.Mappers.Implementation.Users;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.Users;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +20,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DbModels.Users;
-using BartenderSupportSystem.Server.Data.DTO.Users;
-using BartenderSupportSystem.Server.Data.Mappers.Implementation.Users;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces.Users;
 
 namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
 {
@@ -96,7 +94,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTimeOffset.Now };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTime.UtcNow };
                 try
                 {
                     var userDetails = new CustomerDto { FirstName = Input.FirstName, LastName = Input.LastName };

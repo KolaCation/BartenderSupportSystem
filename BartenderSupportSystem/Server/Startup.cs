@@ -1,4 +1,7 @@
 using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.DbModels.Users;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using BartenderSupportSystem.Server.Helpers;
 using BartenderSupportSystem.Server.Validators.RecommendationSystem;
 using BartenderSupportSystem.Server.Validators.TestSystem;
@@ -14,9 +17,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using BartenderSupportSystem.Server.Data.DbModels.Users;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 
 namespace BartenderSupportSystem.Server
 {
@@ -34,9 +34,13 @@ namespace BartenderSupportSystem.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("BartenderSupportSystemConnection")));
+            services.AddDbContext<ApplicationDbContext>(
+                options =>
+                {
+                    options.UseNpgsql(
+                        Configuration.GetConnectionString("Local"),
+                        x => x.MigrationsAssembly(typeof(Startup).Assembly.GetName().FullName));
+                }, ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -117,7 +121,8 @@ namespace BartenderSupportSystem.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-            });
+            })
+                .EnsureDbMigrated<ApplicationDbContext>();
 
 
             app.UseSpa(spa =>

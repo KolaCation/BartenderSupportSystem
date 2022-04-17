@@ -1,8 +1,8 @@
 ﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 
 namespace BartenderSupportSystem.Server.Validators.TestSystem
 {

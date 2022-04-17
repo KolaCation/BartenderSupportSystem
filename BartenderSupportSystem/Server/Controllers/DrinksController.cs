@@ -1,4 +1,6 @@
 ﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
@@ -9,8 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 
 namespace BartenderSupportSystem.Server.Controllers
 {
@@ -114,7 +114,7 @@ namespace BartenderSupportSystem.Server.Controllers
             await _context.SaveChangesAsync();
             var createdDrink = _context.DrinksSet.OrderByDescending(e => e.Id).First();
 
-            return CreatedAtAction(nameof(GetDrink), new {id = createdDrink.Id}, _drinkMapper.ToDto(createdDrink));
+            return CreatedAtAction(nameof(GetDrink), new { id = createdDrink.Id }, _drinkMapper.ToDto(createdDrink));
         }
 
         [HttpDelete("{id}")]

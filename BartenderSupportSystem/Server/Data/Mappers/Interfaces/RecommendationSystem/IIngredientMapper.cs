@@ -1,7 +1,7 @@
 ﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
-using System.Collections.Generic;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.Generic;
+using System.Collections.Generic;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem
 {

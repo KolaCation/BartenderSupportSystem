@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using System;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -27,7 +27,9 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new CocktailDbModel
                     {
-                        Name = item.Name, Type = (CocktailType) result, Description = item.Description,
+                        Name = item.Name,
+                        Type = (CocktailType)result,
+                        Description = item.Description,
                         PhotoPath = item.PhotoPath
                     };
                 }
@@ -35,7 +37,10 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new CocktailDbModel
                     {
-                        Id = item.Id, Name = item.Name, Type = (CocktailType) result, Description = item.Description,
+                        Id = item.Id,
+                        Name = item.Name,
+                        Type = (CocktailType)result,
+                        Description = item.Description,
                         PhotoPath = item.PhotoPath
                     };
                 }

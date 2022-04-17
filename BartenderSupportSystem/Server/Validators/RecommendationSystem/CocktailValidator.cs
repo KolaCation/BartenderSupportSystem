@@ -1,8 +1,8 @@
 ﻿using BartenderSupportSystem.Server.Data;
-using FluentValidation;
-using System;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
+using FluentValidation;
+using System;
 
 namespace BartenderSupportSystem.Server.Validators.RecommendationSystem
 {

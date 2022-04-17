@@ -19,14 +19,17 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             {
                 return new RatingDbModel
                 {
-                    UserRatings = _userRatingMapper.ToDbModelList(item.RatingList), TestId = item.TestId
+                    UserRatings = _userRatingMapper.ToDbModelList(item.RatingList),
+                    TestId = item.TestId
                 };
             }
             else
             {
                 return new RatingDbModel
                 {
-                    UserRatings = _userRatingMapper.ToDbModelList(item.RatingList), Id = item.Id, TestId = item.TestId
+                    UserRatings = _userRatingMapper.ToDbModelList(item.RatingList),
+                    Id = item.Id,
+                    TestId = item.TestId
                 };
             }
         }

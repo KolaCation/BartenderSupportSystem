@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -30,8 +30,9 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new IngredientDbModel
                     {
-                        ComponentId = item.ComponentId, CocktailId = item.CocktailId,
-                        ProportionType = (ProportionType) result,
+                        ComponentId = item.ComponentId,
+                        CocktailId = item.CocktailId,
+                        ProportionType = (ProportionType)result,
                         ProportionValue = item.ProportionValue
                     };
                 }
@@ -39,8 +40,10 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
                 {
                     return new IngredientDbModel
                     {
-                        Id = item.Id, ComponentId = item.ComponentId, CocktailId = item.CocktailId,
-                        ProportionType = (ProportionType) result,
+                        Id = item.Id,
+                        ComponentId = item.ComponentId,
+                        CocktailId = item.CocktailId,
+                        ProportionType = (ProportionType)result,
                         ProportionValue = item.ProportionValue
                     };
                 }

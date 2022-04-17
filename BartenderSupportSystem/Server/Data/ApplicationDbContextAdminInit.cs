@@ -1,14 +1,13 @@
-﻿using BartenderSupportSystem.Server.Data.DbModels;
+﻿using BartenderSupportSystem.Server.Data.DbModels.Users;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DbModels.Users;
-using Microsoft.EntityFrameworkCore;
 
 namespace BartenderSupportSystem.Server.Data
 {
@@ -28,7 +27,7 @@ namespace BartenderSupportSystem.Server.Data
                 Email = email.ToLower(),
                 UserName = email.ToLower(),
                 EmailConfirmed = true,
-                RegistrationDate = DateTimeOffset.Now
+                RegistrationDate = DateTime.UtcNow
             };
 
             var userExists = await context.Users.AnyAsync(e => e.NormalizedUserName == email.ToUpper());
@@ -39,7 +38,7 @@ namespace BartenderSupportSystem.Server.Data
                 try
                 {
                     await context.CustomersSet.AddAsync(
-                        new CustomerDbModel {FirstName = "Husk", LastName = "Heidegger"});
+                        new CustomerDbModel { FirstName = "Husk", LastName = "Heidegger" });
                     await context.SaveChangesAsync();
                     var storedData = context.CustomersSet.OrderByDescending(e => e.Id).FirstOrDefault();
                     user.CustomerId = storedData?.Id ?? default;

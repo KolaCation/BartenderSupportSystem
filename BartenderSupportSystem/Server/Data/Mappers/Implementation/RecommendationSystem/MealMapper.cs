@@ -10,11 +10,11 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
         {
             if (item.Id == 0)
             {
-                return new MealDbModel {Name = item.Name, PricePerGr = item.PricePerGr};
+                return new MealDbModel { Name = item.Name, PricePerGr = item.PricePerGr };
             }
             else
             {
-                return new MealDbModel {Id = item.Id, Name = item.Name, PricePerGr = item.PricePerGr};
+                return new MealDbModel { Id = item.Id, Name = item.Name, PricePerGr = item.PricePerGr };
             }
         }
 

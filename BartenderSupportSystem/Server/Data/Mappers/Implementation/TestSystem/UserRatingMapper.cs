@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.TestSystem;
 using BartenderSupportSystem.Server.Data.DTO.TestSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.TestSystem;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
 {
@@ -13,13 +13,16 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
             if (item.Id == 0)
             {
                 return new UserRatingDbModel
-                    {RatingId = item.RatingId, TestId = item.TestId, UserName = item.UserName, Mark = item.Mark};
+                { RatingId = item.RatingId, TestId = item.TestId, UserName = item.UserName, Mark = item.Mark };
             }
             else
             {
                 return new UserRatingDbModel
                 {
-                    Id = item.Id, RatingId = item.RatingId, TestId = item.TestId, UserName = item.UserName,
+                    Id = item.Id,
+                    RatingId = item.RatingId,
+                    TestId = item.TestId,
+                    UserName = item.UserName,
                     Mark = item.Mark
                 };
             }

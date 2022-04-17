@@ -1,8 +1,8 @@
-﻿using System;
-using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
-using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+﻿using BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
+using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
+using System;
 
 namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem
 {
@@ -15,11 +15,11 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.Recommendati
             {
                 if (item.Id == 0)
                 {
-                    return new BrandDbModel {Name = item.Name, CountryOfOrigin = (Countries) result};
+                    return new BrandDbModel { Name = item.Name, CountryOfOrigin = (Countries)result };
                 }
                 else
                 {
-                    return new BrandDbModel {Id = item.Id, Name = item.Name, CountryOfOrigin = (Countries) result};
+                    return new BrandDbModel { Id = item.Id, Name = item.Name, CountryOfOrigin = (Countries)result };
                 }
             }
             else

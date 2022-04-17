@@ -1,4 +1,5 @@
 ﻿using BartenderSupportSystem.Server.Data;
+using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Implementation.RecommendationSystem;
 using BartenderSupportSystem.Server.Data.Mappers.Interfaces.RecommendationSystem;
 using BartenderSupportSystem.Server.Helpers;
@@ -9,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem;
 
 namespace BartenderSupportSystem.Server.Controllers
 {

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
+﻿using BartenderSupportSystem.Server.Data.DTO.RecommendationSystem.Enums;
 using BartenderSupportSystem.Server.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace BartenderSupportSystem.Server.Data.DbModels.RecommendationSystem
 {

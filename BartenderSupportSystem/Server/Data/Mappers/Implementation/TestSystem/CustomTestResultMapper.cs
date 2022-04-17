@@ -20,15 +20,20 @@ namespace BartenderSupportSystem.Server.Data.Mappers.Implementation.TestSystem
                 return new CustomTestResultDbModel
                 {
                     PickedAnswers = _pickedAnswerMapper.ToDbModelList(item.PickedAnswers),
-                    CustomTestId = item.CustomTestId, UserName = item.UserName, PersonalMark = item.PersonalMark
+                    CustomTestId = item.CustomTestId,
+                    UserName = item.UserName,
+                    PersonalMark = item.PersonalMark
                 };
             }
             else
             {
                 return new CustomTestResultDbModel
                 {
-                    PickedAnswers = _pickedAnswerMapper.ToDbModelList(item.PickedAnswers), Id = item.Id,
-                    CustomTestId = item.CustomTestId, UserName = item.UserName, PersonalMark = item.PersonalMark
+                    PickedAnswers = _pickedAnswerMapper.ToDbModelList(item.PickedAnswers),
+                    Id = item.Id,
+                    CustomTestId = item.CustomTestId,
+                    UserName = item.UserName,
+                    PersonalMark = item.PersonalMark
                 };
             }
         }

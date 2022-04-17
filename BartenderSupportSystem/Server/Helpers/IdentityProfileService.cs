@@ -1,10 +1,10 @@
-﻿using Duende.IdentityServer.Extensions;
+﻿using BartenderSupportSystem.Server.Data.DbModels.Users;
+using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
-using BartenderSupportSystem.Server.Data.DbModels.Users;
 
 namespace BartenderSupportSystem.Server.Helpers
 {
