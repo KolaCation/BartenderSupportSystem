@@ -85,16 +85,8 @@
 	</Target>
 
 	<ItemGroup>
-		<Content Remove="wwwroot\bootstrap.min.css" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Folder Include="wwwroot\cocktails\" />
 		<Folder Include="wwwroot\drinks\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="wwwroot\bootstrap.min.css" />
 	</ItemGroup>
 
 </Project>

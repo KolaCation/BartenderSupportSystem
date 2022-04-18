@@ -57,9 +57,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId, code },
-                protocol: Request.Scheme);
+                null,
+                new { userId, code },
+                Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.Email,
                 "Confirm your email",

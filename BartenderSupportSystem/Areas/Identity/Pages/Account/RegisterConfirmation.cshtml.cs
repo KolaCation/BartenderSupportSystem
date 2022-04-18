@@ -51,9 +51,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId, code, returnUrl },
-                    protocol: Request.Scheme);
+                    null,
+                    new { area = "Identity", userId, code, returnUrl },
+                    Request.Scheme);
             }
 
             return Page();

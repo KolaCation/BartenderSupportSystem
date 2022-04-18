@@ -93,9 +93,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account.Manage
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
-                    pageHandler: null,
-                    values: new { userId, email = Input.NewEmail, code },
-                    protocol: Request.Scheme);
+                    null,
+                    new { userId, email = Input.NewEmail, code },
+                    Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
@@ -129,9 +129,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account.Manage
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { area = "Identity", userId, code },
-                protocol: Request.Scheme);
+                null,
+                new { area = "Identity", userId, code },
+                Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
                 "Confirm your email",

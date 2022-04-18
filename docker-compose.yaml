@@ -1,0 +1,33 @@
+version: "3.9"
+
+networks:
+  bss-network:
+    driver: bridge
+
+services:
+  postgres-db:
+    image: postgres:14.2
+    environment:
+      POSTGRES_DB: "BartenderSupportSystem"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    restart: always
+    networks:
+      - bss-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-db
+    ports:
+      - 3000:80
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - bss-network

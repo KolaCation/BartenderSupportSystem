@@ -51,9 +51,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
+                    null,
+                    new { area = "Identity", code },
+                    Request.Scheme);
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,

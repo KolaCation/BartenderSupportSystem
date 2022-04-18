@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "echo hello && ng serve",
-    "build": "ng build",
+    "build": "echo hello && ng build",
     "test": "ng test",
     "lint": "eslint . --ext .ts",
     "e2e": "ng e2e"

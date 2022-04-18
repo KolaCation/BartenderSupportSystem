@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using Duende.IdentityServer.Configuration;
 
 namespace BartenderSupportSystem.Server
 {
@@ -38,7 +39,7 @@ namespace BartenderSupportSystem.Server
                 options =>
                 {
                     options.UseNpgsql(
-                        Configuration.GetConnectionString("Local"),
+                        Configuration.GetConnectionString("Docker"),
                         x => x.MigrationsAssembly(typeof(Startup).Assembly.GetName().FullName));
                 }, ServiceLifetime.Transient);
 
@@ -63,7 +64,8 @@ namespace BartenderSupportSystem.Server
                 options.Authentication.CookieSlidingExpiration = true;
             })
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
-                .AddProfileService<IdentityProfileService>();
+                .AddProfileService<IdentityProfileService>()
+                .AddDeveloperSigningCredential();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
@@ -79,7 +81,7 @@ namespace BartenderSupportSystem.Server
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("https://localhost:44340")
+                    builder => builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
@@ -99,9 +101,9 @@ namespace BartenderSupportSystem.Server
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
             if (!env.IsDevelopment())
@@ -131,7 +133,7 @@ namespace BartenderSupportSystem.Server
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseAngularCliServer("start");
                 }
             });
 

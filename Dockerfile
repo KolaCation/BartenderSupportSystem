@@ -7,10 +7,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["BartenderSupportSystem/Server/BartenderSupportSystem.Server.csproj", "BartenderSupportSystem/Server/"]
-RUN dotnet restore "BartenderSupportSystem/Server/BartenderSupportSystem.Server.csproj"
+# Install NodeJs
+RUN apt-get update && \
+apt-get install -y wget && \
+apt-get install -y gnupg2 && \
+wget -qO- https://deb.nodesource.com/setup_12.x | bash - && \
+apt-get install -y build-essential nodejs
+# End Install
+COPY ["BartenderSupportSystem/BartenderSupportSystem.Server.csproj", "BartenderSupportSystem/"]
+RUN dotnet restore "BartenderSupportSystem/BartenderSupportSystem.Server.csproj"
 COPY . .
-WORKDIR "/src/BartenderSupportSystem/Server"
+WORKDIR "/src/BartenderSupportSystem"
 RUN dotnet build "BartenderSupportSystem.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish

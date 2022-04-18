@@ -59,7 +59,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            var redirectUrl = Url.Page("./ExternalLogin", "Callback", new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
@@ -80,7 +80,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -134,9 +134,9 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Page(
                             "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId, code },
-                            protocol: Request.Scheme);
+                            null,
+                            new { area = "Identity", userId, code },
+                            Request.Scheme);
 
                         await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
@@ -147,7 +147,7 @@ namespace BartenderSupportSystem.Server.Areas.Identity.Pages.Account
                             return RedirectToPage("./RegisterConfirmation", new { Input.Email });
                         }
 
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        await _signInManager.SignInAsync(user, false, info.LoginProvider);
 
                         return LocalRedirect(returnUrl);
                     }
